@@ -1,13 +1,19 @@
 "use client";
 
-import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useSIWS } from '@/hooks/useSIWS';
-import { useState, useEffect } from 'react';
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useSIWS } from "@/hooks/useSIWS";
+import { useState, useEffect } from "react";
 
 export default function WalletConnectButton() {
   const { connected, publicKey } = useWallet();
-  const { isAuthenticated, isLoading, authenticate, logout, checkPersistedAuth } = useSIWS();
+  const {
+    isAuthenticated,
+    isLoading,
+    authenticate,
+    logout,
+    checkPersistedAuth,
+  } = useSIWS();
   const [showWalletInfo, setShowWalletInfo] = useState(false);
 
   useEffect(() => {
@@ -20,8 +26,8 @@ export default function WalletConnectButton() {
     try {
       await authenticate();
     } catch (error) {
-      console.error('Sign in failed:', error);
-      alert('Sign in failed. Please try again.');
+      console.error("Sign in failed:", error);
+      alert("Sign in failed. Please try again.");
     }
   };
 
@@ -30,7 +36,7 @@ export default function WalletConnectButton() {
       await logout();
       setShowWalletInfo(false);
     } catch (error) {
-      console.error('Sign out failed:', error);
+      console.error("Sign out failed:", error);
     }
   };
 
@@ -49,15 +55,11 @@ export default function WalletConnectButton() {
   // If wallet is connected but not authenticated
   if (connected && !isAuthenticated) {
     return (
-      <div className="flex items-center justify-center space-x-3">
-        <span className="text-[#E6F0F0] text-sm">Wallet Connected</span>
+      <div className="flex items-center justify-center">
         <button
           onClick={handleSignIn}
-          className="bg-[#15C0B9] hover:bg-[#13A8A1] text-white font-bold py-3 px-6 rounded-xl shadow-lg transform transition duration-200 hover:scale-105 flex items-center space-x-3 cursor-pointer"
+          className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-101 cursor-pointer"
         >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z"/>
-          </svg>
           <span>Sign In</span>
         </button>
       </div>
@@ -68,41 +70,59 @@ export default function WalletConnectButton() {
   if (connected && isAuthenticated && publicKey) {
     return (
       <div className="relative flex items-center justify-center">
-        <button
-          onClick={() => setShowWalletInfo(!showWalletInfo)}
-          className="bg-[#15C0B9] hover:bg-[#13A8A1] text-white font-bold py-3 px-6 rounded-xl shadow-lg transform transition duration-200 hover:scale-105 flex items-center space-x-3 cursor-pointer"
-        >
-          <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-          <span>{truncateAddress(publicKey.toString())}</span>
-          <svg
-            className={`w-4 h-4 transform transition-transform ${showWalletInfo ? "rotate-180" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-101">
+          {/* Left section - Wallet icon */}
+          <div className="bg-white/5 p-3 flex items-center justify-center border-r border-white/20">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-white"
+            >
+              <path d="M17 14h.01" />
+              <path d="M7 7h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14" />
+            </svg>
+          </div>
+          
+          {/* Right section - Address and dropdown */}
+          <button
+            onClick={() => setShowWalletInfo(!showWalletInfo)}
+            className="flex-1 px-4 py-3 flex items-center justify-between text-white font-medium hover:bg-white/10 transition-all duration-200 cursor-pointer"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <span className="text-sm">{truncateAddress(publicKey.toString())}</span>
+            <svg
+              className={`w-4 h-4 transform transition-transform duration-200 ${
+                showWalletInfo ? "rotate-180" : ""
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+        </div>
 
         {showWalletInfo && (
-          <div className="absolute top-full mt-2 right-0 bg-[#E6F0F0] dark:bg-[#19181C] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl p-4 min-w-[280px] z-50">
-            {/* <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-[#15C0B9] rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z"/>
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-[#19181C] dark:text-[#E6F0F0]">Phantom Wallet</h3>
-                <p className="text-sm text-green-600 dark:text-green-400">Authenticated</p>
-              </div>
-            </div> */}
-
+          <div className="absolute top-full mt-2 right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-4 min-w-[280px] z-50">
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-[#19181C] dark:text-[#E6F0F0]">Address</label>
-                <div className="bg-gray-100 dark:bg-[#19181C] rounded-lg p-2 mt-1 border dark:border-gray-600">
-                  <code className="text-sm font-mono text-[#19181C] dark:text-[#E6F0F0] break-all">
+                <label className="text-sm font-medium text-white/80">
+                  Address
+                </label>
+                <div className="bg-white/5 rounded-lg p-2 mt-1 border border-white/10">
+                  <code className="text-sm font-mono text-white break-all">
                     {publicKey.toString()}
                   </code>
                 </div>
@@ -111,13 +131,15 @@ export default function WalletConnectButton() {
               <div className="flex space-x-2">
                 <button
                   onClick={handleSignOut}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 cursor-pointer"
+                  className="flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 >
                   Sign Out
                 </button>
                 <button
-                  onClick={() => navigator.clipboard.writeText(publicKey.toString())}
-                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 cursor-pointer"
+                  onClick={() =>
+                    navigator.clipboard.writeText(publicKey.toString())
+                  }
+                  className="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 >
                   Copy Address
                 </button>
@@ -132,20 +154,7 @@ export default function WalletConnectButton() {
   // If wallet is not connected - show wallet adapter button
   return (
     <div className="wallet-adapter-button-container">
-      <WalletMultiButton className="!bg-[#15C0B9] hover:!bg-[#13A8A1] !text-white !font-bold !py-3 !px-6 !rounded-xl !shadow-lg !transform !transition !duration-200 hover:!scale-105" />
-      <style jsx global>{`
-        .wallet-adapter-button-trigger {
-          background-color: #15C0B9 !important;
-        }
-        .wallet-adapter-button:not([disabled]):hover {
-          background-color: #13A8A1 !important;
-        }
-        .wallet-adapter-button {
-          display: flex !important;
-          align-items: center !important;
-          gap: 0.75rem !important;
-        }
-      `}</style>
+      <WalletMultiButton className="!text-white !py-3 !px-6 !shadow-2xl" />
     </div>
   );
-} 
+}
