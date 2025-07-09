@@ -40,3 +40,30 @@
   background: rgba(255, 255, 255, 0.15) !important;
   border-color: rgba(255, 255, 255, 0.3) !important;
 }
+
+/* Custom Scrollbar Styles */
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: #15C0B9 rgba(255, 255, 255, 0.1);
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #15C0B9, #0a9d95);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #1dd1c7, #15C0B9);
+  box-shadow: 0 0 8px rgba(21, 192, 185, 0.3);
+}
