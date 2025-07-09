@@ -48,6 +48,8 @@ export function useSIWS() {
           publicKey: publicKey.toString(),
           timestamp: Date.now(),
         }));
+
+        // TODO: redirect to mfa page
         
         return { success: true, signInData, signInOutput };
       } else {

@@ -24,12 +24,12 @@
 }
 
 .wallet-adapter-modal-title {
-  color: #19181C !important;
+  color: #E6F0F0 !important;
 }
 
-.wallet-adapter-modal-list .wallet-adapter-button {
+/* .wallet-adapter-modal-list .wallet-adapter-button {
   border: 1px solid #15C0B9 !important;
-}
+} */
 
 .wallet-adapter-modal-list .wallet-adapter-button:hover {
   background-color: #15C0B9 !important;
