@@ -58,7 +58,7 @@ export default function WalletConnectButton() {
       <div className="flex items-center justify-center">
         <button
           onClick={handleSignIn}
-          className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-101 cursor-pointer"
+          className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-lg shadow-2xl transform transition-all duration-300 hover:scale-101 cursor-pointer"
         >
           <span>Sign In</span>
         </button>
@@ -70,9 +70,9 @@ export default function WalletConnectButton() {
   if (connected && isAuthenticated && publicKey) {
     return (
       <div className="relative flex items-center justify-center">
-        <div className="flex bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-101">
+        <div className="flex backdrop-blur-md rounded-lg shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-101">
           {/* Left section - Wallet icon */}
-          <div className="bg-white/5 p-3 flex items-center justify-center border-r border-white/20">
+          <div className="bg-white/5 p-3 flex items-center justify-center border border-white/20 rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -93,7 +93,7 @@ export default function WalletConnectButton() {
           {/* Right section - Address and dropdown */}
           <button
             onClick={() => setShowWalletInfo(!showWalletInfo)}
-            className="flex-1 px-4 py-3 flex items-center justify-between text-white font-medium hover:bg-white/10 transition-all duration-200 cursor-pointer"
+            className="flex-1 px-4 py-3 flex items-center justify-between text-white font-medium transition-all duration-200 cursor-pointer"
           >
             <span className="text-sm">{truncateAddress(publicKey.toString())}</span>
             <svg
@@ -115,7 +115,7 @@ export default function WalletConnectButton() {
         </div>
 
         {showWalletInfo && (
-          <div className="absolute top-full mt-2 right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-4 min-w-[280px] z-50">
+          <div className="absolute top-full mt-2 right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-2xl p-4 min-w-[280px] z-50">
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium text-white/80">
