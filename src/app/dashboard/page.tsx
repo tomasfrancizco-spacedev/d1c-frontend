@@ -1,3 +1,5 @@
+"use client";
+
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DashboardCards from "@/components/DashboardCards";
 import Image from "next/image";
