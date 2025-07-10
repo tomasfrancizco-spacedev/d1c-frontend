@@ -5,6 +5,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { SolanaSignInInput, SolanaSignInOutput } from '@solana/wallet-standard-features';
 import { createSignInData, verifySIWSMessage } from '@/lib/siws';
 import { PublicKey } from '@solana/web3.js';
+import { useRouter } from 'next/navigation';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -15,6 +16,7 @@ export interface AuthState {
 
 export function useSIWS() {
   const { connected, publicKey, signIn, disconnect } = useWallet();
+  const router = useRouter();
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
     publicKey: null,
@@ -49,7 +51,8 @@ export function useSIWS() {
           timestamp: Date.now(),
         }));
 
-        // TODO: redirect to mfa page
+        // Redirect to dashboard after successful authentication
+        router.push('/dashboard');
         
         return { success: true, signInData, signInOutput };
       } else {
@@ -65,7 +68,7 @@ export function useSIWS() {
     } finally {
       setIsLoading(false);
     }
-  }, [signIn, publicKey]);
+  }, [signIn, publicKey, router]);
 
   const logout = useCallback(async () => {
     setIsLoading(true);
