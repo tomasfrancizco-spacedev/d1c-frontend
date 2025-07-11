@@ -14,3 +14,15 @@ export const PROGRAM_IDS = {
   TOKEN_2022: new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'),
   ASSOCIATED_TOKEN: new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
 } as const;
+
+// Helius URLs
+export const HELIUS_URLS = {
+  MAINNET: 'https://mainnet.helius-rpc.com',
+  TESTNET: 'https://devnet.helius-rpc.com',
+} as const;
+
+// Backend API URLs
+export const BACKEND_API_URLS = {
+  STAGING: '',
+  PRODUCTION: '',
+} as const;

@@ -1,11 +1,12 @@
 interface DashboardCardsProps {
   contributionAmount: string;
   usdAmount: string;
-  d1cAmount: string;
+  d1cBalance: string;
   tradingVolume: string;
+  isLoadingBalance?: boolean;
 }
 
-export default function DashboardCards({ contributionAmount, usdAmount, d1cAmount, tradingVolume }: DashboardCardsProps) {
+export default function DashboardCards({ contributionAmount, usdAmount, d1cBalance, tradingVolume, isLoadingBalance = false }: DashboardCardsProps) {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -24,7 +25,12 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cAmoun
               </div>
             </div>
             <div className="space-y-3">
-              <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{d1cAmount}</div>
+              <div className="flex items-center gap-3">
+                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{d1cBalance}</div>
+                {isLoadingBalance && (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
+                )}
+              </div>
               
               <div className="pt-2">
                 <button className="text-[#15C0B9] hover:text-[#E6F0F0] text-sm font-medium transition-colors duration-200 drop-shadow-sm">

@@ -4,14 +4,65 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DashboardCards from "@/components/DashboardCards";
 import Image from "next/image";
 import { topContributors } from "@/data/topContributors_mock";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useState, useEffect } from "react";
+import { fetchTokenBalance, formatBalance } from "@/lib/api";
+import { D1CBalanceResponse } from "@/types/api";
 
 export default function Dashboard() {
-   
+  const { publicKey } = useWallet();
+  
+  // Balance state management
+  const [balanceData, setBalanceData] = useState<D1CBalanceResponse | null>(null);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  const [balanceError, setBalanceError] = useState<string | null>(null);
+
+  // Static data (these could also be fetched from APIs in the future)
   const contributionAmount = "345 $D1C";
   const collegeName = "LSU Athletes";
   const usdAmount = "234 USD";
-  const d1cAmount = "1234 $D1C";
   const tradingVolume = "12345678 $D1C";
+
+  // Fetch balance when wallet is connected
+  useEffect(() => {
+    const loadBalance = async () => {
+      if (!publicKey) {
+        setBalanceData(null);
+        setBalanceError(null);
+        return;
+      }
+
+      setIsLoadingBalance(true);
+      setBalanceError(null);
+
+      try {
+        const { data, error } = await fetchTokenBalance(publicKey.toString());
+        
+        if (error) {
+          setBalanceError(error);
+          setBalanceData(null);
+        } else if (data) {
+          setBalanceData(data);
+        }
+      } catch (err) {
+        console.error('Error loading balance:', err);
+        setBalanceError('Failed to load balance');
+      } finally {
+        setIsLoadingBalance(false);
+      }
+    };
+
+    loadBalance();
+  }, [publicKey]);
+
+  // Calculate display values
+  const d1cBalance = balanceData 
+    ? formatBalance(balanceData.formattedAmount) 
+    : isLoadingBalance 
+      ? "Loading..." 
+      : balanceError 
+        ? "Error loading balance"
+        : "Connect wallet to view balance";
 
 
   const getPositionSuffix = (position: number) => {
@@ -62,9 +113,10 @@ export default function Dashboard() {
           {/* Cards Section */}
           <DashboardCards 
             tradingVolume={tradingVolume}
-            d1cAmount={d1cAmount}
+            d1cBalance={d1cBalance}
             contributionAmount={contributionAmount}
             usdAmount={usdAmount}
+            isLoadingBalance={isLoadingBalance}
           />
 
           {/* Top Contributions Section */}

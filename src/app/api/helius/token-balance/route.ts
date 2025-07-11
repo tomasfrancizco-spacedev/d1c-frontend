@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { D1C_TOKEN } from '@/lib/constants';
+import { D1C_TOKEN, HELIUS_URLS } from '@/lib/constants';
 import { getD1CAssociatedTokenAddress, formatD1CAmount } from '@/lib/token-utils';
 import { D1CBalanceResponse, ApiError } from '@/types/api';
 
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     }, { status: 400 });
   }
 
-  const baseUrl = process.env.HELIUS_DEVNET_URL;
+  const baseUrl = process.env.NODE_ENV === 'production' ? HELIUS_URLS.MAINNET : HELIUS_URLS.TESTNET;
   const apiKey = process.env.HELIUS_API_KEY;
 
   if (!apiKey) {
