@@ -1,4 +1,7 @@
-import { D1CBalanceResponse, ApiError } from '@/types/api';
+import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse } from '@/types/api';
+import { userContributions } from '@/data/userContributions_mock';
+import { tradingVolume } from '@/data/tradingVolume_mock';
+import { topContributors } from '@/data/leaderboard_mock';
 
 /**
  * Base API configuration
@@ -83,4 +86,117 @@ export function formatUsdBalance(balance: number | string): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(numBalance);
+}
+
+/**
+ * Fetch user contributions
+ * Currently returns mock data - will be switched to API call later
+ */
+export async function fetchUserContributions(
+  userAddress: string
+): Promise<{ data?: ContributionsResponse; error?: string }> {
+  if (!userAddress) {
+    return { error: 'User address is required' };
+  }
+
+  try {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // TODO: Replace with actual API call when ready
+    // const endpoint = `/contributions?userAddress=${encodeURIComponent(userAddress)}`;
+    // return apiCall<ContributionsResponse>(endpoint);
+    
+    // For now, return mock data
+    return {
+      data: {
+        success: true,
+        data: userContributions
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching contributions:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
+ * Calculate total contribution amount from user contributions
+ */
+export function calculateTotalContribution(contributions: UserContribution[]): string {
+  if (!contributions || contributions.length === 0) {
+    return formatBalance(0);
+  }
+
+  const total = contributions.reduce((sum, contribution) => {
+    // Extract numeric value from amount string (e.g., "2,450 $D1C" -> 2450)
+    const numericValue = parseFloat(contribution.amount.replace(/[,$D1C\s]/g, ''));
+    return sum + (isNaN(numericValue) ? 0 : numericValue);
+  }, 0);
+
+  return formatBalance(total);
+}
+
+/**
+ * Fetch trading volume data
+ * Currently returns mock data - will be switched to API call later
+ */
+export async function fetchTradingVolume(): Promise<{ data?: TradingVolumeResponse; error?: string }> {
+  try {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // TODO: Replace with actual API call when ready
+    // const endpoint = `/trading-volume`;
+    // return apiCall<TradingVolumeResponse>(endpoint);
+    
+    // For now, return mock data
+    return {
+      data: {
+        success: true,
+        data: tradingVolume
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching trading volume:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
+ * Get trading volume amount from trading volume data
+ */
+export function getTradingVolumeAmount(volumeData: TradingVolumeData[]): string {
+  if (!volumeData || volumeData.length === 0) {
+    return formatBalance(0);
+  }
+
+  // Return the first trading volume amount
+  return volumeData[0]?.amount || formatBalance(0);
+}
+
+/**
+ * Fetch leaderboard data
+ * Currently returns mock data - will be switched to API call later
+ */
+export async function fetchLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
+  try {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 400));
+    
+    // TODO: Replace with actual API call when ready
+    // const endpoint = `/leaderboard`;
+    // return apiCall<LeaderboardResponse>(endpoint);
+    
+    // For now, return mock data
+    return {
+      data: {
+        success: true,
+        data: topContributors
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
 } 
