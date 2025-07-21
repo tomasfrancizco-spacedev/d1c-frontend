@@ -1,28 +1,34 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import DefaultLayout from '@/components/Layouts/DefaultLayout';
-import AuthFormContainer from '@/components/AuthFormContainer';
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import AuthFormContainer from "@/components/AuthFormContainer";
 
 export default function MFAVerifyPage() {
-  const [code, setCode] = useState(['', '', '', '', '', '']);
-  const [email, setEmail] = useState('');
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
     // Get email from localStorage
-    const storedEmail = localStorage.getItem('mfa-email');
+    const storedEmail =
+      localStorage.getItem("mfa-email") ||
+      localStorage.getItem("mfa-completed");
     if (storedEmail) {
       setEmail(storedEmail);
+    } else {
+      // If no email, redirect to request page
+      router.push("/auth/mfa/request");
     }
-  }, []);
+  }, [router]);
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) return; // Only allow single digits
-    
+
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
@@ -34,56 +40,94 @@ export default function MFAVerifyPage() {
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !code[index] && index > 0) {
+    if (e.key === "Backspace" && !code[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const verificationCode = code.join('');
-    
+    const verificationCode = code.join("");
+
     if (verificationCode.length !== 6) return;
-    
+
     setIsLoading(true);
-    
+    setError(null);
+
     try {
-      // TODO: Add API call to verify code
-      // await verifyCode(verificationCode);
-      
-      console.log('Verification code:', verificationCode);
-      
-      // Navigate to dashboard or success page
-      router.push('/dashboard');
+      // Call the MFA verification API
+      const response = await fetch("/api/auth/mfa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          code: verificationCode,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Store MFA completion in localStorage for client-side state
+        localStorage.setItem(
+          "mfa-completed",
+          JSON.stringify({
+            email,
+            timestamp: Date.now(),
+          })
+        );
+
+        // Clear the email from localStorage since MFA is complete
+        localStorage.removeItem("mfa-email");
+
+        // Navigate to dashboard
+        router.push("/dashboard");
+      } else {
+        setError(data.error || "Verification failed. Please try again.");
+      }
     } catch (error) {
-      console.error('Error verifying code:', error);
+      console.error("Error verifying code:", error);
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleResendCode = () => {
-    router.push('/auth/mfa/request');
+    router.push("/auth/mfa/request");
   };
 
-  const isCodeComplete = code.every(digit => digit !== '');
+  const isCodeComplete = code.every((digit) => digit !== "");
 
   return (
     <DefaultLayout>
       <div className="pt-[150px] min-h-screen bg-[#19181C] flex items-center justify-center p-4">
         <AuthFormContainer
           title="Enter the verification code"
-          subtitle={`Enter the 6 digit code we sent to ${email || 'your email'}`}
+          subtitle={`Enter the 6 digit code we sent to ${
+            email || "your email"
+          }`}
           showBackButton={true}
           backButtonHref="/auth/mfa/request"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Error message */}
+            {error && (
+              <div className="text-red-400 text-sm text-center bg-red-400/10 border border-red-400/20 rounded-lg p-3">
+                {error}
+              </div>
+            )}
+
             {/* 6 input squares for verification code */}
             <div className="flex justify-center space-x-3">
               {code.map((digit, index) => (
                 <input
                   key={index}
-                  ref={(el) => { inputRefs.current[index] = el; }}
+                  ref={(el) => {
+                    inputRefs.current[index] = el;
+                  }}
                   type="text"
                   inputMode="numeric"
                   maxLength={1}
@@ -98,11 +142,11 @@ export default function MFAVerifyPage() {
             {/* Resend code link */}
             <div className="text-center">
               <span className="text-[#E6F0F0]/70 text-sm">
-                Didn&apos;t receive the code?{' '}
+                Didn&apos;t receive the code?{" "}
                 <button
                   type="button"
                   onClick={handleResendCode}
-                  className="text-[#15C0B9] hover:text-[#1dd1c7] underline transition-colors duration-200"
+                  className="cursor-pointer text-[#15C0B9] hover:text-[#1dd1c7] underline transition-colors duration-200"
                 >
                   Resend code
                 </button>
@@ -112,7 +156,7 @@ export default function MFAVerifyPage() {
             <button
               type="submit"
               disabled={!isCodeComplete || isLoading}
-              className="w-full bg-[#15C0B9] hover:bg-[#1dd1c7] disabled:bg-[#15C0B9]/50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
+              className="cursor-pointer w-full bg-[#15C0B9] hover:bg-[#1dd1c7] disabled:bg-[#15C0B9]/50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -120,7 +164,7 @@ export default function MFAVerifyPage() {
                   Verifying...
                 </div>
               ) : (
-                'Verify now'
+                "Verify now"
               )}
             </button>
           </form>

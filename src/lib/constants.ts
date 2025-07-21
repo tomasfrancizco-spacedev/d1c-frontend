@@ -23,6 +23,7 @@ export const HELIUS_URLS = {
 
 // Backend API URLs
 export const BACKEND_API_URLS = {
+  DEVELOPMENT: 'http://localhost:3000',
   STAGING: '',
   PRODUCTION: '',
 } as const;

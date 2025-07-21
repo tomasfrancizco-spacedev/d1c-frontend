@@ -38,6 +38,24 @@ export function useSIWS() {
       const isValid = await verifySIWSMessage(signInData, signInOutput);
       
       if (isValid) {
+        const timestamp = Date.now();
+        
+        // Set authentication cookie via API
+        const response = await fetch('/api/auth/siws', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            publicKey: publicKey.toString(),
+            timestamp
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to set authentication cookie');
+        }
+
         setAuthState({
           isAuthenticated: true,
           publicKey,
@@ -45,14 +63,19 @@ export function useSIWS() {
           signInOutput,
         });
         
-        // Store auth state in localStorage for persistence
+        // Keep localStorage for client-side state
         localStorage.setItem('siws-auth', JSON.stringify({
           publicKey: publicKey.toString(),
-          timestamp: Date.now(),
+          timestamp,
         }));
 
-        // Redirect to dashboard after successful authentication
-        router.push('/dashboard');
+        // Check if user has completed MFA
+        const mfaAuth = localStorage.getItem('mfa-completed');
+        if (mfaAuth) {
+          router.push('/dashboard');
+        } else {
+          router.push('/auth/mfa/request');
+        }
         
         return { success: true, signInData, signInOutput };
       } else {
@@ -73,18 +96,34 @@ export function useSIWS() {
   const logout = useCallback(async () => {
     setIsLoading(true);
     try {
+      // Clear authentication cookies via API
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        console.error('Failed to clear authentication cookies');
+      }
+
       await disconnect();
       setAuthState({
         isAuthenticated: false,
         publicKey: null,
       });
+      
+      // Clear localStorage
       localStorage.removeItem('siws-auth');
+      localStorage.removeItem('mfa-completed');
+      localStorage.removeItem('mfa-email');
+      
+      // Redirect to landing page
+      router.push('/');
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [disconnect]);
+  }, [disconnect, router]);
 
   const checkPersistedAuth = useCallback(() => {
     if (!connected || !publicKey) {

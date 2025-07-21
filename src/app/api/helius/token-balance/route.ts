@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     }, { status: 400 });
   }
 
-  const baseUrl = process.env.NODE_ENV === 'production' ? HELIUS_URLS.MAINNET : HELIUS_URLS.TESTNET;
+  const baseUrl = process.env.NODE_ENV === 'development' ? HELIUS_URLS.TESTNET : HELIUS_URLS.MAINNET;
   const apiKey = process.env.HELIUS_API_KEY;
 
   if (!apiKey) {
