@@ -2,13 +2,12 @@ import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, 
 import { userContributions } from '@/data/userContributions_mock';
 import { tradingVolume } from '@/data/tradingVolume_mock';
 import { topContributors } from '@/data/leaderboard_mock';
+import { BACKEND_API_URLS } from '@/lib/constants';
 
 /**
  * Base API configuration
  */
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? process.env.NEXT_PUBLIC_API_URL || ''
-  : '';
+const API_BASE_URL = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : (process.env.NODE_ENV === 'test' ? BACKEND_API_URLS.STAGING : BACKEND_API_URLS.PRODUCTION);
 
 /**
  * Generic API call wrapper with error handling

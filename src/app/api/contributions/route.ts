@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const userAddress = searchParams.get('userAddress');
-  const baseUrl = process.env.NODE_ENV === 'production' ? BACKEND_API_URLS.PRODUCTION : BACKEND_API_URLS.STAGING;
+  const baseUrl = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : (process.env.NODE_ENV === 'test' ? BACKEND_API_URLS.STAGING : BACKEND_API_URLS.PRODUCTION);
 
   try {
     const response = await fetch(`${baseUrl}/contributions?userAddress=${userAddress}`, {

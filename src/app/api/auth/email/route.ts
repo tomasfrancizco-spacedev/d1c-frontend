@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const { email, walletAddress } = await request.json();
-  const baseUrl = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : BACKEND_API_URLS.PRODUCTION;
+  const baseUrl = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : (process.env.NODE_ENV === 'test' ? BACKEND_API_URLS.STAGING : BACKEND_API_URLS.PRODUCTION);
 
   if (!email || !walletAddress) {
     return NextResponse.json({ success: false, error: 'Email and wallet address are required' }, { status: 400 });

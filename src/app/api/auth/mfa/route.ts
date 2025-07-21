@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : BACKEND_API_URLS.PRODUCTION;
+    const baseUrl = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : (process.env.NODE_ENV === 'test' ? BACKEND_API_URLS.STAGING : BACKEND_API_URLS.PRODUCTION);
 
     const verifyOtpResponse = await fetch(`${baseUrl}/v1/auth/verify-otp`, {
       method: 'POST',
