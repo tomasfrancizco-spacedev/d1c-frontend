@@ -1,0 +1,22 @@
+export const topContributors = [
+  { position: 1, name: "LSU Athletes", amount: "2,450 $D1C", logo: "/divisionlogo2.png" },
+  { position: 2, name: "UCLA Bruins", amount: "1,850 $D1C", logo: "/divisionlogo2.png" },
+  { position: 3, name: "Duke Blue Devils", amount: "1,275 $D1C", logo: "/divisionlogo2.png" },
+  { position: 4, name: "Texas Longhorns", amount: "1,150 $D1C", logo: "/divisionlogo2.png" },
+  { position: 5, name: "Michigan Wolverines", amount: "1,025 $D1C", logo: "/divisionlogo2.png" },
+  { position: 6, name: "Stanford Cardinal", amount: "950 $D1C", logo: "/divisionlogo2.png" },
+  { position: 7, name: "Florida Gators", amount: "875 $D1C", logo: "/divisionlogo2.png" },
+  { position: 8, name: "Ohio State Buckeyes", amount: "825 $D1C", logo: "/divisionlogo2.png" },
+  { position: 9, name: "Alabama Crimson Tide", amount: "775 $D1C", logo: "/divisionlogo2.png" },
+  { position: 10, name: "Georgia Bulldogs", amount: "720 $D1C", logo: "/divisionlogo2.png" },
+  { position: 11, name: "Notre Dame Fighting Irish", amount: "680 $D1C", logo: "/divisionlogo2.png" },
+  { position: 12, name: "USC Trojans", amount: "645 $D1C", logo: "/divisionlogo2.png" },
+  { position: 13, name: "Penn State Nittany Lions", amount: "610 $D1C", logo: "/divisionlogo2.png" },
+  { position: 14, name: "Oregon Ducks", amount: "575 $D1C", logo: "/divisionlogo2.png" },
+  { position: 15, name: "Clemson Tigers", amount: "540 $D1C", logo: "/divisionlogo2.png" },
+  { position: 16, name: "Miami Hurricanes", amount: "505 $D1C", logo: "/divisionlogo2.png" },
+  { position: 17, name: "Virginia Tech Hokies", amount: "470 $D1C", logo: "/divisionlogo2.png" },
+  { position: 18, name: "Wisconsin Badgers", amount: "435 $D1C", logo: "/divisionlogo2.png" },
+  { position: 19, name: "Auburn Tigers", amount: "400 $D1C", logo: "/divisionlogo2.png" },
+  { position: 20, name: "Tennessee Volunteers", amount: "365 $D1C", logo: "/divisionlogo2.png" }
+];
