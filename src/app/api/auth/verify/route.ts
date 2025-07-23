@@ -1,12 +1,11 @@
-import { BACKEND_API_URLS } from '@/lib/constants';
+import { API_BASE_URL } from '@/lib/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const { email, code } = await request.json();
-  const baseUrl = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : (process.env.NODE_ENV === 'test' ? BACKEND_API_URLS.STAGING : BACKEND_API_URLS.PRODUCTION);
 
   try {
-    const response = await fetch(`${baseUrl}/auth/verify?email=${email}&code=${code}`, {
+    const response = await fetch(`${API_BASE_URL}/auth/verify?email=${email}&code=${code}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

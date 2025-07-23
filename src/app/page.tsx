@@ -12,7 +12,7 @@ export default function Home() {
                 Division One Crypto
               </h1>
               <p className="text-lg md:text-xl text-[#E6F0F0]/80 mb-8">
-                Connect your wallet to get started with college crypto contributions
+                {/* Connect your wallet to get started with college crypto contributions */}
               </p>
             </div>
 

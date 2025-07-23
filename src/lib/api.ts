@@ -7,13 +7,26 @@ import { BACKEND_API_URLS } from '@/lib/constants';
 /**
  * Base API configuration
  */
-const API_BASE_URL = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : (process.env.NODE_ENV === 'test' ? BACKEND_API_URLS.STAGING : BACKEND_API_URLS.PRODUCTION);
+const getBaseUrl = (env: string) => {
+  switch (env) {
+    case 'production':
+      return BACKEND_API_URLS.PRODUCTION;
+    case 'test':
+      return BACKEND_API_URLS.STAGING;
+    case 'development':
+    default:
+      return BACKEND_API_URLS.DEVELOPMENT;
+  }
+};
+
+
+export const API_BASE_URL = getBaseUrl(process.env.NODE_ENV || 'development');
 
 /**
  * Generic API call wrapper with error handling
  */
 async function apiCall<T>(
-  endpoint: string, 
+  endpoint: string,
   options: RequestInit = {}
 ): Promise<{ data?: T; error?: string }> {
   try {
@@ -59,15 +72,15 @@ export async function fetchTokenBalance(
  */
 export function formatBalance(balance: number | string, suffix: string = '$D1C'): string {
   const numBalance = typeof balance === 'string' ? parseFloat(balance) : balance;
-  
+
   if (isNaN(numBalance)) return `0 ${suffix}`;
-  
+
   // Format large numbers with commas
   const formatted = numBalance.toLocaleString('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
-  
+
   return `${formatted} ${suffix}`;
 }
 
@@ -76,9 +89,9 @@ export function formatBalance(balance: number | string, suffix: string = '$D1C')
  */
 export function formatUsdBalance(balance: number | string): string {
   const numBalance = typeof balance === 'string' ? parseFloat(balance) : balance;
-  
+
   if (isNaN(numBalance)) return '$0.00';
-  
+
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -101,11 +114,11 @@ export async function fetchUserContributions(
   try {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     // TODO: Replace with actual API call when ready
     // const endpoint = `/contributions?userAddress=${encodeURIComponent(userAddress)}`;
     // return apiCall<ContributionsResponse>(endpoint);
-    
+
     // For now, return mock data
     return {
       data: {
@@ -144,11 +157,11 @@ export async function fetchTradingVolume(): Promise<{ data?: TradingVolumeRespon
   try {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     // TODO: Replace with actual API call when ready
     // const endpoint = `/trading-volume`;
     // return apiCall<TradingVolumeResponse>(endpoint);
-    
+
     // For now, return mock data
     return {
       data: {
@@ -182,11 +195,11 @@ export async function fetchLeaderboard(): Promise<{ data?: LeaderboardResponse; 
   try {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 400));
-    
+
     // TODO: Replace with actual API call when ready
     // const endpoint = `/leaderboard`;
     // return apiCall<LeaderboardResponse>(endpoint);
-    
+
     // For now, return mock data
     return {
       data: {

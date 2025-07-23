@@ -25,5 +25,5 @@ export const HELIUS_URLS = {
 export const BACKEND_API_URLS = {
   DEVELOPMENT: 'http://localhost:3000',
   STAGING: 'http://ec2-3-134-105-162.us-east-2.compute.amazonaws.com:3000',
-  PRODUCTION: 'http://ec2-3-134-105-162.us-east-2.compute.amazonaws.com:3000',
+  PRODUCTION: '',
 } as const;
