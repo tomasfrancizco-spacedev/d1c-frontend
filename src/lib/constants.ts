@@ -17,7 +17,8 @@ export const PROGRAM_IDS = {
 
 // Helius URLs
 export const HELIUS_URLS = {
-  MAINNET: 'https://mainnet.helius-rpc.com',
+  // MAINNET: 'https://mainnet.helius-rpc.com',
+  MAINNET: 'https://devnet.helius-rpc.com',
   TESTNET: 'https://devnet.helius-rpc.com',
 } as const;
 

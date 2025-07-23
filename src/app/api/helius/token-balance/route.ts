@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     }, { status: 400 });
   }
 
-  const baseUrl = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test' ? HELIUS_URLS.TESTNET : HELIUS_URLS.MAINNET;
+  const heliusBaseUrl = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test' ? HELIUS_URLS.TESTNET : HELIUS_URLS.MAINNET;
   const apiKey = process.env.HELIUS_API_KEY;
 
   if (!apiKey) {
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const ataAddress = getD1CAssociatedTokenAddress(userAddress);
 
     // Query the D1C balance
-    const response = await fetch(`${baseUrl}/?api-key=${apiKey}`, {
+    const response = await fetch(`${heliusBaseUrl}/?api-key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

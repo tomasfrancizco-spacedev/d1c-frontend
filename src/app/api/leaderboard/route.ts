@@ -1,11 +1,9 @@
-import { BACKEND_API_URLS } from '@/lib/constants';
+import { API_BASE_URL } from '@/lib/api';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const baseUrl = process.env.NODE_ENV === 'development' ? BACKEND_API_URLS.DEVELOPMENT : (process.env.NODE_ENV === 'test' ? BACKEND_API_URLS.STAGING : BACKEND_API_URLS.PRODUCTION);
-
   try {
-    const response = await fetch(`${baseUrl}/leaderboard`, {  
+    const response = await fetch(`${API_BASE_URL}/leaderboard`, {  
       method: 'GET',
     });
     const data = await response.json();
