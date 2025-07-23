@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/lib/api';
+import { BACKEND_API_BASE_URL } from '@/lib/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/v1/auth/wallet-signin`, {
+    const response = await fetch(`${BACKEND_API_BASE_URL}/v1/auth/wallet-signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

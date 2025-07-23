@@ -2,12 +2,27 @@ import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, 
 import { userContributions } from '@/data/userContributions_mock';
 import { tradingVolume } from '@/data/tradingVolume_mock';
 import { topContributors } from '@/data/leaderboard_mock';
-import { BACKEND_API_URLS } from '@/lib/constants';
+import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
+
+/**
+ * Frontend API configuration (Next.js API routes)
+ */
+const getFrontendApiUrl = (env: string) => {
+  switch (env) {
+    case 'production':
+      return FRONTEND_API_URLS.PRODUCTION;
+    case 'test':
+      return FRONTEND_API_URLS.STAGING;
+    case 'development':
+    default:
+      return FRONTEND_API_URLS.DEVELOPMENT;
+  }
+};
 
 /**
  * Base API configuration
  */
-const getBaseUrl = (env: string) => {
+const getBackendApiUrl = (env: string) => {
   switch (env) {
     case 'production':
       return BACKEND_API_URLS.PRODUCTION;
@@ -20,7 +35,9 @@ const getBaseUrl = (env: string) => {
 };
 
 
-export const API_BASE_URL = getBaseUrl(process.env.NODE_ENV || 'development');
+export const BACKEND_API_BASE_URL = getBackendApiUrl(process.env.NODE_ENV || 'development');
+export const FRONTEND_API_BASE_URL = getFrontendApiUrl(process.env.NODE_ENV || 'development');
+
 
 /**
  * Generic API call wrapper with error handling
@@ -30,7 +47,7 @@ async function apiCall<T>(
   options: RequestInit = {}
 ): Promise<{ data?: T; error?: string }> {
   try {
-    const url = `${API_BASE_URL}/api${endpoint}`;
+    const url = `${FRONTEND_API_BASE_URL}/api${endpoint}`;
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
