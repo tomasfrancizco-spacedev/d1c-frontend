@@ -1,9 +1,9 @@
-import { API_BASE_URL } from '@/lib/api';
+import { BACKEND_API_BASE_URL } from '@/lib/api';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const response = await fetch(`${API_BASE_URL}/leaderboard`, {  
+    const response = await fetch(`${BACKEND_API_BASE_URL}/leaderboard`, {  
       method: 'GET',
     });
     const data = await response.json();

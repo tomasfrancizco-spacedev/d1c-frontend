@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/lib/api';
+import { BACKEND_API_BASE_URL } from '@/lib/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 });
     }
 
-    const verifyOtpResponse = await fetch(`${API_BASE_URL}/v1/auth/verify-otp`, {
+    const verifyOtpResponse = await fetch(`${BACKEND_API_BASE_URL}/v1/auth/verify-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

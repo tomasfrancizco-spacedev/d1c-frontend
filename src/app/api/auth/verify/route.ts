@@ -1,11 +1,11 @@
-import { API_BASE_URL } from '@/lib/api';
+import { BACKEND_API_BASE_URL } from '@/lib/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const { email, code } = await request.json();
 
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/verify?email=${email}&code=${code}`, {
+    const response = await fetch(`${BACKEND_API_BASE_URL}/auth/verify?email=${email}&code=${code}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

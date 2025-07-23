@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/lib/api';
+import { BACKEND_API_BASE_URL } from '@/lib/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const userAddress = searchParams.get('userAddress');
 
   try {
-    const response = await fetch(`${API_BASE_URL}/contributions?userAddress=${userAddress}`, {
+    const response = await fetch(`${BACKEND_API_BASE_URL}/contributions?userAddress=${userAddress}`, {
       method: 'GET',
     });
     const data = await response.json();
