@@ -30,6 +30,6 @@ export const BACKEND_API_URLS = {
 
 export const FRONTEND_API_URLS = {
   DEVELOPMENT: 'http://localhost:3001',
-  STAGING: 'https://staging.d3ieo9817fyven.amplifyapp.com/',
-  PRODUCTION: 'https://staging.d3ieo9817fyven.amplifyapp.com/', // TODO: Change to production URL (TBD)
+  STAGING: 'https://staging.d3ieo9817fyven.amplifyapp.com',
+  PRODUCTION: 'https://staging.d3ieo9817fyven.amplifyapp.com', // TODO: Change to production URL (TBD)
 } as const;
