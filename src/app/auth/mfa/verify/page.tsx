@@ -115,7 +115,7 @@ export default function MFAVerifyPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error message */}
             {error && (
-              <div className="text-red-400 text-sm text-center bg-red-400/10 border border-red-400/20 rounded-lg p-3">
+              <div className="text-red-400 text-sm text-center bg-red-400/10 border border-red-400/20 rounded-md p-3">
                 {error}
               </div>
             )}
@@ -134,7 +134,7 @@ export default function MFAVerifyPage() {
                   value={digit}
                   onChange={(e) => handleInputChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="w-12 h-12 text-center text-xl font-semibold bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-[#E6F0F0] focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-200"
+                  className="w-12 h-12 text-center text-xl font-semibold bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-md text-[#E6F0F0] focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-200"
                 />
               ))}
             </div>
@@ -156,7 +156,7 @@ export default function MFAVerifyPage() {
             <button
               type="submit"
               disabled={!isCodeComplete || isLoading}
-              className="cursor-pointer w-full bg-[#15C0B9] hover:bg-[#1dd1c7] disabled:bg-[#15C0B9]/50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
+              className="cursor-pointer w-full bg-[#15C0B9] hover:bg-[#1dd1c7] disabled:bg-[#15C0B9]/50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">

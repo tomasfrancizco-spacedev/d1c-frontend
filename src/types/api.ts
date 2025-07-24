@@ -39,6 +39,7 @@ export interface LeaderboardEntry {
   name: string;
   amount: string;
   logo: string;
+  bg?: string;
 }
 
 export interface LeaderboardResponse {
