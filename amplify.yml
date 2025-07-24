@@ -6,14 +6,14 @@ frontend:
         - npm ci
     build:
       commands:
-        - env | grep -e SECRET_ >> .env.production
-        - env | grep -e NEXT_PUBLIC_ >> .env.production
+        - env | grep -e HELIUS_API_KEY >> .env.production
+        - env | grep -e NODE_ENV >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
     files:
-      - '**/*'
+      - "**/*"
   cache:
     paths:
-      - node_modules/**/* 
+      - node_modules/**/*
       - .next/cache/**/*
