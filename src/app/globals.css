@@ -7,6 +7,14 @@ html, body, #__next, #root {
   font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Line clamp utilities */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 /* Wallet Adapter Styles */
 @import url('@solana/wallet-adapter-react-ui/styles.css');
 
