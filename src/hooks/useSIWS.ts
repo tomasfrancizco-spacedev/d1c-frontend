@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { SolanaSignInInput, SolanaSignInOutput } from '@solana/wallet-standard-features';
 import { createSignInData, verifySIWSMessage } from '@/lib/siws';
@@ -134,11 +134,11 @@ export function useSIWS() {
       return;
     }
 
+
     const stored = localStorage.getItem('siws-auth');
     if (stored) {
       try {
-        const { publicKey: storedKey, timestamp } = JSON.parse(stored);
-        
+        const { publicKey: storedKey, timestamp } = JSON.parse(stored);        
         // Check if auth is still valid (24 hours)
         const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
         
@@ -156,6 +156,11 @@ export function useSIWS() {
       }
     }
   }, [connected, publicKey]);
+
+  // Automatically check for persisted auth when wallet connection changes
+  useEffect(() => {
+    checkPersistedAuth();
+  }, [checkPersistedAuth]);
 
   return {
     // Wallet connection state

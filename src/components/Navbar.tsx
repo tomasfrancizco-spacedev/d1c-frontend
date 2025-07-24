@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import WalletConnectButton from "@/components/WalletConnectButton";
 import Image from "next/image";
+import { useSIWS } from "@/hooks/useSIWS";
 
 const Navbar = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -9,8 +10,37 @@ const Navbar = (props: {
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [isFullyAuthenticated, setIsFullyAuthenticated] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  
+  const { connected, isAuthenticated } = useSIWS();
+
+  // Check for full authentication (wallet + MFA)
+  useEffect(() => {
+    const checkFullAuth = () => {
+      if (typeof window === "undefined") return;
+      
+      const mfaCompleted = localStorage.getItem('mfa-completed');
+      const hasValidMFA = mfaCompleted ? (() => {
+        try {
+          const mfaData = JSON.parse(mfaCompleted);
+          const isExpired = Date.now() - mfaData.timestamp > 24 * 60 * 60 * 1000; // 24 hours
+          return !isExpired;
+        } catch {
+          return false;
+        }
+      })() : false;
+      
+      setIsFullyAuthenticated(connected && isAuthenticated && hasValidMFA);
+    };
+
+    checkFullAuth();
+    
+    const interval = setInterval(checkFullAuth, 5000);
+    
+    return () => clearInterval(interval);
+  }, [connected, isAuthenticated]);
 
   // Close mobile menu when screen size changes to desktop
   useEffect(() => {
@@ -182,6 +212,20 @@ const Navbar = (props: {
         {/* Desktop navigation menu */}
         <div className="hidden lg:block">
           <ul className="flex items-center gap-8 2xsm:gap-4">
+            {isFullyAuthenticated && (
+              <li>
+                <Link 
+                  href="/dashboard"
+                  className="text-[#E6F0F0] hover:text-[#15C0B9] font-medium transition-colors duration-200 flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z" />
+                  </svg>
+                  Dashboard
+                </Link>
+              </li>
+            )}
             <li>
               <WalletConnectButton />
             </li>
@@ -192,6 +236,21 @@ const Navbar = (props: {
         {mobileMenuOpen && (
           <div className="absolute top-full left-0 w-full sm:w-1/2  bg-[#19181C] shadow-md mt-1 py-2 lg:hidden z-50">
             <ul className="flex flex-col space-y-3 px-4">
+              {isFullyAuthenticated && (
+                <li>
+                  <Link 
+                    href="/dashboard"
+                    className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-colors duration-200 flex items-center gap-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z" />
+                    </svg>
+                    Dashboard
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="#">
                   <p className="text-[#E6F0F0] hover:text-white py-2">

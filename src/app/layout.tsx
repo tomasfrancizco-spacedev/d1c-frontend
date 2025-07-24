@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "D1C - Division One Crypto",
   description: "Where the passion of college sports meets the future of digital innovation.",
   icons: {
-    icon: "/divisionlogo2.png",
+    icon: "/divisionlogo2.png"
   },
 };
 
