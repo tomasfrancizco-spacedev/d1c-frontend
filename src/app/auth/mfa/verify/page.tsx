@@ -103,7 +103,7 @@ export default function MFAVerifyPage() {
 
   return (
     <DefaultLayout>
-      <div className="pt-[150px] min-h-screen bg-[#19181C] flex items-center justify-center p-4">
+      <div className="pt-[150px] min-h-screen bg-[#03211e] flex items-center justify-center p-4">
         <AuthFormContainer
           title="Enter the verification code"
           subtitle={`Enter the 6 digit code we sent to ${
@@ -156,8 +156,9 @@ export default function MFAVerifyPage() {
             <button
               type="submit"
               disabled={!isCodeComplete || isLoading}
-              className="cursor-pointer w-full bg-[#15C0B9] hover:bg-[#1dd1c7] disabled:bg-[#15C0B9]/50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
+              className="cursor-pointer w-full disabled:cursor-not-allowed text-white bg-[#15C0B9]/50 hover:bg-[#15C0B9]/60 disabled:bg-[#104f47] font-medium py-3 px-4 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
             >
+            
               {isLoading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
