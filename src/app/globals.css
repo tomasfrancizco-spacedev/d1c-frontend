@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 /* Set IBM Plex Sans as default font */
-* {
+html, body, #__next, #root {
   font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
