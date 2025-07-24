@@ -58,7 +58,7 @@ export default function WalletConnectButton() {
       <div className="flex items-center justify-center">
         <button
           onClick={handleSignIn}
-          className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-lg shadow-2xl transform transition-all duration-300 hover:scale-101 cursor-pointer"
+          className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 hover:scale-101 cursor-pointer"
         >
           <span>Sign In</span>
         </button>
@@ -70,9 +70,9 @@ export default function WalletConnectButton() {
   if (connected && isAuthenticated && publicKey) {
     return (
       <div className="relative flex items-center justify-center">
-        <div className="flex backdrop-blur-md rounded-lg shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-101">
+        <div className="flex backdrop-blur-md rounded-md shadow-2xl overflow-hidden transform transition-all duration-300">
           {/* Left section - Wallet icon */}
-          <div className="bg-white/5 p-3 flex items-center justify-center border border-white/20 rounded-lg">
+          <div className="bg-white/5 p-3 flex items-center justify-center border border-white/20 rounded-md">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -93,7 +93,7 @@ export default function WalletConnectButton() {
           {/* Right section - Address and dropdown */}
           <button
             onClick={() => setShowWalletInfo(!showWalletInfo)}
-            className="flex-1 px-4 py-3 flex items-center justify-between text-white font-medium transition-all duration-200 cursor-pointer"
+            className="flex-1 px-4 py-3 flex items-center justify-between text-[#E6F0F0] hover:text-[#15C0B9]  font-medium transition-all duration-200 cursor-pointer"
           >
             <span className="text-sm">{truncateAddress(publicKey.toString())}</span>
             <svg
@@ -115,13 +115,13 @@ export default function WalletConnectButton() {
         </div>
 
         {showWalletInfo && (
-          <div className="absolute top-full mt-2 right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-2xl p-4 min-w-[280px] z-50">
+          <div className="absolute top-full mt-2 right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-md shadow-2xl p-4 min-w-[280px] z-50">
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium text-white/80">
                   Address
                 </label>
-                <div className="bg-white/5 rounded-lg p-2 mt-1 border border-white/10">
+                <div className="bg-white/5 rounded-md p-2 mt-1 border border-white/10">
                   <code className="text-sm font-mono text-white break-all">
                     {publicKey.toString()}
                   </code>
@@ -131,7 +131,7 @@ export default function WalletConnectButton() {
               <div className="flex space-x-2">
                 <button
                   onClick={handleSignOut}
-                  className="flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                  className="text-sm flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 >
                   Sign Out
                 </button>
@@ -139,9 +139,9 @@ export default function WalletConnectButton() {
                   onClick={() =>
                     navigator.clipboard.writeText(publicKey.toString())
                   }
-                  className="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                  className="text-sm flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 >
-                  Copy Address
+                  Copy
                 </button>
               </div>
             </div>

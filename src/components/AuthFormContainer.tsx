@@ -44,7 +44,7 @@ export default function AuthFormContainer({
         </div>
       )}
 
-      <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-lg border border-[rgba(255,255,255,0.1)] rounded-2xl p-8 shadow-2xl">
+      <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-lg border border-[rgba(255,255,255,0.1)] rounded-md p-8 shadow-2xl">
         <div className="text-left mb-8">
           <h1 className="text-2xl font-semibold text-[#E6F0F0] mb-2">
             {title}

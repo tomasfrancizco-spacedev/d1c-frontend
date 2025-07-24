@@ -57,7 +57,7 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cBalan
   };
 
   const renderCard = (card: typeof cards[0]) => (
-    <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px] mx-auto max-w-sm">
+    <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px] mx-auto max-w-sm">
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-[#E6F0F0] drop-shadow-sm">
@@ -137,7 +137,7 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cBalan
       <div className="hidden md:grid grid-cols-3 gap-6">
         
         {/* My Balance Card */}
-        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
+        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#E6F0F0] drop-shadow-sm">
@@ -167,7 +167,7 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cBalan
         </div>
 
         {/* My Contributions Card */}
-        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
+        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#E6F0F0] drop-shadow-sm">
@@ -197,7 +197,7 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cBalan
         </div>
 
         {/* Trading Volume Card */}
-        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
+        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#E6F0F0] drop-shadow-sm">

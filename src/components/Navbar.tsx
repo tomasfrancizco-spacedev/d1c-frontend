@@ -132,11 +132,11 @@ const Navbar = (props: {
 
   return (
     <header
-      className={`fixed top-0 z-999 flex w-full bg-[#19181C] drop-shadow-1 transition-opacity duration-300 ease-in-out ${
+      className={`fixed top-0 z-999 flex w-full bg-white/0 backdrop-blur-xl shadow-2xl transition-all duration-300 ease-in-out ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="flex flex-grow items-center justify-between m-3 px-4 py-4 shadow-2 md:px-6 2xl:px-11">
+      <div className="flex flex-grow items-center justify-between m-3 px-4 py-4 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           {/* <!-- Hamburger Toggle BTN --> */}
           <button
@@ -146,7 +146,7 @@ const Navbar = (props: {
               setMobileMenuOpen(!mobileMenuOpen);
               props.setSidebarOpen(!props.sidebarOpen);
             }}
-            className="z-99999 block rounded-sm border border-stroke bg-[#19181C] p-1.5 shadow-sm lg:hidden"
+            className="z-99999 block rounded-sm border border-white/20 bg-white/10 backdrop-blur-md p-1.5 shadow-lg lg:hidden hover:bg-white/20 transition-all duration-200"
           >
             <span className="relative block h-5.5 w-5.5 cursor-pointer">
               <span className="du-block absolute right-0 h-full w-full">
@@ -192,20 +192,20 @@ const Navbar = (props: {
               width={20}
               height={20}
             />
-            <p className="text-[#15C0B9] hover:text-[#E6F0F0]">DIVISION ONE</p>
+            <p className="text-[#15C0B9] font-medium hover:text-[#E6F0F0] transition-colors duration-200">DIVISION ONE</p>
           </Link>
         </div>
 
         {/* Division One logo - visible only on small screens, positioned to the right */}
         <div className="lg:hidden ml-auto">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform duration-200">
             <Image
               src="/divisionlogo2.png"
               alt="Division One Logo"
               width={20}
               height={20}
             />
-            <p className="text-[#15C0B9] hover:text-[#E6F0F0]">DIVISION ONE</p>
+            <p className="text-[#15C0B9] hover:text-[#E6F0F0] transition-colors duration-200">DIVISION ONE</p>
           </Link>
         </div>
 
@@ -216,7 +216,7 @@ const Navbar = (props: {
               <li>
                 <Link 
                   href="/dashboard"
-                  className="text-[#E6F0F0] hover:text-[#15C0B9] font-medium transition-colors duration-200 flex items-center gap-2"
+                  className="text-[#E6F0F0] hover:text-[#15C0B9] font-medium transition-all duration-200 flex items-center gap-2 px-3 py-2 rounded-md backdrop-blur-sm"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
@@ -234,13 +234,13 @@ const Navbar = (props: {
 
         {/* Mobile dropdown menu */}
         {mobileMenuOpen && (
-          <div className="absolute top-full left-0 w-full sm:w-1/2  bg-[#19181C] shadow-md mt-1 py-2 lg:hidden z-50">
+          <div className="absolute top-full left-0 w-full sm:w-1/2 bg-white/5 backdrop-blur-xl shadow-2xl mt-1 py-2 lg:hidden z-50 rounded-md">
             <ul className="flex flex-col space-y-3 px-4">
               {isFullyAuthenticated && (
                 <li>
                   <Link 
                     href="/dashboard"
-                    className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-colors duration-200 flex items-center gap-2"
+                    className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-all duration-200 flex items-center gap-2 px-3 rounded-md hover:bg-white/10"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,8 +252,8 @@ const Navbar = (props: {
                 </li>
               )}
               <li>
-                <Link href="#">
-                  <p className="text-[#E6F0F0] hover:text-white py-2">
+                <Link href="#" className="block px-3 py-2 rounded-md hover:bg-white/10 transition-all duration-200">
+                  <p className="text-[#E6F0F0] hover:text-white">
                     Sidebar
                   </p>
                 </Link>
