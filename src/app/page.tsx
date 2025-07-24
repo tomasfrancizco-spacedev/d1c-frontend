@@ -80,7 +80,7 @@ export default function Home() {
                 </div>
                 <input
                   type="text"
-                  placeholder="Search your favorite school..."
+                  placeholder="Look up your favorite school..."
                   className="w-full pl-14 pr-4 py-4 bg-[rgba(255,255,255,0.05)] backdrop-blur-md border border-[rgba(255,255,255,0.1)] rounded-md text-[#E6F0F0] placeholder-[#E6F0F0]/60 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-300 text-lg"
                 />
               </div>
