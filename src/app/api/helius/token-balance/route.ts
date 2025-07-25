@@ -30,13 +30,6 @@ export async function GET(request: NextRequest) {
     }, { status: 500 });
   }
 
-  console.log('=== HELIUS API DEBUG ===');
-  console.log('NODE_ENV:', process.env.NODE_ENV);
-  console.log('Helius Base URL:', heliusBaseUrl);
-  console.log('API Key exists:', !!apiKey);
-  console.log('API Key length:', apiKey?.length || 0);
-  console.log('User Address:', userAddress);
-
   try {
     // Get the D1C associated token account address
     const ataAddress = getD1CAssociatedTokenAddress(userAddress);

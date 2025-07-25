@@ -2,19 +2,46 @@ import { BACKEND_API_BASE_URL } from '@/lib/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  const { email, code } = await request.json();
-
   try {
-    const response = await fetch(`${BACKEND_API_BASE_URL}/auth/verify?email=${email}&code=${code}`, {
+    const { email, code, walletAddress } = await request.json();
+
+    if (!email || !code) {
+      return NextResponse.json({ error: 'Missing email or code' }, { status: 400 });
+    }
+
+    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+      return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 });
+    }
+
+    const verifyOtpResponse = await fetch(`${BACKEND_API_BASE_URL}/v1/auth/verify-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
+      body: JSON.stringify({ email, otpCode: code, walletAddress }),
     });
-    const data = await response.json();
-    return NextResponse.json({ success: true, data });
+
+    const verifyOtpData = await verifyOtpResponse.json();
+
+    if (!verifyOtpData.success) {
+      return NextResponse.json({ error: verifyOtpData.error }, { status: 400 });
+    }
+
+    const response = NextResponse.json({ success: true, verified: true, data: verifyOtpData });
+
+    // Set httpOnly cookie for MFA authentication
+    response.cookies.set('mfa-auth', JSON.stringify(verifyOtpData), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60, // 24 hours
+      path: '/'
+    });
+
+    return response;
   } catch (error) {
-    console.error('Failed to verify email:', error);
-    return NextResponse.json({ success: false, error: 'Failed to verify email' }, { status: 500 });
+    console.error('Failed to verify MFA:', error);
+    return NextResponse.json({ error: 'Failed to verify MFA' }, { status: 500 });
   }
-}
+} 

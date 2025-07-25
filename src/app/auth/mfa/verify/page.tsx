@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useWallet } from "@solana/wallet-adapter-react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AuthFormContainer from "@/components/AuthFormContainer";
 
@@ -12,6 +13,8 @@ export default function MFAVerifyPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const { publicKey } = useWallet();
 
   useEffect(() => {
     // Get email from localStorage
@@ -48,6 +51,7 @@ export default function MFAVerifyPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const verificationCode = code.join("");
+    const walletAddress = publicKey?.toBase58();
 
     if (verificationCode.length !== 6) return;
 
@@ -56,12 +60,13 @@ export default function MFAVerifyPage() {
 
     try {
       // Call the MFA verification API
-      const response = await fetch("/api/auth/mfa", {
+      const response = await fetch("/api/auth/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          walletAddress,
           email,
           code: verificationCode,
         }),
@@ -158,7 +163,6 @@ export default function MFAVerifyPage() {
               disabled={!isCodeComplete || isLoading}
               className="cursor-pointer w-full disabled:cursor-not-allowed text-white bg-[#15C0B9]/50 hover:bg-[#15C0B9]/60 disabled:bg-[#104f47] font-medium py-3 px-4 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
             >
-            
               {isLoading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
