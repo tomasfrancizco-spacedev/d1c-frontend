@@ -4,9 +4,10 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useSIWS } from "@/hooks/useSIWS";
 import { useState, useEffect } from "react";
+import { isMobile, detectMobileWallet, openPhantomDeepLink } from "@/lib/wallet-utils";
 
 export default function WalletConnectButton() {
-  const { connected, publicKey } = useWallet();
+  const { connected, publicKey, connecting, wallet, disconnect } = useWallet();
   const {
     isAuthenticated,
     isLoading,
@@ -15,12 +16,30 @@ export default function WalletConnectButton() {
     checkPersistedAuth,
   } = useSIWS();
   const [showWalletInfo, setShowWalletInfo] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
     if (connected) {
       checkPersistedAuth();
+      setConnectionError(null);
     }
   }, [connected, checkPersistedAuth]);
+
+  // Handle connection timeout/failure
+  useEffect(() => {
+    if (connecting) {
+      setConnectionError(null);
+      
+      // Set a timeout for connection attempts
+      const timer = setTimeout(() => {
+        if (connecting && !connected) {
+          setConnectionError("Connection timed out. The wallet may not be installed.");
+        }
+      }, 10000); // 10 second timeout
+
+      return () => clearTimeout(timer);
+    }
+  }, [connecting, connected]);
 
   const handleSignIn = async () => {
     try {
@@ -40,6 +59,28 @@ export default function WalletConnectButton() {
     }
   };
 
+  const handleResetConnection = async () => {
+    try {
+      setConnectionError(null);
+      await disconnect();
+    } catch (error) {
+      console.error("Reset failed:", error);
+    }
+  };
+
+  const handleWalletSelection = () => {
+    // Reset any previous errors
+    setConnectionError(null);
+    
+    // On mobile, check if any wallet is detected
+    if (isMobile()) {
+      const detectedWallet = detectMobileWallet();
+      if (!detectedWallet) {
+        console.log("No mobile wallet detected");
+      }
+    }
+  };
+
   const truncateAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
@@ -48,6 +89,51 @@ export default function WalletConnectButton() {
     return (
       <div className="flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#15C0B9]"></div>
+      </div>
+    );
+  }
+
+  // Show connecting state with option to cancel
+  if (connecting) {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-3">
+        <div className="flex items-center space-x-3">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
+          <span className="text-white">
+            Connecting to {wallet?.adapter.name || "wallet"}...
+          </span>
+        </div>
+        <button
+          onClick={handleResetConnection}
+          className="text-sm bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm"
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  }
+
+  // Show connection error with reset option
+  if (connectionError) {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-3 max-w-xs">
+        <div className="text-red-400 text-sm text-center">{connectionError}</div>
+        <div className="flex space-x-2">
+          <button
+            onClick={handleResetConnection}
+            className="text-sm bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm"
+          >
+            Try Again
+          </button>
+          {isMobile() && (
+            <button
+              onClick={() => openPhantomDeepLink()}
+              className="text-sm bg-[#15C0B9]/20 hover:bg-[#15C0B9]/30 border border-[#15C0B9]/30 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm"
+            >
+              Get Phantom
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -151,10 +237,13 @@ export default function WalletConnectButton() {
     );
   }
 
-  // If wallet is not connected - show wallet adapter button
+  // If wallet is not connected - show wallet adapter button with enhanced mobile handling
   return (
     <div className="wallet-adapter-button-container">
-      <WalletMultiButton className="!text-white !py-3 !px-6 !shadow-2xl" />
+      <WalletMultiButton 
+        className="!text-white !py-3 !px-6 !shadow-2xl" 
+        onClick={handleWalletSelection}
+      />
     </div>
   );
 }
