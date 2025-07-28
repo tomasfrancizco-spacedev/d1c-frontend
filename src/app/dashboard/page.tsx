@@ -2,7 +2,8 @@
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DashboardCards from "@/components/DashboardCards";
-import TopContributions from "@/components/TopContributions";
+import CollegeLeaderboard from "@/components/CollegeLeaderboard";
+import UserLeaderboard from "@/components/UserLeaderboard";
 import Image from "next/image";
 
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -198,7 +199,11 @@ export default function Dashboard() {
 
           {/* Top Contributions Section */}
           <div className="mt-16">
-            <TopContributions />
+            <CollegeLeaderboard />
+          </div>
+
+          <div className="mt-16">
+            <UserLeaderboard />
           </div>
 
         </main>

@@ -1,4 +1,5 @@
-export const topContributors = [
+// Keep the college data as well for the other component
+export const collegeLeaderboard = [
   { position: 1, name: "Stanford Cardinals", amount: "2,450 $D1C", logo: "/colleges/stanford.png", bg: "#8c1516" },
   { position: 2, name: "UCLA Bruins", amount: "1,850 $D1C", logo: "/colleges/ucla.png", bg: "#007dc3" },
   { position: 3, name: "Florida Gators", amount: "1,275 $D1C", logo: "/colleges/florida.png", bg: "#167446" },

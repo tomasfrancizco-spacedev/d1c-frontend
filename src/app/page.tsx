@@ -1,7 +1,7 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import WalletConnectButton from "@/components/WalletConnectButton";
 import CommunityCarousel from "@/components/CommunityCarousel";
-import TopContributions from "@/components/TopContributions";
+import CollegeLeaderboard from "@/components/CollegeLeaderboard";
 import FAQ from "@/components/FAQ";
 import Image from "next/image";
 import AnimatedElement from "@/components/AnimatedElement";
@@ -258,7 +258,7 @@ export default function Home() {
           {/* Top Contributions Section */}
           <div className="mt-32 mb-24">
             <AnimatedElement>
-              <TopContributions />
+              <CollegeLeaderboard />
             </AnimatedElement>
           </div>
 
