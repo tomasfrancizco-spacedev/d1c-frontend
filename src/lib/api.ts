@@ -1,7 +1,8 @@
 import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse } from '@/types/api';
 import { userContributions } from '@/data/userContributions_mock';
 import { tradingVolume } from '@/data/tradingVolume_mock';
-import { topContributors } from '@/data/leaderboard_mock';
+import { collegeLeaderboard } from '@/data/collegeLeaderboard_mock';
+import { userLeaderboard } from '@/data/userLeaderboard_mock';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
 /**
@@ -208,7 +209,7 @@ export function getTradingVolumeAmount(volumeData: TradingVolumeData[]): string 
  * Fetch leaderboard data
  * Currently returns mock data - will be switched to API call later
  */
-export async function fetchLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
+export async function fetchCollegeLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
   try {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 400));
@@ -221,7 +222,33 @@ export async function fetchLeaderboard(): Promise<{ data?: LeaderboardResponse; 
     return {
       data: {
         success: true,
-        data: topContributors
+        data: collegeLeaderboard
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+} 
+
+/**
+ * Fetch leaderboard data
+ * Currently returns mock data - will be switched to API call later
+ */
+export async function fetchUserLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
+  try {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    // TODO: Replace with actual API call when ready
+    // const endpoint = `/leaderboard`;
+    // return apiCall<LeaderboardResponse>(endpoint);
+
+    // For now, return mock data
+    return {
+      data: {
+        success: true,
+        data: userLeaderboard
       }
     };
   } catch (error) {

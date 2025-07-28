@@ -2,18 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { fetchLeaderboard } from "@/lib/api";
+import { fetchCollegeLeaderboard } from "@/lib/api";
 import { LeaderboardEntry } from "@/types/api";
 
-interface TopContributionsProps {
+interface CollegeLeaderboardProps {
   showTitle?: boolean;
   className?: string;
 }
 
-export default function TopContributions({
+export default function CollegeLeaderboard({
   showTitle = true,
   className = "",
-}: TopContributionsProps) {
+}: CollegeLeaderboardProps) {
   // Leaderboard state management
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
     []
@@ -28,7 +28,7 @@ export default function TopContributions({
       setLeaderboardError(null);
 
       try {
-        const { data, error } = await fetchLeaderboard();
+        const { data, error } = await fetchCollegeLeaderboard();
 
         if (error) {
           setLeaderboardError(error);
@@ -87,7 +87,7 @@ export default function TopContributions({
                     style={{ backgroundColor: contributor.bg }}
                   >
                     <Image
-                      src={contributor.logo}
+                      src={contributor.logo || ""}
                       alt={`${contributor.position}${getPositionSuffix(
                         contributor.position
                       )} Place School Logo`}
@@ -145,7 +145,7 @@ export default function TopContributions({
                   <div className="flex-shrink-0 self-start">
                     <div className="w-16 h-16 rounded-md overflow-hidden bg-white">
                       <Image
-                        src={contributor.logo}
+                        src={contributor.logo || ""}
                         alt={`${contributor.name} Logo`}
                         width={64}
                         height={64}
@@ -165,7 +165,7 @@ export default function TopContributions({
                       </span>
                       <span className="text-[#E6F0F0]/60">•</span>
                       <span className="text-[#E6F0F0]/80 truncate">
-                        University of {contributor.name.split(" ")[0]}
+                        University of {contributor.name?.split(" ")[0] || ""}
                       </span>
                     </div>
                   </div>

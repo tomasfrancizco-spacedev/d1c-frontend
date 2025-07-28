@@ -36,9 +36,10 @@ export interface TradingVolumeResponse {
 
 export interface LeaderboardEntry {
   position: number;
-  name: string;
+  name?: string;
+  address?: string;
   amount: string;
-  logo: string;
+  logo?: string;
   bg?: string;
 }
 
