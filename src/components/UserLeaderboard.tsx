@@ -65,7 +65,7 @@ export default function UserLeaderboard({
         <>
           {/* User Contributors Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {leaderboardData.map((contributor) => (
+            {leaderboardData.slice(0, 12).map((contributor) => (
               <div
                 key={contributor.position}
                 className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300"
@@ -81,8 +81,7 @@ export default function UserLeaderboard({
                   {/* User Avatar */}
                   <div className="flex-shrink-0">
                     <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: contributor.bg || "#8c1516" }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center bg-white/10"
                     >
                       <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                         <svg
