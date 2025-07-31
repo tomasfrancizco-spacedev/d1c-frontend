@@ -34,16 +34,33 @@ export interface TradingVolumeResponse {
   data: TradingVolumeData[];
 }
 
-export interface LeaderboardEntry {
-  position: number;
-  name?: string;
-  address?: string;
-  amount: string;
-  logo?: string;
-  bg?: string;
+export interface UserLeaderboardEntry {
+  rankPosition: number | null;
+  totalContributions: string;
+  transactionCount: number;
+  walletAddress: string;
+}
+
+export interface CollegeLeaderboardEntry {
+  college: {
+    city: string;
+    commonName: string;
+    id: number;
+    name: string;
+    nickname: string;
+    primary: string;
+    state: string;
+    subdivision: string;
+    type: string;
+    logo?: string;
+  }
+  rankPosition: number | null;
+  totalContributionsReceived: string;
+  transactionCount: number;
+  walletAddress: string;
 }
 
 export interface LeaderboardResponse {
   success: boolean;
-  data: LeaderboardEntry[];
+  data: CollegeLeaderboardEntry[] | UserLeaderboardEntry[];
 }

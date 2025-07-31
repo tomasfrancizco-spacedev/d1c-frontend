@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,75,100..700;1,75,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wdth,wght@0,75,100..700;1,75,100..700&display=swap');
 
 @import "tailwindcss";
 
 /* Set IBM Plex Sans as default font */
 html, body, #__next, #root {
-  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-family: "IBM Plex Sans Condensed", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Line clamp utilities */

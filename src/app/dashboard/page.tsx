@@ -121,6 +121,7 @@ export default function Dashboard() {
     };
 
     loadTradingVolume();
+
   }, []);
 
   // Calculate display values
