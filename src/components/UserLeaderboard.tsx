@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { fetchUserLeaderboard } from "@/lib/api";
-import { LeaderboardEntry } from "@/types/api";
+import { UserLeaderboardEntry } from "@/types/api";
+import { formatBalance } from "@/lib/api";
 
 interface UserLeaderboardProps {
   showTitle?: boolean;
@@ -13,7 +14,7 @@ export default function UserLeaderboard({
   showTitle = true,
   className = "",
 }: UserLeaderboardProps) {
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+  const [leaderboardData, setLeaderboardData] = useState<UserLeaderboardEntry[]>([]);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null);
 
@@ -26,11 +27,13 @@ export default function UserLeaderboard({
       try {
         const { data, error } = await fetchUserLeaderboard();
 
+        setLeaderboardData(data?.data as UserLeaderboardEntry[] || []);
+
         if (error) {
           setLeaderboardError(error);
           setLeaderboardData([]);
         } else if (data?.success && data.data) {
-          setLeaderboardData(data.data);
+          setLeaderboardData(data.data as UserLeaderboardEntry[]);
         }
       } catch (err) {
         console.error("Error loading leaderboard:", err);
@@ -44,7 +47,7 @@ export default function UserLeaderboard({
   }, []);
 
   return (
-    <div className={`max-w-6xl mx-auto ${className}`}>
+    <div className={`max-w-6xl mx-auto ${className} mb-12`}>
       {showTitle && (
         <div className="flex items-center justify-center text-center gap-3 mb-12">
           <h3 className="text-2xl md:text-3xl lg:text-4xl text-[#E6F0F0] mb-4">
@@ -65,16 +68,16 @@ export default function UserLeaderboard({
         <>
           {/* User Contributors Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {leaderboardData.slice(0, 12).map((contributor) => (
+            {leaderboardData?.slice(0, 12).map((user) => (
               <div
-                key={contributor.position}
+                key={user.walletAddress}
                 className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300"
               >
                 <div className="flex items-center gap-4">
                   {/* Position Badge */}
                   <div className="flex-shrink-0">
                     <div className="bg-white/10 text-white text-sm font-bold rounded-lg px-3 py-2 min-w-[50px] h-[40px] flex items-center justify-center">
-                      {contributor.position.toString().padStart(2, "0")}
+                      {leaderboardData.indexOf(user) + 1}
                     </div>
                   </div>
 
@@ -106,10 +109,10 @@ export default function UserLeaderboard({
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-lg font-semibold text-[#E6F0F0] mb-1 truncate">
-                      {contributor.name}
+                      {user.walletAddress}
                     </h4>
                     <p className="text-[#15C0B9] font-bold text-sm">
-                      {contributor.amount}
+                      {formatBalance(user.totalContributions)}
                     </p>
                   </div>
                 </div>

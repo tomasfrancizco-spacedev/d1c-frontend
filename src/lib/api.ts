@@ -1,8 +1,6 @@
 import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse } from '@/types/api';
 import { userContributions } from '@/data/userContributions_mock';
 import { tradingVolume } from '@/data/tradingVolume_mock';
-import { collegeLeaderboard } from '@/data/collegeLeaderboard_mock';
-import { userLeaderboard } from '@/data/userLeaderboard_mock';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
 /**
@@ -211,20 +209,8 @@ export function getTradingVolumeAmount(volumeData: TradingVolumeData[]): string 
  */
 export async function fetchCollegeLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 400));
-
-    // TODO: Replace with actual API call when ready
-    // const endpoint = `/leaderboard`;
-    // return apiCall<LeaderboardResponse>(endpoint);
-
-    // For now, return mock data
-    return {
-      data: {
-        success: true,
-        data: collegeLeaderboard
-      }
-    };
+    const endpoint = `/college-leaderboard`;
+    return apiCall<LeaderboardResponse>(endpoint);
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
@@ -237,22 +223,10 @@ export async function fetchCollegeLeaderboard(): Promise<{ data?: LeaderboardRes
  */
 export async function fetchUserLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 400));
-
-    // TODO: Replace with actual API call when ready
-    // const endpoint = `/leaderboard`;
-    // return apiCall<LeaderboardResponse>(endpoint);
-
-    // For now, return mock data
-    return {
-      data: {
-        success: true,
-        data: userLeaderboard
-      }
-    };
+    const endpoint = `/user-leaderboard`;
+    return apiCall<LeaderboardResponse>(endpoint);
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
-} 
+}
