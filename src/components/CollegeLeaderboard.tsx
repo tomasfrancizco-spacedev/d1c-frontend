@@ -5,6 +5,7 @@ import Image from "next/image";
 import { fetchCollegeLeaderboard } from "@/lib/api";
 import { CollegeLeaderboardEntry } from "@/types/api";
 import { formatBalance } from "@/lib/api";
+import CommunityCard from "./CommunityCard";
 
 interface CollegeLeaderboardProps {
   showTitle?: boolean;
@@ -16,9 +17,9 @@ export default function CollegeLeaderboard({
   className = "",
 }: CollegeLeaderboardProps) {
   // Leaderboard state management
-  const [leaderboardData, setLeaderboardData] = useState<CollegeLeaderboardEntry[]>(
-    []
-  );
+  const [leaderboardData, setLeaderboardData] = useState<
+    CollegeLeaderboardEntry[]
+  >([]);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null);
 
@@ -48,18 +49,11 @@ export default function CollegeLeaderboard({
     loadLeaderboard();
   }, []);
 
-  const getPositionSuffix = (position: number) => {
-    if (position === 1) return "st";
-    if (position === 2) return "nd";
-    if (position === 3) return "rd";
-    return "th";
-  };
-
   return (
     <div className={`max-w-6xl mx-auto ${className}`}>
       {showTitle && (
         <div className="flex items-center justify-center text-center gap-3 mb-12">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl text-[#E6F0F0] mb-4">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
             Top contributions from the community
           </h3>
           {isLoadingLeaderboard && (
@@ -79,51 +73,13 @@ export default function CollegeLeaderboard({
           <div className="mb-12">
             <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 mb-8">
               {leaderboardData.slice(0, 3).map((college) => (
-                <div
+                <CommunityCard
                   key={college.college.name}
-                  className="flex flex-col items-center flex-1 max-w-[100px] sm:max-w-[120px] md:max-w-none"
-                >
-                  <div
-                    className="relative mb-2 sm:mb-4 w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] md:w-[120px] md:h-[120px] flex items-center justify-center rounded-full overflow-hidden"
-                  >
-                    <Image
-                      src={college.college.logo || "/colleges/college_placeholder.png"}
-                      alt={`${leaderboardData.indexOf(college) + 1}${getPositionSuffix(
-                        leaderboardData.indexOf(college) + 1
-                      )} Place School Logo`}
-                      width={60}
-                      height={60}
-                      className="rounded-full w-[70px] h-[60px] sm:w-[70px] sm:h-[70px] md:w-[110px] md:h-[80px] object-cover"
-                    />
-                  </div>
-                  <div className="text-center w-full">
-                    {/* Mobile: Stack badge above name */}
-                    <div className="sm:hidden flex flex-col items-center gap-1 mb-2 h-[60px]">
-                      <div className="bg-white/10 text-white text-xs font-bold rounded-md px-2 py-1 min-w-[30px] h-[30px] flex items-center justify-center">
-                        {leaderboardData.indexOf(college) + 1}
-                        {getPositionSuffix(leaderboardData.indexOf(college) + 1)}
-                      </div>
-                      <h4 className="text-xs font-semibold text-[#E6F0F0] leading-tight line-clamp-2 px-1">
-                        {college.college.name}
-                      </h4>
-                    </div>
-                    
-                    {/* Desktop: Badge and name side by side */}
-                    <div className="hidden sm:flex items-center justify-center gap-2 md:gap-3 mb-2 h-[50px] md:h-[60px]">
-                      <div className="bg-white/10 text-white text-sm font-bold rounded-md px-2 md:px-3 py-1 md:py-2 min-w-[35px] md:min-w-[40px] h-[35px] md:h-[40px] flex items-center justify-center flex-shrink-0">
-                        {leaderboardData.indexOf(college) + 1}
-                        {getPositionSuffix(leaderboardData.indexOf(college) + 1)}
-                      </div>
-                      <h4 className="text-sm md:text-lg font-semibold text-[#E6F0F0] leading-tight line-clamp-2 text-center">
-                        {college.college.name}
-                      </h4>
-                    </div>
-                    
-                    <p className="text-[#15C0B9] font-bold text-xs sm:text-sm md:text-base h-[20px] sm:h-[24px] flex items-center justify-center">
-                      {formatBalance(college.totalContributionsReceived)}
-                    </p>
-                  </div>
-                </div>
+                  image={college.college.logo || "/colleges/college_placeholder.png"}
+                  title={college.college.name || ""}
+                  subtitle={`${formatBalance(college.totalContributionsReceived)}`}
+                  onSupport={() => {}}
+                />
               ))}
             </div>
           </div>
@@ -165,7 +121,8 @@ export default function CollegeLeaderboard({
                       </span>
                       <span className="text-[#E6F0F0]/60">•</span>
                       <span className="text-[#E6F0F0]/80 truncate">
-                        University of {college.college.name?.split(" ")[0] || ""}
+                        University of{" "}
+                        {college.college.name?.split(" ")[0] || ""}
                       </span>
                     </div>
                   </div>
@@ -184,7 +141,10 @@ export default function CollegeLeaderboard({
           <div className="mb-12">
             <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 mb-8">
               {Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="flex flex-col items-center flex-1 max-w-[100px] sm:max-w-[120px] md:max-w-none">
+                <div
+                  key={index}
+                  className="flex flex-col items-center flex-1 max-w-[100px] sm:max-w-[120px] md:max-w-none"
+                >
                   <div className="w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] md:w-[120px] md:h-[120px] bg-white/10 rounded-full animate-pulse mb-2 sm:mb-4"></div>
                   <div className="text-center space-y-1 sm:space-y-2 w-full">
                     <div className="h-3 sm:h-4 bg-white/10 rounded animate-pulse w-full max-w-[60px] sm:max-w-[80px] mx-auto"></div>

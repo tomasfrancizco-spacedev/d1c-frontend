@@ -47,7 +47,7 @@ export default function UserLeaderboard({
   }, []);
 
   return (
-    <div className={`max-w-6xl mx-auto ${className}`}>
+    <div className={`max-w-6xl mx-auto ${className} mb-12`}>
       {showTitle && (
         <div className="flex items-center justify-center text-center gap-3 mb-12">
           <h3 className="text-2xl md:text-3xl lg:text-4xl text-[#E6F0F0] mb-4">

@@ -11,31 +11,31 @@ export default function Home() {
   const communityItems = [
     {
       id: "1",
-      image: "/divisionlogo2.png",
+      image: "/colleges/college_placeholder.png",
       title: "LSU Tigers",
       subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
     {
       id: "2",
-      image: "/divisionlogo2.png",
+      image: "/colleges/college_placeholder.png",
       title: "Alabama Crimson Tide",
       subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
     {
       id: "3",
-      image: "/divisionlogo2.png",
+      image: "/colleges/college_placeholder.png",
       title: "Duke Blue Devils",
       subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
     {
       id: "4",
-      image: "/divisionlogo2.png",
+      image: "/colleges/college_placeholder.png",
       title: "UCLA Bruins",
       subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
     {
       id: "5",
-      image: "/divisionlogo2.png",
+      image: "/colleges/college_placeholder.png",
       title: "Texas Longhorns",
       subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
@@ -57,7 +57,7 @@ export default function Home() {
 
               {/* Main Title */}
               <div className="mb-8">
-                <h1 className="text-3xl md:text-5xl font-bold md:max-w-2xl text-center mx-auto mb-6 bg-[#E6F0F0] bg-clip-text text-transparent">
+                <h1 className="text-3xl md:text-5xl font-bold md:max-w-2xl text-center mx-auto mb-6 text-white">
                   Support your favorite school,{" "}
                   <span className="italic">every </span>trade counts
                 </h1>
@@ -68,7 +68,7 @@ export default function Home() {
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 z-999 flex items-center pointer-events-none">
                     <svg
-                      className="h-6 w-6 text-[#E6F0F0]"
+                      className="h-6 w-6 text-[#E6F0F0]/90"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -84,7 +84,7 @@ export default function Home() {
                   <input
                     type="text"
                     placeholder="Look up your favorite school..."
-                    className="w-full pl-14 pr-4 py-4 bg-[rgba(255,255,255,0.05)] backdrop-blur-md border border-[rgba(255,255,255,0.1)] rounded-md text-[#E6F0F0] placeholder-[#E6F0F0]/60 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-300 text-lg"
+                    className="w-full pl-14 pr-4 py-4 bg-[rgba(0,0,0,0.4)] backdrop-blur-md border border-[rgba(255,255,255,0.1)] rounded-md text-[#E6F0F0] placeholder-[#E6F0F0]/90 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-300 text-lg"
                   />
                 </div>
               </div>
@@ -101,15 +101,9 @@ export default function Home() {
           {/* Recently Supported by Community Section */}
           <div className="mt-24 mb-16">
             <AnimatedElement>
-            <div className="max-w-6xl mx-auto">
-              <div className="text-left mb-8">
-                <h4 className="text-sm text-[gray]">
-                  Recently supported by the community
-                </h4>
+              <div className="max-w-6xl mx-auto">
+                <CommunityCarousel items={communityItems} />
               </div>
-
-              <CommunityCarousel items={communityItems} />
-            </div>
             </AnimatedElement>
           </div>
 
@@ -117,10 +111,13 @@ export default function Home() {
           <div className="mt-32 mb-24">
             <AnimatedElement>
               <div className="max-w-6xl mx-auto px-6">
+                <div className="text-center mb-4">
+                  <h4 className="text-sm text-[#E6F0F0]/80">GET IN THE GAME</h4>
+                </div>
                 {/* Centered Title */}
                 <div className="text-center mb-16">
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl text-[#E6F0F0] mb-4">
-                    How does it work?
+                  <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-semibold mb-4">
+                    Your $D1C game plan
                   </h3>
                 </div>
 
@@ -138,9 +135,13 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    <h3 className="text-xl md:text-lg lg:text-xl font-semibold text-[#E6F0F0] mb-2">
+                    <h3 className="text-left w-full text-xl md:text-lg lg:text-xl font-semibold text-white mb-2">
                       Connect your wallet
                     </h3>
+                    <p className="text-left w-full text-sm text-white/80 mb-2">
+                      Link your Phantom wallet to unlock direct access to NIL
+                      impact.
+                    </p>
                   </div>
 
                   {/* Step 2: Pick a School */}
@@ -155,9 +156,13 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    <h3 className="text-xl md:text-lg lg:text-xl font-semibold text-[#E6F0F0] mb-2">
+                    <h3 className="text-left w-full text-xl md:text-lg lg:text-xl font-semibold text-white mb-2">
                       Pick a school
                     </h3>
+                    <p className="text-left w-full text-sm text-white/80 mb-2">
+                      Select your program as your team of choice and fuel their
+                      athletes with every trade.
+                    </p>
                   </div>
 
                   {/* Step 3: Start Trading */}
@@ -172,9 +177,13 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    <h3 className="text-xl md:text-lg lg:text-xl font-semibold text-[#E6F0F0] mb-2">
+                    <h3 className="text-left w-full text-xl md:text-lg lg:text-xl font-semibold text-white mb-2">
                       Start trading
                     </h3>
+                    <p className="text-left w-full text-sm text-white/80 mb-2">
+                      Trade $D1C and turn your fan energy into real support with
+                      every transaction.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -185,69 +194,143 @@ export default function Home() {
           <div className="mt-32 mb-24">
             <AnimatedElement>
               <div className="max-w-6xl mx-auto px-6">
+                <div className="text-center mb-4">
+                  <h4 className="text-sm text-[#E6F0F0]/80 ">
+                    SCHOOL PRIDE FUELS PLAYERS
+                  </h4>
+                </div>
                 {/* Title */}
                 <div className="text-center mb-16">
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl text-[#E6F0F0] mb-4">
-                    Built for fans
+                  <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-semibold mb-4">
+                    Designed for fans, built for impact
                   </h3>
                 </div>
 
                 {/* Content Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                  {/* Image Section */}
-                  <div className="order-2 md:order-1">
-                    <div className="relative w-full h-80 md:h-96">
-                      <div className="w-full h-full bg-[#15C0B9]/20 backdrop-blur-md border border-[#15C0B9]/30 rounded-md overflow-hidden">
-                        {/* Placeholder for image - you can replace with actual image */}
-                        <div className="w-full h-full bg-gradient-to-br from-[#15C0B9]/30 to-[#15C0B9]/10 flex items-center justify-center">
-                          <div className="text-[#15C0B9] text-lg font-medium">
-                            Image Placeholder
-                          </div>
+                <div className="space-y-12">
+                  {/* Image Section - Always on top for lg screens */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center lg:hidden">
+                    {/* Image for sm/md - side by side */}
+                    <div className="order-1">
+                      <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-md relative w-full h-80 md:h-96">
+                        <Image
+                          src="/landing/builtforimpact.png"
+                          alt="Built for impact"
+                          fill
+                          className="object-cover rounded-md"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Text Content for sm/md */}
+                    <div className="order-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Your trades help fund athletes */}
+                        <div className="text-center md:text-left">
+                          <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
+                            Your trades help fund athletes
+                          </h4>
+                          <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                            2% of every $D1C transaction goes to your selected
+                            school&apos;s NIL wallet
+                          </p>
+                        </div>
+
+                        {/* See where your support goes */}
+                        <div className="text-center md:text-left">
+                          <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
+                            See where your support goes
+                          </h4>
+                          <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                            All contributions are recorded on-chain and visible
+                            in real time
+                          </p>
+                        </div>
+
+                        {/* No barriers to join */}
+                        <div className="text-center md:text-left">
+                          <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
+                            No barriers to join
+                          </h4>
+                          <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                            Anyone can participate. No minimums or complex
+                            requirements
+                          </p>
+                        </div>
+
+                        {/* Support any Division 1 program */}
+                        <div className="text-center md:text-left">
+                          <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
+                            Support any Division 1 program
+                          </h4>
+                          <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                            Back the teams you care about, from powerhouses to
+                            underdogs
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Text Content Section */}
-                  <div className="order-2 space-y-8">
-                    {/* Built for fans */}
-                    <div>
-                      <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
-                        Built for fans
-                      </h4>
-                      <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
-                        Your trades help fund real athletes at your school.
-                      </p>
+                  {/* Large screen layout - Image on top, text below */}
+                  <div className="hidden lg:block space-y-12">
+                    {/* Image Section for lg */}
+                    <div className="w-full">
+                      <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-md relative w-full h-96">
+                        <Image
+                          src="/landing/builtforimpact.png"
+                          alt="Built for impact"
+                          fill
+                          className="object-cover rounded-md w-full"
+                        />
+                      </div>
                     </div>
 
-                    {/* NIL-Ready */}
-                    <div>
-                      <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
-                        NIL-Ready
-                      </h4>
-                      <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
-                        D1C aligns with Name, Image & Likeness rules.
-                      </p>
-                    </div>
+                    {/* Text Content for lg - 4 columns side by side */}
+                    <div className="grid grid-cols-4 gap-8">
+                      {/* Your trades help fund athletes */}
+                      <div className="text-center">
+                        <h4 className="text-lg font-semibold text-[#E6F0F0] mb-3">
+                          Your trades help fund athletes
+                        </h4>
+                        <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                          2% of every $D1C transaction goes to your selected
+                          school&apos;s NIL wallet
+                        </p>
+                      </div>
 
-                    {/* Simple participation */}
-                    <div>
-                      <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
-                        Simple participation
-                      </h4>
-                      <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
-                        Just connect, choose, and trade.
-                      </p>
-                    </div>
+                      {/* See where your support goes */}
+                      <div className="text-center">
+                        <h4 className="text-lg font-semibold text-[#E6F0F0] mb-3">
+                          See where your support goes
+                        </h4>
+                        <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                          All contributions are recorded on-chain and visible in
+                          real time
+                        </p>
+                      </div>
 
-                    {/* Every Trade Sends $1 */}
-                    <div>
-                      <h4 className="text-xl font-semibold text-[#E6F0F0] mb-3">
-                        Every Trade Sends $1
-                      </h4>
-                      <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
-                        Real impact, every time.
-                      </p>
+                      {/* No barriers to join */}
+                      <div className="text-center">
+                        <h4 className="text-lg font-semibold text-[#E6F0F0] mb-3">
+                          No barriers to join
+                        </h4>
+                        <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                          Anyone can participate. No minimums or complex
+                          requirements
+                        </p>
+                      </div>
+
+                      {/* Support any Division 1 program */}
+                      <div className="text-center">
+                        <h4 className="text-lg font-semibold text-[#E6F0F0] mb-3">
+                          Support any Division 1 program
+                        </h4>
+                        <p className="text-[#E6F0F0]/70 text-base leading-relaxed">
+                          Back the teams you care about, from powerhouses to
+                          underdogs
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -258,6 +341,11 @@ export default function Home() {
           {/* Top Contributions Section */}
           <div className="mt-32 mb-24">
             <AnimatedElement>
+              <div className="text-center mb-4">
+                <h4 className="text-sm text-[#E6F0F0]/80 ">
+                  RULING THE FIELD
+                </h4>
+              </div>
               <CollegeLeaderboard />
             </AnimatedElement>
           </div>
