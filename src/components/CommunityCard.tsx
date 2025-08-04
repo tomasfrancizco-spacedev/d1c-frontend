@@ -6,6 +6,8 @@ interface CommunityCardProps {
   image: string;
   title: string;
   subtitle: string;
+  rank?: number;
+  isRanked?: boolean;
   onSupport?: () => void;
 }
 
@@ -13,17 +15,22 @@ export default function CommunityCard({
   image,
   title,
   subtitle,
+  rank,
+  isRanked,
   onSupport,
 }: CommunityCardProps) {
+
   return (
     <div className="flex-shrink-0 w-80 bg-white/5 backdrop-blur-md border border-white/10 rounded-md overflow-hidden hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl">
       {/* Image Section */}
       <div className="relative h-48 w-full">
         <Image src={image} alt={title} fill className="object-cover" />
       </div>
-      <div className="absolute top-5 left-5 h-[22px] w-[22px] text-white bg-[#03211e]/90 backdrop-blur-md border border-white/10 rounded-md flex items-center justify-center z-10">
-        <p className="text-sm">1</p>
-      </div>
+      {isRanked && (
+        <div className="absolute top-5 left-5 h-[22px] w-[22px] text-white bg-[#03211e]/90 backdrop-blur-md border border-white/10 rounded-md flex items-center justify-center z-10">
+          <p className="text-sm">{rank}</p>
+        </div>
+      )}
 
       {/* Content Section */}
       <div className="p-6">

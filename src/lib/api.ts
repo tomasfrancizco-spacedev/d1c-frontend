@@ -1,11 +1,8 @@
-import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse } from '@/types/api';
+import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData } from '@/types/api';
 import { userContributions } from '@/data/userContributions_mock';
 import { tradingVolume } from '@/data/tradingVolume_mock';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
-/**
- * Frontend API configuration (Next.js API routes)
- */
 const getFrontendApiUrl = (env: string) => {
   switch (env) {
     case 'production':
@@ -18,9 +15,6 @@ const getFrontendApiUrl = (env: string) => {
   }
 };
 
-/**
- * Base API configuration
- */
 const getBackendApiUrl = (env: string) => {
   switch (env) {
     case 'production':
@@ -33,14 +27,9 @@ const getBackendApiUrl = (env: string) => {
   }
 };
 
-
 export const BACKEND_API_BASE_URL = getBackendApiUrl(process.env.NODE_ENV || 'development');
 export const FRONTEND_API_BASE_URL = getFrontendApiUrl(process.env.NODE_ENV || 'development');
 
-
-/**
- * Generic API call wrapper with error handling
- */
 async function apiCall<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -69,9 +58,6 @@ async function apiCall<T>(
   }
 }
 
-/**
- * Fetch D1C token balance for a specific wallet address
- */
 export async function fetchTokenBalance(
   userAddress: string
 ): Promise<{ data?: D1CBalanceResponse; error?: string }> {
@@ -83,9 +69,6 @@ export async function fetchTokenBalance(
   return apiCall<D1CBalanceResponse>(endpoint);
 }
 
-/**
- * Format balance for display with D1C suffix
- */
 export function formatBalance(balance: number | string, suffix: string = '$D1C'): string {
   const numBalance = typeof balance === 'string' ? parseFloat(balance) : balance;
 
@@ -100,9 +83,6 @@ export function formatBalance(balance: number | string, suffix: string = '$D1C')
   return `${formatted} ${suffix}`;
 }
 
-/**
- * Format balance in USD (example for future use)
- */
 export function formatUsdBalance(balance: number | string): string {
   const numBalance = typeof balance === 'string' ? parseFloat(balance) : balance;
 
@@ -116,10 +96,22 @@ export function formatUsdBalance(balance: number | string): string {
   }).format(numBalance);
 }
 
-/**
- * Fetch user contributions
- * Currently returns mock data - will be switched to API call later
- */
+export async function fetchUserData(
+  userAddress: string
+): Promise<{ data?: UserData; error?: string }> {
+  if (!userAddress) {
+    return { error: 'User address is required' };
+  }
+
+  try {
+    const endpoint = `/user-data?userAddress=${encodeURIComponent(userAddress)}`;
+    return apiCall<UserData>(endpoint);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
 export async function fetchUserContributions(
   userAddress: string
 ): Promise<{ data?: ContributionsResponse; error?: string }> {
@@ -128,47 +120,14 @@ export async function fetchUserContributions(
   }
 
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // TODO: Replace with actual API call when ready
-    // const endpoint = `/contributions?userAddress=${encodeURIComponent(userAddress)}`;
-    // return apiCall<ContributionsResponse>(endpoint);
-
-    // For now, return mock data
-    return {
-      data: {
-        success: true,
-        data: userContributions
-      }
-    };
+    const endpoint = `/user-contributions?userAddress=${encodeURIComponent(userAddress)}`;
+    return apiCall<ContributionsResponse>(endpoint);
   } catch (error) {
     console.error('Error fetching contributions:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
 
-/**
- * Calculate total contribution amount from user contributions
- */
-export function calculateTotalContribution(contributions: UserContribution[]): string {
-  if (!contributions || contributions.length === 0) {
-    return formatBalance(0);
-  }
-
-  const total = contributions.reduce((sum, contribution) => {
-    // Extract numeric value from amount string (e.g., "2,450 $D1C" -> 2450)
-    const numericValue = parseFloat(contribution.amount.replace(/[,$D1C\s]/g, ''));
-    return sum + (isNaN(numericValue) ? 0 : numericValue);
-  }, 0);
-
-  return formatBalance(total);
-}
-
-/**
- * Fetch trading volume data
- * Currently returns mock data - will be switched to API call later
- */
 export async function fetchTradingVolume(): Promise<{ data?: TradingVolumeResponse; error?: string }> {
   try {
     // Simulate API delay
@@ -191,9 +150,6 @@ export async function fetchTradingVolume(): Promise<{ data?: TradingVolumeRespon
   }
 }
 
-/**
- * Get trading volume amount from trading volume data
- */
 export function getTradingVolumeAmount(volumeData: TradingVolumeData[]): string {
   if (!volumeData || volumeData.length === 0) {
     return formatBalance(0);
@@ -203,10 +159,6 @@ export function getTradingVolumeAmount(volumeData: TradingVolumeData[]): string 
   return volumeData[0]?.amount || formatBalance(0);
 }
 
-/**
- * Fetch leaderboard data
- * Currently returns mock data - will be switched to API call later
- */
 export async function fetchCollegeLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
   try {
     const endpoint = `/college-leaderboard`;
@@ -217,10 +169,6 @@ export async function fetchCollegeLeaderboard(): Promise<{ data?: LeaderboardRes
   }
 } 
 
-/**
- * Fetch leaderboard data
- * Currently returns mock data - will be switched to API call later
- */
 export async function fetchUserLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {
   try {
     const endpoint = `/user-leaderboard`;

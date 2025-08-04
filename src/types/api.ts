@@ -13,11 +13,47 @@ export interface ApiError {
   error: string;
 }
 
-export interface UserContribution {
+export interface UserData {
+  success: boolean;
+  data: {
+    id: number;
+    walletAddress: string;
+    emails: string[];
+    currentLinkedCollege: {
+      id: number;
+      name: string;
+      commonName: string;
+      nickname: string;
+      city: string;
+      state: string;
+      type: string;
+      subdivision: string;
+      primary: string;
+      walletAddress: string;
+      logo: string;
+    };
+  };
+}
+
+export interface CollegeData {
   id: number;
   name: string;
-  amount: string;
+  commonName: string;
+  nickname: string;
+  city: string;
+  state: string;
+  type: string;
+  subdivision: string;
+  primary: string;
+  walletAddress: string;
   logo: string;
+}
+
+export interface UserContribution {
+  contributions: number;
+  totalContributions: number;
+  linkedCollege: string;
+
 }
 
 export interface ContributionsResponse {

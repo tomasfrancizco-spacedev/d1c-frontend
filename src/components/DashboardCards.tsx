@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 interface DashboardCardsProps {
-  contributionAmount: string;
+  totalContributionAmount: string;
   usdAmount: string;
   d1cBalance: string;
   tradingVolume: string;
@@ -12,7 +12,7 @@ interface DashboardCardsProps {
   isLoadingTradingVolume?: boolean;
 }
 
-export default function DashboardCards({ contributionAmount, usdAmount, d1cBalance, tradingVolume, isLoadingBalance = false, isLoadingContributions = false, isLoadingTradingVolume = false }: DashboardCardsProps) {
+export default function DashboardCards({ totalContributionAmount, usdAmount, d1cBalance, tradingVolume, isLoadingBalance = false, isLoadingContributions = false, isLoadingTradingVolume = false }: DashboardCardsProps) {
   const [currentCard, setCurrentCard] = useState(0);
 
   const cards = [
@@ -28,7 +28,7 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cBalan
     },
     {
       title: "My Contributions", 
-      value: contributionAmount,
+      value: totalContributionAmount,
       isLoading: isLoadingContributions,
       icon: (
         <svg className="w-5 h-5 text-[#15C0B9] drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cBalan
       <div className="hidden md:grid grid-cols-3 gap-6">
         
         {/* My Balance Card */}
-        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
+        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px] overflow-hidden">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#E6F0F0] drop-shadow-sm">
@@ -181,7 +181,7 @@ export default function DashboardCards({ contributionAmount, usdAmount, d1cBalan
             </div>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{contributionAmount}</div>
+                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{totalContributionAmount}</div>
                 {isLoadingContributions && (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
                 )}

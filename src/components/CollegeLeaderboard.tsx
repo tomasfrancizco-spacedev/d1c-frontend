@@ -68,69 +68,88 @@ export default function CollegeLeaderboard({
           <p>Error loading leaderboard: {leaderboardError}</p>
         </div>
       ) : leaderboardData.length > 0 ? (
+        // ... existing code ...
         <>
-          {/* Top 3 Contributors */}
-          <div className="mb-12">
-            <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 mb-8">
-              {leaderboardData.slice(0, 3).map((college) => (
-                <CommunityCard
-                  key={college.college.name}
-                  image={college.college.logo || "/colleges/college_placeholder.png"}
-                  title={college.college.name || ""}
-                  subtitle={`${formatBalance(college.totalContributionsReceived)}`}
-                  onSupport={() => {}}
-                />
-              ))}
+          {/* Full-width background container */}
+          <div 
+            className="absolute inset-0 w-screen left-1/2 transform -translate-x-1/2 -z-10"
+            style={{
+              backgroundImage: 'url(/bc-leaderboard.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              minHeight: '100vh'
+            }}
+          />
+          
+          {/* Content container */}
+          <div className="relative z-10">
+            {/* Top 3 Contributors */}
+            <div className="mb-12">
+              <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 mb-8">
+                {leaderboardData.slice(0, 3).map((college) => (
+                  <CommunityCard
+                    key={college.college.name}
+                    image={college.college.logo || "/colleges/college_placeholder.png"}
+                    title={college.college.name || ""}
+                    subtitle={`${formatBalance(college.totalContributionsReceived)}`}
+                    rank={leaderboardData.indexOf(college) + 1}
+                    isRanked={true}
+                    onSupport={() => {}}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Contributors Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {leaderboardData.slice(3, 13).map((college) => (
-              <div
-                key={college.college.name}
-                className="bg-white/5 backdrop-blur-md border border-white/10 rounded-md overflow-hidden hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 p-4 h-[88px]"
-              >
-                <div className="flex items-center gap-4 h-full">
-                  {/* Position Number */}
-                  <div className="flex-shrink-0 text-[#E6F0F0]/50 font-bold text-lg min-w-[40px] self-start">
-                    {leaderboardData.indexOf(college) + 1}
-                  </div>
-
-                  {/* Team Logo */}
-                  <div className="flex-shrink-0 self-start">
-                    <div className="w-16 h-16 rounded-md overflow-hidden bg-white">
-                      <Image
-                        src={college.college.logo || ""}
-                        alt={`${college.college.name} Logo`}
-                        width={64}
-                        height={64}
-                        className="w-full h-full object-cover"
-                      />
+            {/* Contributors Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {leaderboardData.slice(3, 13).map((college) => (
+                <div
+                  key={college.college.name}
+                  className="bg-white/5 backdrop-blur-md border border-white/10 rounded-md overflow-hidden hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 p-4 h-[88px]"
+                >
+                  <div className="flex items-center gap-4 h-full">
+                    {/* Position Number */}
+                    <div className="flex-shrink-0 text-[#E6F0F0]/50 font-bold text-lg min-w-[40px] self-start">
+                      {leaderboardData.indexOf(college) + 1}
                     </div>
-                  </div>
 
-                  {/* Team Info */}
-                  <div className="flex-1 min-w-0 flex flex-col justify-center h-full">
-                    <h4 className="text-lg font-semibold text-[#E6F0F0] line-clamp-2 leading-tight mb-1 h-[44px] flex items-center">
-                      {college.college.name}
-                    </h4>
-                    <div className="flex items-center gap-2 text-sm h-[20px]">
-                      <span className="font-bold text-[#15C0B9]">
-                        {formatBalance(college.totalContributionsReceived)}
-                      </span>
-                      <span className="text-[#E6F0F0]/60">•</span>
-                      <span className="text-[#E6F0F0]/80 truncate">
-                        University of{" "}
-                        {college.college.name?.split(" ")[0] || ""}
-                      </span>
+                    {/* Team Logo */}
+                    <div className="flex-shrink-0 self-start">
+                      <div className="w-16 h-16 rounded-md overflow-hidden bg-white">
+                        <Image
+                          src={college.college.logo || ""}
+                          alt={`${college.college.name} Logo`}
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Team Info */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-center h-full">
+                      <h4 className="text-lg font-semibold text-[#E6F0F0] line-clamp-2 leading-tight mb-1 h-[44px] flex items-center">
+                        {college.college.name}
+                      </h4>
+                      <div className="flex items-center gap-2 text-sm h-[20px]">
+                        <span className="font-bold text-[#15C0B9]">
+                          {formatBalance(college.totalContributionsReceived)}
+                        </span>
+                        <span className="text-[#E6F0F0]/60">•</span>
+                        <span className="text-[#E6F0F0]/80 truncate">
+                          University of{" "}
+                          {college.college.name?.split(" ")[0] || ""}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </>
+// ... existing code ...
       ) : !isLoadingLeaderboard ? (
         <div className="text-center text-[#E6F0F0] p-8">
           <p>No leaderboard data available</p>
