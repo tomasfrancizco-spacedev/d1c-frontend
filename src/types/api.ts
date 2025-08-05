@@ -13,11 +13,59 @@ export interface ApiError {
   error: string;
 }
 
-export interface UserContribution {
+export interface UserData {
+  success: boolean;
+  data: {
+    id: number;
+    walletAddress: string;
+    emails: string[];
+    currentLinkedCollege: {
+      id: number;
+      name: string;
+      commonName: string;
+      nickname: string;
+      city: string;
+      state: string;
+      type: string;
+      subdivision: string;
+      primary: string;
+      walletAddress: string;
+      logo: string;
+    };
+  };
+}
+
+export interface CollegeData {
   id: number;
   name: string;
-  amount: string;
+  commonName: string;
+  nickname: string;
+  city: string;
+  state: string;
+  type: string;
+  subdivision: string;
+  primary: string;
+  walletAddress: string;
   logo: string;
+}
+
+export interface UserContribution {
+  contributions: number;
+  totalContributions: number;
+  linkedCollege: {
+    id: number;
+    name: string;
+    commonName: string;
+    nickname: string;
+    city: string;
+    state: string;
+    type: string;
+    subdivision: string;
+    primary: string;
+    walletAddress: string;
+    logo: string;
+  };
+
 }
 
 export interface ContributionsResponse {
@@ -26,12 +74,12 @@ export interface ContributionsResponse {
 }
 
 export interface TradingVolumeData {
-  amount: string;
+  totalVolume: number;
 }
 
 export interface TradingVolumeResponse {
   success: boolean;
-  data: TradingVolumeData[];
+  data: TradingVolumeData;
 }
 
 export interface UserLeaderboardEntry {

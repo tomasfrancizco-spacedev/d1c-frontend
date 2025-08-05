@@ -11,8 +11,6 @@ export async function GET() {
     });
     const data = await response.json();
 
-    console.log({data})
-
     if(data.success) {
       return NextResponse.json({ success: true, data: data.data });
     } else {

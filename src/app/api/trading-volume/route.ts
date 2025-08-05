@@ -3,11 +3,24 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const response = await fetch(`${BACKEND_API_BASE_URL}/trading-volume`, {
+    // const periodStart = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    // const encodedPeriodStart = encodeURIComponent(periodStart);
+
+    const response = await fetch(`${BACKEND_API_BASE_URL}/v1/stats/trading-volume?periodType=all_time`, {
       method: 'GET',
     });
+
+    if (!response.ok) {
+      return NextResponse.json({ success: false, error: 'Failed to get trading volume' }, { status: 500 });
+    }
+
     const data = await response.json();
-    return NextResponse.json({ success: true, data });
+
+    if (data.success) {
+      return NextResponse.json({ success: true, data: data.data });
+    } else {
+      return NextResponse.json({ success: false, error: data.error }, { status: 500 });
+    }
   } catch (error) {
     console.error('Failed to get trading volume:', error);
     return NextResponse.json({ success: false, error: 'Failed to get trading volume' }, { status: 500 });

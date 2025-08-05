@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import WalletConnectButton from "@/components/WalletConnectButton";
 import Image from "next/image";
 import { useSIWS } from "@/hooks/useSIWS";
+import { usePathname } from "next/navigation";
 
 const Navbar = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -13,9 +14,9 @@ const Navbar = (props: {
   const [isFullyAuthenticated, setIsFullyAuthenticated] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  
+  const [isDashboard, setIsDashboard] = useState(false);
   const { connected, isAuthenticated } = useSIWS();
-
+  const pathname = usePathname();
   // Check for full authentication (wallet + MFA)
   useEffect(() => {
     const checkFullAuth = () => {
@@ -42,6 +43,8 @@ const Navbar = (props: {
     return () => clearInterval(interval);
   }, [connected, isAuthenticated]);
 
+
+
   // Close mobile menu when screen size changes to desktop
   useEffect(() => {
     const handleResize = () => {
@@ -53,6 +56,15 @@ const Navbar = (props: {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    // check url pathname
+    if (pathname === "/dashboard") {
+      setIsDashboard(true);
+    } else {
+      setIsDashboard(false);
+    }
+  }, [pathname])
 
   // Create a sentinel element for scroll detection
   useEffect(() => {
@@ -212,7 +224,7 @@ const Navbar = (props: {
         {/* Desktop navigation menu */}
         <div className="hidden lg:block">
           <ul className="flex items-center gap-8 2xsm:gap-4">
-            {isFullyAuthenticated && (
+            {isFullyAuthenticated && !isDashboard && (
               <li>
                 <Link 
                   href="/dashboard"

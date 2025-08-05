@@ -81,7 +81,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|divisionlogo2.png).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|divisionlogo2.png|landing/builtforimpact2.png|landing/connect2.png|landing/pickschool2.png|landing/starttrading2.png|landing/faq.png|colleges/college_placeholder.png|bc-leaderboard.png|bg.png).*)"],
 };
 
 

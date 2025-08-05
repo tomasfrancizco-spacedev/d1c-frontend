@@ -47,7 +47,21 @@ export default function Home() {
         <main className="container mx-auto px-6 py-16">
           {/* Header Section */}
           <AnimatedElement>
-            <div className="max-w-4xl mx-auto text-center text-[#E6F0F0]">
+            {/* Full-width background container */}
+            <div 
+              className="absolute inset-0 w-screen left-1/2 transform -translate-x-1/2 -z-10"
+              style={{
+                backgroundImage: 'url(/bg.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minHeight: '100vh',
+                backgroundPositionY: '-100px'
+              }}
+            />
+            
+            {/* Content container */}
+            <div className="max-w-4xl mx-auto text-center text-[#E6F0F0] relative z-10">
               {/* Subtitle */}
               <div className="mb-4">
                 <p className="text-sm md:text-base text-[#E6F0F0]/80 font-medium">
@@ -128,9 +142,10 @@ export default function Home() {
                     <div className="relative w-full h-56 mb-6">
                       <div className="h-full bg-white/5 backdrop-blur-md border border-white/10 rounded-md overflow-hidden hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300">
                         <Image
-                          src="/landing/connect.png"
+                          src="/landing/connect2.png"
                           alt="Connect your wallet"
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           className="object-cover"
                         />
                       </div>
@@ -149,7 +164,7 @@ export default function Home() {
                     <div className="relative w-full h-56 mb-6">
                       <div className="w-full h-full bg-white/5 backdrop-blur-md border border-white/10 rounded-md overflow-hidden hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300">
                         <Image
-                          src="/landing/pickschool.png"
+                          src="/landing/pickschool2.png"
                           alt="Pick a school"
                           fill
                           className="object-cover"
@@ -170,7 +185,7 @@ export default function Home() {
                     <div className="relative w-full h-56 mb-6">
                       <div className="w-full h-full bg-white/5 backdrop-blur-md border border-white/10 rounded-md overflow-hidden hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300">
                         <Image
-                          src="/landing/starttrading.png"
+                          src="/landing/starttrading2.png"
                           alt="Start trading"
                           fill
                           className="object-cover"
@@ -214,7 +229,7 @@ export default function Home() {
                     <div className="order-1">
                       <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-md relative w-full h-80 md:h-96">
                         <Image
-                          src="/landing/builtforimpact.png"
+                          src="/landing/builtforimpact2.png"
                           alt="Built for impact"
                           fill
                           className="object-cover rounded-md"
@@ -278,7 +293,7 @@ export default function Home() {
                     <div className="w-full">
                       <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-md relative w-full h-96">
                         <Image
-                          src="/landing/builtforimpact.png"
+                          src="/landing/builtforimpact2.png"
                           alt="Built for impact"
                           fill
                           className="object-cover rounded-md w-full"
@@ -342,9 +357,7 @@ export default function Home() {
           <div className="mt-32 mb-24">
             <AnimatedElement>
               <div className="text-center mb-4">
-                <h4 className="text-sm text-[#E6F0F0]/80 ">
-                  RULING THE FIELD
-                </h4>
+                <h4 className="text-sm text-[#E6F0F0]/80 ">RULING THE FIELD</h4>
               </div>
               <CollegeLeaderboard />
             </AnimatedElement>
