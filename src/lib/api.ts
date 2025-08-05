@@ -1,4 +1,4 @@
-import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData } from '@/types/api';
+import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData } from '@/types/api';
 import { userContributions } from '@/data/userContributions_mock';
 import { tradingVolume } from '@/data/tradingVolume_mock';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
@@ -128,35 +128,30 @@ export async function fetchUserContributions(
   }
 }
 
+export const getLinkedCollegeContributions = (contributionsData: UserContribution[], linkedCollege: CollegeData) => {
+  const contributions = contributionsData.find(
+    (contribution) =>
+      contribution.linkedCollege?.id === linkedCollege?.id
+  )?.contributions;
+  return contributions ? contributions : 0;
+};
+
 export async function fetchTradingVolume(): Promise<{ data?: TradingVolumeResponse; error?: string }> {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    // TODO: Replace with actual API call when ready
-    // const endpoint = `/trading-volume`;
-    // return apiCall<TradingVolumeResponse>(endpoint);
-
-    // For now, return mock data
-    return {
-      data: {
-        success: true,
-        data: tradingVolume
-      }
-    };
+    const endpoint = `/trading-volume`;
+    return apiCall<TradingVolumeResponse>(endpoint);
   } catch (error) {
     console.error('Error fetching trading volume:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
 
-export function getTradingVolumeAmount(volumeData: TradingVolumeData[]): string {
-  if (!volumeData || volumeData.length === 0) {
+export function getTradingVolumeAmount(volumeData: TradingVolumeData): string {
+  if (!volumeData) {
     return formatBalance(0);
   }
 
-  // Return the first trading volume amount
-  return volumeData[0]?.amount || formatBalance(0);
+  return volumeData.totalVolume.toString() || formatBalance(0);
 }
 
 export async function fetchCollegeLeaderboard(): Promise<{ data?: LeaderboardResponse; error?: string }> {

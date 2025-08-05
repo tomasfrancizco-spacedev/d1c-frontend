@@ -55,7 +55,8 @@ export default function Home() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                minHeight: '100vh'
+                minHeight: '100vh',
+                backgroundPositionY: '-100px'
               }}
             />
             

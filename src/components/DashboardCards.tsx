@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatBalance } from "@/lib/api";
 
 interface DashboardCardsProps {
   totalContributionAmount: string;
@@ -69,7 +70,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
         </div>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{card.value}</div>
+            <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md truncate">{card.value}</div>
             {card.isLoading && (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
             )}
@@ -98,7 +99,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
           {/* Navigation Arrows */}
           <button
             onClick={prevCard}
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-200 shadow-lg"
+            className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-200 shadow-lg"
             disabled={cards.length <= 1}
           >
             <svg className="w-5 h-5 text-[#15C0B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +109,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
 
           <button
             onClick={nextCard}
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-200 shadow-lg"
+            className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-200 shadow-lg"
             disabled={cards.length <= 1}
           >
             <svg className="w-5 h-5 text-[#15C0B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +138,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
       <div className="hidden md:grid grid-cols-3 gap-6">
         
         {/* My Balance Card */}
-        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px] overflow-hidden">
+        <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none min-h-[200px]">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#E6F0F0] drop-shadow-sm">
@@ -151,7 +152,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
             </div>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{d1cBalance}</div>
+                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md truncate">{d1cBalance}</div>
                 {isLoadingBalance && (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
                 )}
@@ -181,7 +182,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
             </div>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{totalContributionAmount}</div>
+                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md truncate">{totalContributionAmount}</div>
                 {isLoadingContributions && (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
                 )}
@@ -211,7 +212,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
             </div>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md">{tradingVolume}</div>
+                <div className="text-3xl font-bold text-[#15C0B9] drop-shadow-md truncate">{tradingVolume}</div>
                 {isLoadingTradingVolume && (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
                 )}

@@ -19,8 +19,6 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json();
 
-    console.log("user data", {data});
-
     return NextResponse.json({ success: true, data: data });
   } catch (error) {
     console.error('Error fetching user data:', error);

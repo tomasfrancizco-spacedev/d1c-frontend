@@ -52,7 +52,19 @@ export interface CollegeData {
 export interface UserContribution {
   contributions: number;
   totalContributions: number;
-  linkedCollege: string;
+  linkedCollege: {
+    id: number;
+    name: string;
+    commonName: string;
+    nickname: string;
+    city: string;
+    state: string;
+    type: string;
+    subdivision: string;
+    primary: string;
+    walletAddress: string;
+    logo: string;
+  };
 
 }
 
@@ -62,12 +74,12 @@ export interface ContributionsResponse {
 }
 
 export interface TradingVolumeData {
-  amount: string;
+  totalVolume: number;
 }
 
 export interface TradingVolumeResponse {
   success: boolean;
-  data: TradingVolumeData[];
+  data: TradingVolumeData;
 }
 
 export interface UserLeaderboardEntry {

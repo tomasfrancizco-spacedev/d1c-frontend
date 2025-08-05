@@ -15,6 +15,7 @@ import {
   fetchTradingVolume,
   getTradingVolumeAmount,
   fetchUserData,
+  getLinkedCollegeContributions,
 } from "@/lib/api";
 import {
   D1CBalanceResponse,
@@ -54,22 +55,12 @@ export default function Dashboard() {
 
   // Trading volume state management
   const [tradingVolumeData, setTradingVolumeData] = useState<
-    TradingVolumeData[]
-  >([]);
+    TradingVolumeData
+  >();
   const [isLoadingTradingVolume, setIsLoadingTradingVolume] = useState(false);
   const [tradingVolumeError, setTradingVolumeError] = useState<string | null>(
     null
   );
-
-  const getLinkedCollegeContributions = () => {
-    const contributions = contributionsData.filter(
-      (contribution) =>
-        contribution.linkedCollege === linkedCollege?.walletAddress
-    );
-    setLinkedCollegeContributions(
-      contributions[0] ? contributions[0].contributions : 0
-    );
-  };
 
   // Fetch balance when wallet is connected
   useEffect(() => {
@@ -93,10 +84,6 @@ export default function Dashboard() {
         } else if (data) {
           setUserData(data);
           if (data.data.currentLinkedCollege) {
-            console.log(
-              "data.data.currentLinkedCollege",
-              data.data.currentLinkedCollege
-            );
             setLinkedCollege(data.data.currentLinkedCollege);
           }
         }
@@ -174,7 +161,10 @@ export default function Dashboard() {
   }, [publicKey]);
 
   useEffect(() => {
-    getLinkedCollegeContributions();
+    if (linkedCollege) {
+      const contributions = getLinkedCollegeContributions(contributionsData, linkedCollege);
+      setLinkedCollegeContributions(contributions);
+    }
   }, [contributionsData, linkedCollege]);
 
   // Fetch trading volume on component mount (not dependent on wallet)
@@ -188,7 +178,7 @@ export default function Dashboard() {
 
         if (error) {
           setTradingVolumeError(error);
-          setTradingVolumeData([]);
+          setTradingVolumeData(undefined);
         } else if (data?.success && data.data) {
           setTradingVolumeData(data.data);
         }
@@ -213,8 +203,8 @@ export default function Dashboard() {
     : "Connect wallet to view balance";
 
   const tradingVolume =
-    tradingVolumeData.length > 0
-      ? getTradingVolumeAmount(tradingVolumeData)
+    tradingVolumeData && tradingVolumeData.totalVolume > 0
+      ? formatBalance(getTradingVolumeAmount(tradingVolumeData))
       : isLoadingTradingVolume
       ? "Loading..."
       : tradingVolumeError
@@ -232,7 +222,13 @@ export default function Dashboard() {
 
   return (
     <DefaultLayout>
-      <div className="pt-[150px] min-h-screen bg-[#03211e]">
+      <div className="pt-[150px] min-h-screen bg-[#03211e]" style={{
+        backgroundImage: 'url(/bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh'
+      }} >
         <main className="container mx-auto px-6 py-8 text-[#E6F0F0]">
           {/* Header Section */}
           <div className="max-w-6xl mx-auto mb-12">
