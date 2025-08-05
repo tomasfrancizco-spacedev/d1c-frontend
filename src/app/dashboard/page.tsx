@@ -141,7 +141,7 @@ export default function Dashboard() {
           publicKey.toString()
         );
 
-        if (error) {
+        if (error && error !== 'User stats not found') {
           setContributionsError(error);
           setContributionsData([]);
         } else if (data?.success && data.data) {
@@ -209,7 +209,7 @@ export default function Dashboard() {
       ? "Loading..."
       : tradingVolumeError
       ? "Error loading trading volume"
-      : "No trading volume data";
+      : formatBalance(0);
 
   const totalContributionAmount =
     contributionsData.length > 0
