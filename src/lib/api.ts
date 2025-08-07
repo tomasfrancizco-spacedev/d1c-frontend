@@ -1,6 +1,4 @@
-import { D1CBalanceResponse, ApiError, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData } from '@/types/api';
-import { userContributions } from '@/data/userContributions_mock';
-import { tradingVolume } from '@/data/tradingVolume_mock';
+import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData } from '@/types/api';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
 const getFrontendApiUrl = (env: string) => {
@@ -44,11 +42,25 @@ async function apiCall<T>(
       ...options,
     });
 
-    const data = await response.json();
+    // Check if response has content
+    const contentLength = response.headers.get('content-length');
+    const contentType = response.headers.get('content-type');
+    
+    let data;
+    if (contentLength === '0' || !contentType?.includes('application/json')) {
+      data = null;
+    } else {
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse JSON response:', parseError);
+        return { error: 'Invalid JSON response from server' };
+      }
+    }
 
     if (!response.ok) {
-      const errorData = data as ApiError;
-      return { error: errorData.error || `HTTP ${response.status}` };
+      const errorMessage = data?.error || `HTTP ${response.status}`;
+      return { error: errorMessage };
     }
 
     return { data: data as T };
@@ -170,6 +182,28 @@ export async function fetchUserLeaderboard(): Promise<{ data?: LeaderboardRespon
     return apiCall<LeaderboardResponse>(endpoint);
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchColleges(): Promise<{ data?: CollegesData; error?: string }> {
+  try {
+    const endpoint = `/colleges`;
+    return apiCall<CollegesData>(endpoint);
+  } catch (error) {
+    console.error('Error fetching colleges:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function linkCollege(userId: string, collegeId: string): Promise<{ data?: UserData; error?: string }> {
+  try {
+    const endpoint = `/link-college?userId=${userId}&collegeId=${collegeId}`;
+    return apiCall<UserData>(endpoint, {
+      method: 'POST',
+    });
+  } catch (error) {
+    console.error('Error linking college:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

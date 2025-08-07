@@ -49,6 +49,12 @@ export interface CollegeData {
   logo: string;
 }
 
+export interface CollegesData {
+  data: {
+    data: CollegeData[];
+  }
+}
+
 export interface UserContribution {
   contributions: number;
   totalContributions: number;

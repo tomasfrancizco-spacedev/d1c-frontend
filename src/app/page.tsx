@@ -1,3 +1,4 @@
+"use client";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import WalletConnectButton from "@/components/WalletConnectButton";
 import CommunityCarousel from "@/components/CommunityCarousel";
@@ -106,7 +107,7 @@ export default function Home() {
               {/* Mobile-only Wallet Connect Button */}
               <div className="md:hidden mb-8">
                 <div className="flex justify-center">
-                  <WalletConnectButton />
+                  <WalletConnectButton setIsSelectSchoolModalOpen={() => {}} />
                 </div>
               </div>
             </div>
