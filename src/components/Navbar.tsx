@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import WalletConnectButton from "@/components/WalletConnectButton";
+import SelectSchoolModal from "@/components/SelectSchoolModal";
 import Image from "next/image";
 import { useSIWS } from "@/hooks/useSIWS";
 import { usePathname } from "next/navigation";
+import { checkFullAuth } from "@/lib/auth-utils";
+import { fetchUserData } from "@/lib/api";
+import { UserData } from "@/types/api";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const Navbar = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -16,34 +21,39 @@ const Navbar = (props: {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [isDashboard, setIsDashboard] = useState(false);
   const { connected, isAuthenticated } = useSIWS();
+  const { publicKey } = useWallet();
   const pathname = usePathname();
+
+  // Modal and user data state
+  const [isSelectSchoolModalOpen, setIsSelectSchoolModalOpen] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
   // Check for full authentication (wallet + MFA)
   useEffect(() => {
-    const checkFullAuth = () => {
-      if (typeof window === "undefined") return;
-      
-      const mfaCompleted = localStorage.getItem('mfa-completed');
-      const hasValidMFA = mfaCompleted ? (() => {
-        try {
-          const mfaData = JSON.parse(mfaCompleted);
-          const isExpired = Date.now() - mfaData.timestamp > 24 * 60 * 60 * 1000; // 24 hours
-          return !isExpired;
-        } catch {
-          return false;
-        }
-      })() : false;
-      
-      setIsFullyAuthenticated(connected && isAuthenticated && hasValidMFA);
-    };
-
-    checkFullAuth();
-    
-    const interval = setInterval(checkFullAuth, 5000);
-    
-    return () => clearInterval(interval);
+    setIsFullyAuthenticated(checkFullAuth(connected, isAuthenticated) || false);
   }, [connected, isAuthenticated]);
 
+  // Fetch user data when wallet is connected
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (!publicKey) {
+        setUserData(null);
+        return;
+      }
 
+      try {
+        const { data, error } = await fetchUserData(publicKey.toString());
+        if (error) {
+          console.error("Error loading user data:", error);
+        } else if (data) {
+          setUserData(data);
+        }
+      } catch (err) {
+        console.error("Error loading user data:", err);
+      }
+    };
+
+    loadUserData();
+  }, [publicKey]);
 
   // Close mobile menu when screen size changes to desktop
   useEffect(() => {
@@ -64,7 +74,7 @@ const Navbar = (props: {
     } else {
       setIsDashboard(false);
     }
-  }, [pathname])
+  }, [pathname]);
 
   // Create a sentinel element for scroll detection
   useEffect(() => {
@@ -163,7 +173,7 @@ const Navbar = (props: {
             <span className="relative block h-5.5 w-5.5 cursor-pointer">
               <span className="du-block absolute right-0 h-full w-full">
                 <span
-                    className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-[#E6F0F0] delay-[0] duration-200 ease-in-out border border-[#E6F0F0] ${
+                  className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-[#E6F0F0] delay-[0] duration-200 ease-in-out border border-[#E6F0F0] ${
                     !mobileMenuOpen && "!w-full delay-300"
                   }`}
                 ></span>
@@ -185,7 +195,7 @@ const Navbar = (props: {
                   }`}
                 ></span>
                 <span
-                    className={`delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-[#E6F0F0] duration-200 ease-in-out ${
+                  className={`delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-[#E6F0F0] duration-200 ease-in-out ${
                     !mobileMenuOpen && "!h-0 !delay-200"
                   }`}
                 ></span>
@@ -204,20 +214,27 @@ const Navbar = (props: {
               width={20}
               height={20}
             />
-            <p className="text-[#15C0B9] font-medium hover:text-[#E6F0F0] transition-colors duration-200">DIVISION ONE</p>
+            <p className="text-[#15C0B9] font-medium hover:text-[#E6F0F0] transition-colors duration-200">
+              DIVISION ONE
+            </p>
           </Link>
         </div>
 
         {/* Division One logo - visible only on small screens, positioned to the right */}
         <div className="lg:hidden ml-auto">
-          <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform duration-200">
+          <Link
+            href="/"
+            className="flex items-center gap-2 hover:scale-105 transition-transform duration-200"
+          >
             <Image
               src="/divisionlogo2.png"
               alt="Division One Logo"
               width={20}
               height={20}
             />
-            <p className="text-[#15C0B9] hover:text-[#E6F0F0] transition-colors duration-200">DIVISION ONE</p>
+            <p className="text-[#15C0B9] hover:text-[#E6F0F0] transition-colors duration-200">
+              DIVISION ONE
+            </p>
           </Link>
         </div>
 
@@ -226,20 +243,35 @@ const Navbar = (props: {
           <ul className="flex items-center gap-8 2xsm:gap-4">
             {isFullyAuthenticated && !isDashboard && (
               <li>
-                <Link 
+                <Link
                   href="/dashboard"
                   className="text-[#E6F0F0] hover:text-[#15C0B9] font-medium transition-all duration-200 flex items-center gap-2 px-3 py-2 rounded-md backdrop-blur-sm"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"
+                    />
                   </svg>
                   Dashboard
                 </Link>
               </li>
             )}
             <li>
-              <WalletConnectButton />
+              <WalletConnectButton setIsSelectSchoolModalOpen={setIsSelectSchoolModalOpen} />
             </li>
           </ul>
         </div>
@@ -250,30 +282,73 @@ const Navbar = (props: {
             <ul className="flex flex-col space-y-3 px-4">
               {isFullyAuthenticated && (
                 <li>
-                  <Link 
+                  <Link
                     href="/dashboard"
                     className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-all duration-200 flex items-center gap-2 px-3 rounded-md hover:bg-white/10"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"
+                      />
                     </svg>
                     Dashboard
                   </Link>
                 </li>
               )}
-              <li>
-                <Link href="#" className="block px-3 py-2 rounded-md hover:bg-white/10 transition-all duration-200">
-                  <p className="text-[#E6F0F0] hover:text-white">
-                    Sidebar
-                  </p>
-                </Link>
-              </li>
+              {isFullyAuthenticated && (
+                <li>
+                  <button
+                    onClick={() => {
+                      setIsSelectSchoolModalOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="cursor-pointer w-full text-left px-3 py-2 bg-[#15C0B9] hover:bg-[#15C0B9]/90 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0h3m-3 0h-5m2-5h9m-9 0v-5"
+                      />
+                    </svg>
+                    Select School
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
         )}
       </div>
+
+      {isFullyAuthenticated && (
+        <SelectSchoolModal
+          isOpen={isSelectSchoolModalOpen}
+          onClose={() => setIsSelectSchoolModalOpen(false)}
+          userId={userData?.data.id.toString() || ""}
+          // onCollegeLinkSuccess={handleCollegeLinkSuccess}
+        />
+      )}
     </header>
   );
 };

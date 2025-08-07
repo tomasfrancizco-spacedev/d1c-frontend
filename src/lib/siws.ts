@@ -72,4 +72,4 @@ export async function verifySIWSMessage(input: SolanaSignInInput, output: any) {
     console.error('Failed to verify SIWS message:', error);
     return false;
   }
-} 
+}

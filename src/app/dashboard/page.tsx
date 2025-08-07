@@ -21,15 +21,15 @@ import {
   D1CBalanceResponse,
   UserContribution,
   TradingVolumeData,
-  UserData,
   CollegeData,
+  // UserData,
 } from "@/types/api";
 
 export default function Dashboard() {
   const { publicKey } = useWallet();
 
   // User data state management
-  const [userData, setUserData] = useState<UserData | null>(null);
+  // const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
   const [userDataError, setUserDataError] = useState<string | null>(null);
   const [linkedCollege, setLinkedCollege] = useState<CollegeData | null>(null);
@@ -54,47 +54,64 @@ export default function Dashboard() {
   );
 
   // Trading volume state management
-  const [tradingVolumeData, setTradingVolumeData] = useState<
-    TradingVolumeData
-  >();
+  const [tradingVolumeData, setTradingVolumeData] =
+    useState<TradingVolumeData>();
   const [isLoadingTradingVolume, setIsLoadingTradingVolume] = useState(false);
   const [tradingVolumeError, setTradingVolumeError] = useState<string | null>(
     null
   );
 
-  // Fetch balance when wallet is connected
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (!publicKey) {
-        setUserData(null);
-        setUserDataError(null);
-        return;
-      }
 
-      setIsLoadingUserData(true);
+
+  // Function to load user data (can be reused)
+  const loadUserData = async () => {
+    if (!publicKey) {
       setUserDataError(null);
+      setLinkedCollege(null);
+      return;
+    }
 
-      try {
-        const { data, error } = await fetchUserData(publicKey.toString());
+    setIsLoadingUserData(true);
+    setUserDataError(null);
 
-        if (error) {
-          setUserDataError(error);
-          setUserData(null);
+    try {
+      const { data, error } = await fetchUserData(publicKey.toString());
+
+      if (error) {
+        setUserDataError(error);
+        setLinkedCollege(null);
+      } else if (data) {
+        // setUserData(data);
+        if (data.data.currentLinkedCollege) {
+          setLinkedCollege(data.data.currentLinkedCollege as unknown as CollegeData);
+        } else {
           setLinkedCollege(null);
-        } else if (data) {
-          setUserData(data);
-          if (data.data.currentLinkedCollege) {
-            setLinkedCollege(data.data.currentLinkedCollege);
-          }
         }
-      } catch (err) {
-        console.error("Error loading user data:", err);
-        setUserDataError("Failed to load user data");
-      } finally {
-        setIsLoadingUserData(false);
       }
+    } catch (err) {
+      console.error("Error loading user data:", err);
+      setUserDataError("Failed to load user data");
+    } finally {
+      setIsLoadingUserData(false);
+    }
+  };
+
+  // Listen for college link success events
+  useEffect(() => {
+    const handleCollegeLinkSuccess = () => {
+      console.log("College linked successfully, refreshing dashboard data...");
+      loadUserData();
     };
 
+    window.addEventListener('collegeLinkSuccess', handleCollegeLinkSuccess);
+    
+    return () => {
+      window.removeEventListener('collegeLinkSuccess', handleCollegeLinkSuccess);
+    };
+  }, [publicKey]); // Re-setup listener when publicKey changes
+
+  // Fetch balance when wallet is connected
+  useEffect(() => {
     loadUserData();
 
     const loadBalance = async () => {
@@ -141,7 +158,7 @@ export default function Dashboard() {
           publicKey.toString()
         );
 
-        if (error && error !== 'User stats not found') {
+        if (error && error !== "User stats not found") {
           setContributionsError(error);
           setContributionsData([]);
         } else if (data?.success && data.data) {
@@ -162,7 +179,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (linkedCollege) {
-      const contributions = getLinkedCollegeContributions(contributionsData, linkedCollege);
+      const contributions = getLinkedCollegeContributions(
+        contributionsData,
+        linkedCollege
+      );
       setLinkedCollegeContributions(contributions);
     }
   }, [contributionsData, linkedCollege]);
@@ -222,20 +242,28 @@ export default function Dashboard() {
 
   return (
     <DefaultLayout>
-      <div className="pt-[150px] min-h-screen bg-[#03211e]" style={{
-        backgroundImage: 'url(/bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        minHeight: '100vh'
-      }} >
+      <div
+        className="pt-[150px] min-h-screen bg-[#03211e]"
+        style={{
+          backgroundImage: "url(/bg.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          minHeight: "100vh",
+        }}
+      >
         <main className="container mx-auto px-6 py-8 text-[#E6F0F0]">
           {/* Header Section */}
           <div className="max-w-6xl mx-auto mb-12">
+
             <div className="flex items-center justify-center bg-transparent rounded-md p-6">
               <div className="flex items-center justify-center w-full max-w-4xl space-x-10">
                 {/* Logo on the left */}
-                {linkedCollege ? (
+                {userDataError ? (
+                  <div>There was an error retrieving your info</div>
+                ) : isLoadingUserData ? (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
+                ) : linkedCollege ? (
                   <div className="flex items-center gap-3">
                     <Image
                       src={
@@ -258,7 +286,9 @@ export default function Dashboard() {
                   </div>
                 )}
 
-                {linkedCollege && linkedCollegeContributions && linkedCollegeContributions > 0 ? (
+                {linkedCollege &&
+                linkedCollegeContributions &&
+                linkedCollegeContributions > 0 ? (
                   <div className="text-left">
                     <p className="text-lg md:text-4xl text-[#E6F0F0] flex flex-col">
                       <span className="font-semibold">
@@ -274,15 +304,24 @@ export default function Dashboard() {
                       </span>
                     </p>
                   </div>
-                ) : (linkedCollege && (
+                ) : linkedCollege ? (
                   <div className="text-left">
                     <p className="text-lg md:text-4xl text-[#E6F0F0] flex flex-col">
+                      <span className="font-semibold">Start trading $D1C</span>
+                      <span className="font-semibold">to see your</span>
+                      <span className="font-semibold">contributions grow</span>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-left">
+                    <p className="text-lg md:text-2xl text-[#E6F0F0] flex flex-col mb-6">
+                      <span className="font-semibold">Choose your school</span>
                       <span className="font-semibold">
-                        Start contributing to {linkedCollege?.nickname}
+                        to start contributing
                       </span>
                     </p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

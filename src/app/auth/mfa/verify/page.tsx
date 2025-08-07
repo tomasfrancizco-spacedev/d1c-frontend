@@ -161,7 +161,7 @@ export default function MFAVerifyPage() {
             <button
               type="submit"
               disabled={!isCodeComplete || isLoading}
-              className="cursor-pointer w-full disabled:cursor-not-allowed text-white bg-[#15C0B9]/50 hover:bg-[#15C0B9]/60 disabled:bg-[#104f47] font-medium py-3 px-4 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
+              className="cursor-pointer w-full disabled:cursor-not-allowed text-[#06231f] bg-[#16c0b9]/80 hover:bg-[#16c0b9]/90 disabled:bg-[#104f47] font-medium py-3 px-4 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#16c0b9] focus:ring-offset-2 focus:ring-offset-[#19181C]"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">

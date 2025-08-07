@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { formatBalance } from "@/lib/api";
 
 interface DashboardCardsProps {
   totalContributionAmount: string;

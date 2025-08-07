@@ -57,25 +57,31 @@ html, body, #__next, #root {
 /* Custom Scrollbar Styles */
 .scrollbar-custom {
   scrollbar-width: thin;
-  scrollbar-color: #15C0B9 rgba(255, 255, 255, 0.1);
+  scrollbar-color: rgba(21, 192, 185, 0.8) rgba(255, 255, 255, 0.1);
 }
 
 .scrollbar-custom::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 .scrollbar-custom::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb {
-  background: #15C0B9;
-  border-radius: 4px;
+  background: rgba(21, 192, 185, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background: #1dd1c7;
+  background: rgba(21, 192, 185, 1);
+}
+
+.scrollbar-custom::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Hide scrollbars completely */

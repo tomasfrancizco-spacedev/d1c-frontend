@@ -4,9 +4,17 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useSIWS } from "@/hooks/useSIWS";
 import { useState, useEffect } from "react";
-import { isMobile, detectMobileWallet, openPhantomDeepLink } from "@/lib/wallet-utils";
+import {
+  isMobile,
+  detectMobileWallet,
+  openPhantomDeepLink,
+} from "@/lib/wallet-utils";
 
-export default function WalletConnectButton() {
+export default function WalletConnectButton({
+  setIsSelectSchoolModalOpen,
+}: {
+  setIsSelectSchoolModalOpen: (isOpen: boolean) => void;
+}) {
   const { connected, publicKey, connecting, wallet, disconnect } = useWallet();
   const {
     isAuthenticated,
@@ -29,11 +37,13 @@ export default function WalletConnectButton() {
   useEffect(() => {
     if (connecting) {
       setConnectionError(null);
-      
+
       // Set a timeout for connection attempts
       const timer = setTimeout(() => {
         if (connecting && !connected) {
-          setConnectionError("Connection timed out. The wallet may not be installed.");
+          setConnectionError(
+            "Connection timed out. The wallet may not be installed."
+          );
         }
       }, 10000); // 10 second timeout
 
@@ -71,7 +81,7 @@ export default function WalletConnectButton() {
   const handleWalletSelection = () => {
     // Reset any previous errors
     setConnectionError(null);
-    
+
     // On mobile, check if any wallet is detected
     if (isMobile()) {
       const detectedWallet = detectMobileWallet();
@@ -117,7 +127,9 @@ export default function WalletConnectButton() {
   if (connectionError) {
     return (
       <div className="flex flex-col items-center justify-center space-y-3 max-w-xs">
-        <div className="text-red-400 text-sm text-center">{connectionError}</div>
+        <div className="text-red-400 text-sm text-center">
+          {connectionError}
+        </div>
         <div className="flex space-x-2">
           <button
             onClick={handleResetConnection}
@@ -175,13 +187,15 @@ export default function WalletConnectButton() {
               <path d="M7 7h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14" />
             </svg>
           </div>
-          
+
           {/* Right section - Address and dropdown */}
           <button
             onClick={() => setShowWalletInfo(!showWalletInfo)}
             className="flex-1 px-4 py-3 flex items-center justify-between text-[#E6F0F0] hover:text-[#15C0B9]  font-medium transition-all duration-200 cursor-pointer"
           >
-            <span className="text-sm">{truncateAddress(publicKey.toString())}</span>
+            <span className="text-sm">
+              {truncateAddress(publicKey.toString())}
+            </span>
             <svg
               className={`w-4 h-4 transform transition-transform duration-200 ${
                 showWalletInfo ? "rotate-180" : ""
@@ -216,18 +230,42 @@ export default function WalletConnectButton() {
 
               <div className="flex space-x-2">
                 <button
-                  onClick={handleSignOut}
-                  className="text-sm flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                  onClick={() => setIsSelectSchoolModalOpen(true)}
+                  className="cursor-pointer px-4 py-2 bg-[#15C0B9] hover:bg-[#15C0B9]/90 text-white font-medium rounded-lg transition-colors duration-200 flex items-center gap-2"
                 >
-                  Sign Out
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0h3m-3 0h-5m2-5h9m-9 0v-5"
+                    />
+                  </svg>
+                  Select School
                 </button>
                 <button
-                  onClick={() =>
-                    navigator.clipboard.writeText(publicKey.toString())
-                  }
-                  className="text-sm flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                  onClick={handleSignOut}
+                  className="text-sm flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm flex items-center justify-center"
                 >
-                  Copy
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -240,8 +278,8 @@ export default function WalletConnectButton() {
   // If wallet is not connected - show wallet adapter button with enhanced mobile handling
   return (
     <div className="wallet-adapter-button-container">
-      <WalletMultiButton 
-        className="!text-white !py-3 !px-6 !shadow-2xl" 
+      <WalletMultiButton
+        className="!text-white !py-3 !px-6 !shadow-2xl"
         onClick={handleWalletSelection}
       />
     </div>
