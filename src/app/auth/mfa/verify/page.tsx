@@ -24,7 +24,6 @@ export default function MFAVerifyPage() {
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
-      // If no email, redirect to request page
       router.push("/auth/mfa/request");
     }
   }, [router]);
@@ -108,7 +107,16 @@ export default function MFAVerifyPage() {
 
   return (
     <DefaultLayout>
-      <div className="pt-[150px] min-h-screen bg-[#03211e] flex items-center justify-center p-4">
+      <div
+        className="md:pt-[150px] min-h-[calc(100vh-160px)] md:min-h-[calc(100vh-104px)] bg-[#03211e] flex items-center justify-center p-4"
+        style={{
+          backgroundImage: "url(/bg.png)",
+          backgroundSize: "contain",
+          backgroundPosition: "center",
+          backgroundPositionY: "0",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <AuthFormContainer
           title="Enter the verification code"
           subtitle={`Enter the 6 digit code we sent to ${

@@ -10,10 +10,14 @@ interface DefaultLayoutProps {
 export default function DefaultLayout({ children }: DefaultLayoutProps) {
   return (
     <>
-      <div className="relative min-h-screen">
+      <div className="relative">
         <main className="w-full">
           <Navbar sidebarOpen={false} setSidebarOpen={() => {}} />
-          <div className="w-full">{children}</div>
+          <div
+            className="w-full"
+          >
+            {children}
+          </div>
           <Footer />
         </main>
       </div>

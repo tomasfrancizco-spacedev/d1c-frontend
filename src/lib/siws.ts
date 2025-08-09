@@ -23,9 +23,10 @@ export function createSignInData(): SolanaSignInInput {
   return {
     domain: window.location.host,
     statement: 'Sign in to D1C with your Solana wallet.',
+    uri: window.location.origin,
     version: '1',
     nonce: generateNonce(),
-    chainId: 'devnet',
+    chainId: process.env.NODE_ENV === 'production' ? 'mainnet' : 'devnet',
     issuedAt: now.toISOString(),
     expirationTime: expirationTime.toISOString(),
   };

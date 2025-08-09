@@ -8,6 +8,9 @@ import {
   isMobile,
   detectMobileWallet,
   openPhantomDeepLink,
+  getMobileWalletAdapter,
+  isInMobileWalletBrowser,
+  openWalletInAppBrowser,
 } from "@/lib/wallet-utils";
 
 export default function WalletConnectButton({
@@ -25,6 +28,9 @@ export default function WalletConnectButton({
   } = useSIWS();
   const [showWalletInfo, setShowWalletInfo] = useState(false);
   const [connectionError, setConnectionError] = useState<string | null>(null);
+
+  const isWalletBrowser = isInMobileWalletBrowser();
+  const detectedMobileWallet = getMobileWalletAdapter();
 
   useEffect(() => {
     if (connected) {
@@ -230,7 +236,10 @@ export default function WalletConnectButton({
 
               <div className="flex space-x-2">
                 <button
-                  onClick={() => setIsSelectSchoolModalOpen(true)}
+                  onClick={() => {
+                    setIsSelectSchoolModalOpen(true);
+                    setShowWalletInfo(false);
+                  }}
                   className="cursor-pointer px-4 py-2 bg-[#15C0B9] hover:bg-[#15C0B9]/90 text-white font-medium rounded-lg transition-colors duration-200 flex items-center gap-2"
                 >
                   <svg
@@ -271,6 +280,120 @@ export default function WalletConnectButton({
             </div>
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (!connected && isMobile()) {
+    // If we're in a wallet browser and wallet is detected, show success state
+    if (isWalletBrowser && detectedMobileWallet) {
+      return (
+        <div className="space-y-4">
+          <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+            <div className="flex items-center gap-2 text-green-400 mb-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="font-medium">
+                You&apos;re in {detectedMobileWallet} app
+              </span>
+            </div>
+            <p className="text-sm text-white/70">
+              Connect your wallet to continue
+            </p>
+          </div>
+
+          <div className="wallet-adapter-button-container">
+            <WalletMultiButton className="!text-white !py-3 !px-6 !shadow-2xl !w-full" />
+          </div>
+        </div>
+      );
+    }
+
+    // We're in a regular mobile browser - guide user to wallet app
+    return (
+      <div className="space-y-4 max-w-sm">
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-blue-400 mb-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className="font-medium">For best experience</span>
+          </div>
+          <p className="text-sm text-white/70 mb-3">
+            Tap a button below to open this page in your wallet app
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-white font-medium text-center">
+            Choose your wallet:
+          </h3>
+
+          <button
+            onClick={() => openWalletInAppBrowser("phantom")}
+            className="w-full bg-[#9945FF] hover:bg-[#7C3AED] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
+          >
+            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+              <span className="text-[#9945FF] text-sm font-bold">P</span>
+            </div>
+            <div className="flex flex-col items-start">
+              <span>Open in Phantom</span>
+              <span className="text-xs text-white/70">
+                Opens app with this page
+              </span>
+            </div>
+          </button>
+
+          <button
+            onClick={() => openWalletInAppBrowser("solflare")}
+            className="w-full bg-[#FC9745] hover:bg-[#F97316] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
+          >
+            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+              <span className="text-[#FC9745] text-sm font-bold">S</span>
+            </div>
+            <div className="flex flex-col items-start">
+              <span>Open in Solflare</span>
+              <span className="text-xs text-white/70">
+                Opens app with this page
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <div className="border-t border-white/10 pt-4">
+          <details className="text-white/60">
+            <summary className="cursor-pointer text-sm hover:text-white/80 transition-colors">
+              Don&apos;t have a wallet? Get started →
+            </summary>
+            <div className="mt-2 space-y-2 text-xs">
+              <a
+                href="https://phantom.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block hover:text-blue-400 transition-colors"
+              >
+                📱 Download Phantom Wallet
+              </a>
+              <a
+                href="https://solflare.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block hover:text-blue-400 transition-colors"
+              >
+                📱 Download Solflare Wallet
+              </a>
+            </div>
+          </details>
+        </div>
       </div>
     );
   }

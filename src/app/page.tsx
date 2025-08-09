@@ -1,66 +1,34 @@
 "use client";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import WalletConnectButton from "@/components/WalletConnectButton";
-import CommunityCarousel from "@/components/CommunityCarousel";
+import CollegeCarousel from "@/components/CollegeCarousel";
 import CollegeLeaderboard from "@/components/CollegeLeaderboard";
 import FAQ from "@/components/FAQ";
 import Image from "next/image";
 import AnimatedElement from "@/components/AnimatedElement";
+import schools from "@/data/schools.json";
 
 export default function Home() {
-  // Sample data for the community carousel
-  const communityItems = [
-    {
-      id: "1",
-      image: "/colleges/college_placeholder.png",
-      title: "LSU Tigers",
-      subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      id: "2",
-      image: "/colleges/college_placeholder.png",
-      title: "Alabama Crimson Tide",
-      subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      id: "3",
-      image: "/colleges/college_placeholder.png",
-      title: "Duke Blue Devils",
-      subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      id: "4",
-      image: "/colleges/college_placeholder.png",
-      title: "UCLA Bruins",
-      subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      id: "5",
-      image: "/colleges/college_placeholder.png",
-      title: "Texas Longhorns",
-      subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-  ];
+
+  const getRandomSchools = () => {
+    return schools.sort(() => Math.random() - 0.5).slice(0, 30);
+  };
 
   return (
     <DefaultLayout>
-      <div className="pt-[150px] min-h-screen bg-[#03211e]">
+      <div
+        className="pt-[150px] min-h-screen bg-[#03211e]"
+        style={{
+          backgroundImage: "url(/bg.png)",
+          backgroundSize: "contain",
+          backgroundPosition: "center",
+          backgroundPositionY: "0",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <main className="container mx-auto px-6 py-16">
           {/* Header Section */}
           <AnimatedElement>
-            {/* Full-width background container */}
-            <div 
-              className="absolute inset-0 w-screen left-1/2 transform -translate-x-1/2 -z-10"
-              style={{
-                backgroundImage: 'url(/bg.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                minHeight: '100vh',
-                backgroundPositionY: '-100px'
-              }}
-            />
-            
             {/* Content container */}
             <div className="max-w-4xl mx-auto text-center text-[#E6F0F0] relative z-10">
               {/* Subtitle */}
@@ -117,7 +85,7 @@ export default function Home() {
           <div className="mt-24 mb-16">
             <AnimatedElement>
               <div className="max-w-6xl mx-auto">
-                <CommunityCarousel items={communityItems} />
+                <CollegeCarousel items={getRandomSchools()} />
               </div>
             </AnimatedElement>
           </div>

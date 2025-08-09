@@ -134,7 +134,6 @@ export function useSIWS() {
       return;
     }
 
-
     const stored = localStorage.getItem('siws-auth');
     if (stored) {
       try {

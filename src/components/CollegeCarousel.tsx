@@ -1,31 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import CommunityCard from "./CommunityCard";
+import CollegeCard from "./CollegeCard";
 
-interface CommunityItem {
-  id: string;
-  image: string;
-  title: string;
-  subtitle: string;
+interface CollegeItem {
+  logo: string;
+  schoolName: string;
+  commonName: string;
+  nickname: string;
+  city: string;
+  state: string;
+  type: string;
+  subdivision: string;
+  primary: string;
 }
 
-interface CommunityCarouselProps {
-  items: CommunityItem[];
+interface CollegeCarouselProps {
+  items: CollegeItem[];
 }
 
-export default function CommunityCarousel({ items }: CommunityCarouselProps) {
+export default function CollegeCarousel({ items }: CollegeCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const scrollAmountRef = useRef(0);
-
-  // Repeat items multiple times for infinite scroll effect (like the working carousel)
-  const repeatItems = [
-    ...items,
-    ...items,
-    ...items,
-    ...items,
-  ];
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -53,10 +50,10 @@ export default function CommunityCarousel({ items }: CommunityCarouselProps) {
     return () => {
       cancelAnimationFrame(animationId);
     };
-  }, [scrollSpeed, repeatItems.length]);
+  }, [scrollSpeed, items.length]);
 
-  const handleSupport = (item: CommunityItem) => {
-    console.log(`Supporting: ${item.title}`); // TODO: Add support logic here
+  const handleSupport = (item: CollegeItem) => {
+    console.log(`Supporting: ${item.schoolName}`); // TODO: Add support logic here
   };
 
   return (
@@ -67,17 +64,17 @@ export default function CommunityCarousel({ items }: CommunityCarouselProps) {
         onMouseEnter={() => setScrollSpeed(0.3)}
         onMouseLeave={() => setScrollSpeed(1)}
       >
-        {repeatItems.map((item, index) => (
+        {items.map((item, index) => (
           <div
-            key={`${item.id}-${index}`}
+            key={`${item.nickname}-${index}`}
             className="flex-shrink-0"
             onMouseEnter={() => setScrollSpeed(0.3)}
             onMouseLeave={() => setScrollSpeed(1)}
           >
-            <CommunityCard
-              image={item.image}
-              title={item.title}
-              subtitle={item.subtitle}
+            <CollegeCard
+              image={item.logo}
+              title={item.schoolName}
+              subtitle={item.city + ", " + item.state}
               onSupport={() => handleSupport(item)}
             />
           </div>

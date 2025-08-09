@@ -22,14 +22,12 @@ import {
   UserContribution,
   TradingVolumeData,
   CollegeData,
-  // UserData,
 } from "@/types/api";
 
 export default function Dashboard() {
   const { publicKey } = useWallet();
 
   // User data state management
-  // const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
   const [userDataError, setUserDataError] = useState<string | null>(null);
   const [linkedCollege, setLinkedCollege] = useState<CollegeData | null>(null);
@@ -61,9 +59,6 @@ export default function Dashboard() {
     null
   );
 
-
-
-  // Function to load user data (can be reused)
   const loadUserData = async () => {
     if (!publicKey) {
       setUserDataError(null);
@@ -81,9 +76,10 @@ export default function Dashboard() {
         setUserDataError(error);
         setLinkedCollege(null);
       } else if (data) {
-        // setUserData(data);
         if (data.data.currentLinkedCollege) {
-          setLinkedCollege(data.data.currentLinkedCollege as unknown as CollegeData);
+          setLinkedCollege(
+            data.data.currentLinkedCollege as unknown as CollegeData
+          );
         } else {
           setLinkedCollege(null);
         }
@@ -99,14 +95,16 @@ export default function Dashboard() {
   // Listen for college link success events
   useEffect(() => {
     const handleCollegeLinkSuccess = () => {
-      console.log("College linked successfully, refreshing dashboard data...");
       loadUserData();
     };
 
-    window.addEventListener('collegeLinkSuccess', handleCollegeLinkSuccess);
-    
+    window.addEventListener("collegeLinkSuccess", handleCollegeLinkSuccess);
+
     return () => {
-      window.removeEventListener('collegeLinkSuccess', handleCollegeLinkSuccess);
+      window.removeEventListener(
+        "collegeLinkSuccess",
+        handleCollegeLinkSuccess
+      );
     };
   }, [publicKey]); // Re-setup listener when publicKey changes
 
@@ -246,37 +244,25 @@ export default function Dashboard() {
         className="pt-[150px] min-h-screen bg-[#03211e]"
         style={{
           backgroundImage: "url(/bg.png)",
-          backgroundSize: "cover",
+          backgroundSize: "contain",
           backgroundPosition: "center",
+          backgroundPositionY: "0",
           backgroundRepeat: "no-repeat",
-          minHeight: "100vh",
         }}
       >
         <main className="container mx-auto px-6 py-8 text-[#E6F0F0]">
           {/* Header Section */}
           <div className="max-w-6xl mx-auto mb-12">
-
             <div className="flex items-center justify-center bg-transparent rounded-md p-6">
               <div className="flex items-center justify-center w-full max-w-4xl space-x-10">
-                {/* Logo on the left */}
+                {/* 1️⃣ Error */}
                 {userDataError ? (
                   <div>There was an error retrieving your info</div>
-                ) : isLoadingUserData ? (
+                ) : /* 2️⃣ Loading */
+                isLoadingUserData ? (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
-                ) : linkedCollege ? (
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={
-                        linkedCollege.logo ||
-                        "/colleges/college_placeholder.png"
-                      }
-                      alt="College Logo"
-                      width={150}
-                      height={150}
-                      className="rounded-md"
-                    />
-                  </div>
-                ) : (
+                ) : /* 3️⃣ No linked college */
+                !linkedCollege ? (
                   <div className="flex items-center gap-3 text-center">
                     <span className="font-semibold text-lg md:text-4xl text-[#E6F0F0]">
                       Choose a college
@@ -284,43 +270,51 @@ export default function Dashboard() {
                       to support
                     </span>
                   </div>
-                )}
-
-                {linkedCollege &&
-                linkedCollegeContributions &&
-                linkedCollegeContributions > 0 ? (
-                  <div className="text-left">
-                    <p className="text-lg md:text-4xl text-[#E6F0F0] flex flex-col">
-                      <span className="font-semibold">
-                        You&apos;ve contributed{" "}
-                      </span>
-                      <span className="font-bold text-[#15C0B9] my-2 ">
-                        {linkedCollegeContributions
-                          ? formatBalance(linkedCollegeContributions)
-                          : 0}
-                      </span>
-                      <span className="font-semibold text-[#E6F0F0]">
-                        to {linkedCollege?.nickname}
-                      </span>
-                    </p>
-                  </div>
-                ) : linkedCollege ? (
-                  <div className="text-left">
-                    <p className="text-lg md:text-4xl text-[#E6F0F0] flex flex-col">
-                      <span className="font-semibold">Start trading $D1C</span>
-                      <span className="font-semibold">to see your</span>
-                      <span className="font-semibold">contributions grow</span>
-                    </p>
-                  </div>
                 ) : (
-                  <div className="text-left">
-                    <p className="text-lg md:text-2xl text-[#E6F0F0] flex flex-col mb-6">
-                      <span className="font-semibold">Choose your school</span>
-                      <span className="font-semibold">
-                        to start contributing
-                      </span>
-                    </p>
-                  </div>
+                  /* 4️⃣ Linked college (with or without contributions) */
+                  <>
+                    {/* Logo */}
+                    <div className="p-4 bg-white rounded-md">
+                      <Image
+                        src={
+                          linkedCollege.logo ||
+                          "/colleges/college_placeholder.png"
+                        }
+                        alt="College Logo"
+                        width={150}
+                        height={150}
+                        className="rounded-md"
+                      />
+                    </div>
+
+                    {/* Contribution Info */}
+                    <div className="text-left">
+                      {linkedCollegeContributions &&
+                      linkedCollegeContributions > 0 ? (
+                        <p className="text-lg md:text-4xl text-[#E6F0F0] flex flex-col">
+                          <span className="font-semibold">
+                            You&apos;ve contributed
+                          </span>
+                          <span className="font-bold text-[#15C0B9] my-2">
+                            {formatBalance(linkedCollegeContributions)}
+                          </span>
+                          <span className="font-semibold">
+                            to {linkedCollege?.nickname}
+                          </span>
+                        </p>
+                      ) : (
+                        <p className="text-lg md:text-4xl text-[#E6F0F0] flex flex-col">
+                          <span className="font-semibold">
+                            Start trading $D1C
+                          </span>
+                          <span className="font-semibold">to see your</span>
+                          <span className="font-semibold">
+                            contributions grow
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
             </div>

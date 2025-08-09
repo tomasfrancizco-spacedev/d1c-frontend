@@ -17,6 +17,10 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    if (response.headers.get("content-length") === "0") {
+      return NextResponse.json({ success: false, data: null }, { status: 404 });
+    }
+
     const data = await response.json();
 
     return NextResponse.json({ success: true, data: data });
@@ -24,5 +28,5 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching user data:', error);
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
-  
+
 }
