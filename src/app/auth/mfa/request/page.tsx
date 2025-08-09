@@ -52,7 +52,16 @@ export default function MFARequestPage() {
 
   return (
     <DefaultLayout>
-      <div className="pt-[150px] min-h-screen bg-[#03211e] flex items-center justify-center p-4">
+      <div
+        className="md:pt-[150px] min-h-[calc(100vh-160px)] md:min-h-[calc(100vh-104px)] bg-[#03211e] flex items-center justify-center p-4"
+        style={{
+          backgroundImage: "url(/bg.png)",
+          backgroundSize: "contain",
+          backgroundPosition: "center",
+          backgroundPositionY: "0",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <AuthFormContainer
           title="Verify your wallet to support your favorite team"
           subtitle="Enter your email to receive a confirmation code"

@@ -24,12 +24,14 @@ export const HELIUS_URLS = {
 // Backend API URLs
 export const BACKEND_API_URLS = {
   DEVELOPMENT: 'http://localhost:3000',
+  // DEVELOPMENT: 'https://8t97gvxf-3000.brs.devtunnels.ms',
   STAGING: 'http://ec2-3-134-105-162.us-east-2.compute.amazonaws.com:3000',
   PRODUCTION: 'http://ec2-3-134-105-162.us-east-2.compute.amazonaws.com:3000', // TODO: Change to production URL (TBD)
 } as const;
 
 export const FRONTEND_API_URLS = {
   DEVELOPMENT: 'http://localhost:3001',
+  // DEVELOPMENT: 'https://ae31c55c6812.ngrok-free.app',
   STAGING: 'https://staging.d3ieo9817fyven.amplifyapp.com',
   PRODUCTION: 'https://staging.d3ieo9817fyven.amplifyapp.com', // TODO: Change to production URL (TBD)
 } as const;

@@ -9,32 +9,44 @@ import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import { 
-  SolflareWalletAdapter,
-  TorusWalletAdapter,
-  TrustWalletAdapter,
+  SolflareWalletAdapter
 } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css";
+import { isInMobileWalletBrowser } from "@/lib/wallet-utils";
+import { isMobile } from "@/lib/wallet-utils";
 
 interface SolanaProviderProps {
   children: ReactNode;
 }
 
 export const SolanaProvider: FC<SolanaProviderProps> = ({ children }) => {
-  const network = WalletAdapterNetwork.Devnet; // 'mainnet-beta' for production
+  const network = process.env.NODE_ENV === 'production' ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet;
 
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   // Configure wallets for both desktop and mobile
-  const wallets = useMemo(
-    () => [
+  const wallets = useMemo(() => {
+    const walletList = [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
-      new TorusWalletAdapter(),
-      new TrustWalletAdapter(),
-    ],
-    []
-  );
+    ];
+    
+    // On mobile, only show wallets that are actually available
+    if (typeof window !== 'undefined' && isMobile()) {
+      return walletList.filter(wallet => {
+        // Only show wallet if it's detected or we're in its browser
+        const name = wallet.name.toLowerCase();
+        return (
+          (window as any).phantom?.solana && name.includes('phantom') ||
+          (window as any).solflare && name.includes('solflare') ||
+          !isInMobileWalletBrowser() // Show all if not in any wallet browser
+        );
+      });
+    }
+    
+    return walletList;
+  }, []);
 
   return (
     <ConnectionProvider endpoint={endpoint}>

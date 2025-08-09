@@ -34,26 +34,27 @@ const Navbar = (props: {
 
   // Fetch user data when wallet is connected
   useEffect(() => {
-    const loadUserData = async () => {
-      if (!publicKey) {
-        setUserData(null);
-        return;
-      }
-
-      try {
-        const { data, error } = await fetchUserData(publicKey.toString());
-        if (error) {
-          console.error("Error loading user data:", error);
-        } else if (data) {
-          setUserData(data);
+    if (isFullyAuthenticated) {
+      const loadUserData = async () => {
+        if (!publicKey) {
+          setUserData(null);
+          return;
         }
-      } catch (err) {
-        console.error("Error loading user data:", err);
-      }
-    };
 
-    loadUserData();
-  }, [publicKey]);
+        try {
+          const { data, error } = await fetchUserData(publicKey.toString());
+          if (error) {
+            console.error("Error loading user data:", error);
+          } else if (data) {
+            setUserData(data);
+          }
+        } catch (error) {
+          console.error("Error loading user data:", error);
+        }
+      };
+      loadUserData();
+    }
+  }, [publicKey, isFullyAuthenticated]);
 
   // Close mobile menu when screen size changes to desktop
   useEffect(() => {
@@ -68,7 +69,6 @@ const Navbar = (props: {
   }, []);
 
   useEffect(() => {
-    // check url pathname
     if (pathname === "/dashboard") {
       setIsDashboard(true);
     } else {
@@ -207,40 +207,20 @@ const Navbar = (props: {
 
         {/* Division One logo - hidden on small screens */}
         <div className="hidden lg:block">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/divisionlogo2.png"
-              alt="Division One Logo"
-              width={20}
-              height={20}
-            />
-            <p className="text-[#15C0B9] font-medium hover:text-[#E6F0F0] transition-colors duration-200">
-              DIVISION ONE
-            </p>
-          </Link>
-        </div>
-
-        {/* Division One logo - visible only on small screens, positioned to the right */}
-        <div className="lg:hidden ml-auto">
-          <Link
-            href="/"
-            className="flex items-center gap-2 hover:scale-105 transition-transform duration-200"
-          >
-            <Image
-              src="/divisionlogo2.png"
-              alt="Division One Logo"
-              width={20}
-              height={20}
-            />
-            <p className="text-[#15C0B9] hover:text-[#E6F0F0] transition-colors duration-200">
-              DIVISION ONE
-            </p>
-          </Link>
-        </div>
-
-        {/* Desktop navigation menu */}
-        <div className="hidden lg:block">
-          <ul className="flex items-center gap-8 2xsm:gap-4">
+          <ul className="flex items-center gap-2">
+            <li>
+              <Link href="/" className="flex items-center gap-2">
+                <Image
+                  src="/divisionlogo2.png"
+                  alt="Division One Logo"
+                  width={20}
+                  height={20}
+                />
+                <p className="text-[#15C0B9] font-medium hover:text-[#E6F0F0] transition-colors duration-200">
+                  DIVISION ONE
+                </p>
+              </Link>
+            </li>
             {isFullyAuthenticated && !isDashboard && (
               <li>
                 <Link
@@ -270,8 +250,34 @@ const Navbar = (props: {
                 </Link>
               </li>
             )}
+          </ul>
+        </div>
+
+        {/* Division One logo - visible only on small screens, positioned to the right */}
+        <div className="lg:hidden ml-auto">
+          <Link
+            href="/"
+            className="flex items-center gap-2 hover:scale-105 transition-transform duration-200"
+          >
+            <Image
+              src="/divisionlogo2.png"
+              alt="Division One Logo"
+              width={20}
+              height={20}
+            />
+            <p className="text-[#15C0B9] hover:text-[#E6F0F0] transition-colors duration-200">
+              DIVISION ONE
+            </p>
+          </Link>
+        </div>
+
+        {/* Desktop navigation menu */}
+        <div className="hidden lg:block">
+          <ul className="flex items-center gap-8 2xsm:gap-4">
             <li>
-              <WalletConnectButton setIsSelectSchoolModalOpen={setIsSelectSchoolModalOpen} />
+              <WalletConnectButton
+                setIsSelectSchoolModalOpen={setIsSelectSchoolModalOpen}
+              />
             </li>
           </ul>
         </div>
@@ -346,7 +352,8 @@ const Navbar = (props: {
           isOpen={isSelectSchoolModalOpen}
           onClose={() => setIsSelectSchoolModalOpen(false)}
           userId={userData?.data.id.toString() || ""}
-          // onCollegeLinkSuccess={handleCollegeLinkSuccess}
+          linkedCollege={userData?.data.currentLinkedCollege || null}
+          setUserData={setUserData}
         />
       )}
     </header>

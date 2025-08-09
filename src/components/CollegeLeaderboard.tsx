@@ -5,7 +5,7 @@ import Image from "next/image";
 import { fetchCollegeLeaderboard } from "@/lib/api";
 import { CollegeLeaderboardEntry } from "@/types/api";
 import { formatBalance } from "@/lib/api";
-import CommunityCard from "./CommunityCard";
+import CollegeCard from "./CollegeCard";
 
 interface CollegeLeaderboardProps {
   showTitle?: boolean;
@@ -68,31 +68,34 @@ export default function CollegeLeaderboard({
           <p>Error loading leaderboard: {leaderboardError}</p>
         </div>
       ) : leaderboardData.length > 0 ? (
-        // ... existing code ...
         <>
           {/* Full-width background container */}
-          <div 
+          <div
             className="absolute inset-0 w-screen left-1/2 transform -translate-x-1/2 -z-10"
             style={{
-              backgroundImage: 'url(/bc-leaderboard.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              minHeight: '100vh'
+              backgroundImage: "url(/bc-leaderboard.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
             }}
           />
-          
+
           {/* Content container */}
           <div className="relative z-10">
             {/* Top 3 Contributors */}
             <div className="mb-12">
-              <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-8 mb-8">
+              <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-4 md:gap-6 lg:gap-8 mb-8 px-4">
                 {leaderboardData.slice(0, 3).map((college) => (
-                  <CommunityCard
+                  <CollegeCard
                     key={college.college.name}
-                    image={college.college.logo || "/colleges/college_placeholder.png"}
+                    image={
+                      college.college.logo ||
+                      "/colleges/college_placeholder.png"
+                    }
                     title={college.college.name || ""}
-                    subtitle={`${formatBalance(college.totalContributionsReceived)}`}
+                    subtitle={`${formatBalance(
+                      college.totalContributionsReceived
+                    )}`}
                     rank={leaderboardData.indexOf(college) + 1}
                     isRanked={true}
                     onSupport={() => {}}
@@ -129,17 +132,12 @@ export default function CollegeLeaderboard({
 
                     {/* Team Info */}
                     <div className="flex-1 min-w-0 flex flex-col justify-center h-full">
-                      <h4 className="text-lg font-semibold text-[#E6F0F0] line-clamp-2 leading-tight mb-1 h-[44px] flex items-center">
+                      <h4 className="text-lg font-semibold text-[#E6F0F0] line-clamp-2 leading-tight mb-1 h-[44px] flex items-center truncate">
                         {college.college.name}
                       </h4>
-                      <div className="flex items-center gap-2 text-sm h-[20px]">
+                      <div className="flex items-center text-sm h-[20px]">
                         <span className="font-bold text-[#15C0B9]">
                           {formatBalance(college.totalContributionsReceived)}
-                        </span>
-                        <span className="text-[#E6F0F0]/60">•</span>
-                        <span className="text-[#E6F0F0]/80 truncate">
-                          University of{" "}
-                          {college.college.name?.split(" ")[0] || ""}
                         </span>
                       </div>
                     </div>
@@ -149,8 +147,8 @@ export default function CollegeLeaderboard({
             </div>
           </div>
         </>
-// ... existing code ...
-      ) : !isLoadingLeaderboard ? (
+      ) : // ... existing code ...
+      !isLoadingLeaderboard ? (
         <div className="text-center text-[#E6F0F0] p-8">
           <p>No leaderboard data available</p>
         </div>

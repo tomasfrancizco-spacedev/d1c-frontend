@@ -4,12 +4,12 @@ import { createPortal } from "react-dom";
 import { useSIWS } from "@/hooks/useSIWS";
 import { checkFullAuth } from "@/lib/auth-utils";
 import { fetchColleges, linkCollege } from "@/lib/api";
-import { CollegeData } from "@/types/api";
+import { CollegeData, UserData } from "@/types/api";
 import Image from "next/image";
 
 // Cache configuration
 const COLLEGES_CACHE_KEY = "division-one-colleges-cache";
-const CACHE_EXPIRY_HOURS = 24;
+const CACHE_EXPIRY_HOURS = 8;
 
 // Cache utilities
 const getCachedColleges = (): CollegeData[] | null => {
@@ -24,14 +24,14 @@ const getCachedColleges = (): CollegeData[] | null => {
       Date.now() - timestamp > CACHE_EXPIRY_HOURS * 60 * 60 * 1000;
 
     if (isExpired) {
-      localStorage.removeItem(COLLEGES_CACHE_KEY);
+      clearCollegesCache();
       return null;
     }
 
     return data;
   } catch (error) {
     console.error("Error reading colleges cache:", error);
-    localStorage.removeItem(COLLEGES_CACHE_KEY);
+    clearCollegesCache();
     return null;
   }
 };
@@ -50,26 +50,30 @@ const setCachedColleges = (colleges: CollegeData[]): void => {
   }
 };
 
-// const clearCollegesCache = (): void => {
-//   if (typeof window === "undefined") return;
+const clearCollegesCache = (): void => {
+  if (typeof window === "undefined") return;
 
-//   try {
-//     localStorage.removeItem(COLLEGES_CACHE_KEY);
-//   } catch (error) {
-//     console.error("Error clearing colleges cache:", error);
-//   }
-// };
+  try {
+    localStorage.removeItem(COLLEGES_CACHE_KEY);
+  } catch (error) {
+    console.error("Error clearing colleges cache:", error);
+  }
+};
 
 interface SelectSchoolModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
+  linkedCollege: CollegeData | null;
+  setUserData: (userData: UserData) => void;
 }
 
 const SelectSchoolModal = ({
   isOpen,
   onClose,
   userId,
+  linkedCollege,
+  setUserData,
 }: SelectSchoolModalProps) => {
   const { connected, isAuthenticated } = useSIWS();
   const [isFullyAuthenticated, setIsFullyAuthenticated] = useState(false);
@@ -154,14 +158,15 @@ const SelectSchoolModal = ({
   // Filter colleges based on search term
   const filteredColleges =
     colleges &&
-    colleges.filter(
-      (college: CollegeData) =>
+    colleges.filter((college: CollegeData) => {
+      return (
         college.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.commonName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.nickname.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
         college.state.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+      );
+    });
 
   // Handler functions
   const handleSchoolClick = (college: CollegeData) => {
@@ -170,6 +175,17 @@ const SelectSchoolModal = ({
   };
 
   const handleConfirmLinking = async () => {
+    console.log("selectedCollege", selectedCollege);
+    console.log("linkedCollege", linkedCollege);
+    if (selectedCollege?.id === linkedCollege?.id) {
+      console.log("You are already linked to this school");
+      setLinkingError("You are already linked to this school");
+      setSelectedCollege(null);
+      // setShowConfirmModal(false);
+      // onClose();
+      return;
+    }
+
     if (selectedCollege) {
       try {
         setIsLoadingLinking(true);
@@ -182,13 +198,13 @@ const SelectSchoolModal = ({
         if (error) {
           setLinkingError(error);
         } else if (data?.success) {
-          // Dispatch custom event to notify other components
           window.dispatchEvent(
             new CustomEvent("collegeLinkSuccess", {
               detail: selectedCollege,
             })
           );
 
+          setUserData(data);
           setShowConfirmModal(false);
           setSelectedCollege(null);
           onClose();
@@ -260,7 +276,7 @@ const SelectSchoolModal = ({
             <div className="relative w-80">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
-                  className="h-5 w-5 text-white/60"
+                  className="h-5 w-5 text-white/60 z-10"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -302,59 +318,64 @@ const SelectSchoolModal = ({
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[800px]">
-                {filteredColleges.map((college) => (
-                  <div
-                    key={college.id}
-                    className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 cursor-pointer group"
-                    onClick={() => handleSchoolClick(college)}
-                  >
-                    <div className="flex items-center gap-4">
-                      {/* College Avatar */}
-                      <div className="flex-shrink-0">
-                        {college.logo ? (
-                          <Image
-                            src={college.logo}
-                            alt={`${college.name} logo`}
-                            width={48}
-                            height={48}
-                            className="w-12 h-12 rounded-full object-cover bg-white/10"
-                            onError={(e) => {
-                              const target = e.currentTarget;
-                              const fallback =
-                                target.nextElementSibling as HTMLElement;
-                              target.style.display = "none";
-                              if (fallback) {
-                                fallback.style.display = "flex";
-                              }
-                            }}
-                          />
-                        ) : null}
-                        <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-[#15C0B9]/20 to-[#15C0B9]/10 group-hover:from-[#15C0B9]/30 group-hover:to-[#15C0B9]/20 transition-all duration-300 ${
-                            college.logo ? "hidden" : "flex"
-                          }`}
-                        >
-                          <div className="w-8 h-8 rounded-full bg-[#15C0B9]/20 flex items-center justify-center">
-                            <span className="text-xs font-bold text-[#15C0B9]">
-                              {college.name.charAt(0)}
-                            </span>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredColleges.map((college) => {
+                  if (college.id === linkedCollege?.id) {
+                    return null;
+                  }
+                  return (
+                    <div
+                      key={college.id}
+                      className="max-h-[80px] bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 cursor-pointer group"
+                      onClick={() => handleSchoolClick(college)}
+                    >
+                      <div className="flex items-center gap-4">
+                        {/* College Avatar */}
+                        <div className="flex-shrink-0">
+                          {college.logo ? (
+                            <Image
+                              src={college.logo}
+                              alt={`${college.name} logo`}
+                              width={48}
+                              height={48}
+                              className="w-12 h-12 rounded-full object-cover bg-white/10"
+                              onError={(e) => {
+                                const target = e.currentTarget;
+                                const fallback =
+                                  target.nextElementSibling as HTMLElement;
+                                target.style.display = "none";
+                                if (fallback) {
+                                  fallback.style.display = "flex";
+                                }
+                              }}
+                            />
+                          ) : null}
+                          <div
+                            className={`w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-[#15C0B9]/20 to-[#15C0B9]/10 group-hover:from-[#15C0B9]/30 group-hover:to-[#15C0B9]/20 transition-all duration-300 ${
+                              college.logo ? "hidden" : "flex"
+                            }`}
+                          >
+                            <div className="w-8 h-8 rounded-full bg-[#15C0B9]/20 flex items-center justify-center">
+                              <span className="text-xs font-bold text-[#15C0B9]">
+                                {college.name.charAt(0)}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* College Info */}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-base font-semibold text-white mb-1 truncate group-hover:text-[#15C0B9] transition-colors duration-300">
-                          {college.commonName || college.name}
-                        </h4>
-                        <p className="text-[#15C0B9] font-medium text-sm truncate">
-                          {college.nickname} • {college.city}, {college.state}
-                        </p>
+                        {/* College Info */}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-base font-semibold text-white mb-1 truncate group-hover:text-[#15C0B9] transition-colors duration-300">
+                            {college.commonName || college.name}
+                          </h4>
+                          <p className="text-[#15C0B9] font-medium text-sm truncate">
+                            {college.nickname} • {college.city}, {college.state}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {filteredColleges.length === 0 &&
