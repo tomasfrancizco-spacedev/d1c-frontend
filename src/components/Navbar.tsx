@@ -27,6 +27,7 @@ const Navbar = (props: {
   // Modal and user data state
   const [isSelectSchoolModalOpen, setIsSelectSchoolModalOpen] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [isAdminPath, setIsAdminPath] = useState(false);
   // Check for full authentication (wallet + MFA)
   useEffect(() => {
     setIsFullyAuthenticated(checkFullAuth(connected, isAuthenticated) || false);
@@ -73,6 +74,12 @@ const Navbar = (props: {
       setIsDashboard(true);
     } else {
       setIsDashboard(false);
+    }
+
+    if (pathname === "/admin") {
+      setIsAdminPath(true);
+    } else {
+      setIsAdminPath(false);
     }
   }, [pathname]);
 
@@ -221,32 +228,24 @@ const Navbar = (props: {
                 </p>
               </Link>
             </li>
+            <li className="text-[#E6F0F0] ml-1">|</li>
             {isFullyAuthenticated && !isDashboard && (
               <li>
                 <Link
                   href="/dashboard"
-                  className="text-[#E6F0F0] hover:text-[#15C0B9] font-medium transition-all duration-200 flex items-center gap-2 px-3 py-2 rounded-md backdrop-blur-sm"
+                  className="mx-1 text-[#E6F0F0] hover:text-[#15C0B9] font-medium transition-all duration-200 flex items-center py-2 rounded-md backdrop-blur-sm"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"
-                    />
-                  </svg>
                   Dashboard
+                </Link>
+              </li>
+            )}
+            {isFullyAuthenticated && !isAdminPath && (
+              <li>
+                <Link
+                  href="/admin"
+                  className="mx-1 text-[#E6F0F0] hover:text-[#15C0B9] font-medium transition-all duration-200 flex items-center py-2 rounded-md backdrop-blur-sm"
+                >
+                  Admin
                 </Link>
               </li>
             )}
@@ -286,33 +285,25 @@ const Navbar = (props: {
         {mobileMenuOpen && (
           <div className="absolute top-full left-0 w-full sm:w-1/2 bg-white/5 backdrop-blur-xl shadow-2xl mt-1 py-2 lg:hidden z-50 rounded-md">
             <ul className="flex flex-col space-y-3 px-4">
-              {isFullyAuthenticated && (
+              {isFullyAuthenticated && !isDashboard && (
                 <li>
                   <Link
                     href="/dashboard"
                     className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-all duration-200 flex items-center gap-2 px-3 rounded-md hover:bg-white/10"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"
-                      />
-                    </svg>
                     Dashboard
+                  </Link>
+                </li>
+              )}
+              {isFullyAuthenticated && !isAdminPath && (
+                <li>
+                  <Link
+                    href="/admin"
+                    className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-all duration-200 flex items-center gap-2 px-3 rounded-md hover:bg-white/10"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Admin
                   </Link>
                 </li>
               )}
