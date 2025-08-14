@@ -19,12 +19,17 @@ export default function CollegeCard({
   isRanked,
   onSupport,
 }: CollegeCardProps) {
-
   return (
     <div className="flex-shrink-0 w-[200px] h-[280px] bg-white/5 backdrop-blur-md border border-white/10 rounded-md overflow-hidden hover:bg-white/10 hover:border-[#15C0B9]/30 transition-all duration-300 shadow-2xl flex flex-col">
       {/* Image Section */}
       <div className="relative h-32 w-full bg-white">
-        <Image src={image} alt={title} fill className="object-contain p-2" />
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-contain p-2"
+        />
         {isRanked && (
           <div className="absolute top-2 left-2 h-[20px] w-[20px] text-white bg-[#03211e]/90 backdrop-blur-md border border-white/10 rounded-md flex items-center justify-center z-10">
             <p className="text-xs">{rank}</p>

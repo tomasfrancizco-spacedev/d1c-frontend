@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useCallback, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { SolanaSignInInput, SolanaSignInOutput } from '@solana/wallet-standard-features';
@@ -15,7 +14,7 @@ export interface AuthState {
 }
 
 export function useSIWS() {
-  const { connected, publicKey, signIn, disconnect } = useWallet();
+  const { connected, publicKey, signIn, disconnect, connect } = useWallet();
   const router = useRouter();
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
@@ -24,6 +23,11 @@ export function useSIWS() {
   const [isLoading, setIsLoading] = useState(false);
 
   const authenticate = useCallback(async () => {
+
+    if (!connected) {
+      await connect();
+    }
+
     if (!signIn || !publicKey) {
       throw new Error('Wallet not connected or does not support sign in');
     }
@@ -31,15 +35,23 @@ export function useSIWS() {
     setIsLoading(true);
     try {
       const signInData = createSignInData();
-      
-      const signInOutput = await signIn(signInData);
-      
+
+      let signInOutput;
+      try {
+        signInOutput = await signIn(signInData); // @tomas fails when metamask is logged out
+      } catch (error) {
+        if (error instanceof Error && error.message?.includes("Internal JSON-RPC error")) {
+          throw new Error("Please unlock your wallet and try again.");
+        }
+        throw error;
+      }
+
       // Verify the signed message
       const isValid = await verifySIWSMessage(signInData, signInOutput);
-      
+
       if (isValid) {
         const timestamp = Date.now();
-        
+
         // Set authentication cookie via API
         const response = await fetch('/api/auth/siws', {
           method: 'POST',
@@ -62,7 +74,7 @@ export function useSIWS() {
           signInData,
           signInOutput,
         });
-        
+
         // Keep localStorage for client-side state
         localStorage.setItem('siws-auth', JSON.stringify({
           publicKey: publicKey.toString(),
@@ -76,13 +88,12 @@ export function useSIWS() {
         } else {
           router.push('/auth/mfa/request');
         }
-        
+
         return { success: true, signInData, signInOutput };
       } else {
         throw new Error('Failed to verify signed message');
       }
     } catch (error) {
-      console.error('Authentication failed:', error);
       setAuthState({
         isAuthenticated: false,
         publicKey: null,
@@ -110,12 +121,12 @@ export function useSIWS() {
         isAuthenticated: false,
         publicKey: null,
       });
-      
+
       // Clear localStorage
       localStorage.removeItem('siws-auth');
       localStorage.removeItem('mfa-completed');
       localStorage.removeItem('mfa-email');
-      
+
       // Redirect to landing page
       router.push('/');
     } catch (error) {
@@ -137,10 +148,10 @@ export function useSIWS() {
     const stored = localStorage.getItem('siws-auth');
     if (stored) {
       try {
-        const { publicKey: storedKey, timestamp } = JSON.parse(stored);        
+        const { publicKey: storedKey, timestamp } = JSON.parse(stored);
         // Check if auth is still valid (24 hours)
         const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
-        
+
         if (!isExpired && storedKey === publicKey.toString()) {
           setAuthState({
             isAuthenticated: true,
@@ -165,16 +176,16 @@ export function useSIWS() {
     // Wallet connection state
     connected,
     publicKey,
-    
+
     // Authentication state
     isAuthenticated: authState.isAuthenticated,
     isLoading,
-    
+
     // Actions
     authenticate,
     logout,
     checkPersistedAuth,
-    
+
     // Auth data
     signInData: authState.signInData,
     signInOutput: authState.signInOutput,

@@ -62,7 +62,8 @@ export default function WalletConnectButton({
       await authenticate();
     } catch (error) {
       console.error("Sign in failed:", error);
-      alert("Sign in failed. Please try again.");
+      // alert("Sign in failed. Please try again.");
+      alert(error);
     }
   };
 
@@ -347,9 +348,6 @@ export default function WalletConnectButton({
             </div>
             <div className="flex flex-col items-start">
               <span>Open in Phantom</span>
-              <span className="text-xs text-white/70">
-                Opens app with this page
-              </span>
             </div>
           </button>
 
@@ -362,9 +360,6 @@ export default function WalletConnectButton({
             </div>
             <div className="flex flex-col items-start">
               <span>Open in Solflare</span>
-              <span className="text-xs text-white/70">
-                Opens app with this page
-              </span>
             </div>
           </button>
         </div>
@@ -374,12 +369,12 @@ export default function WalletConnectButton({
             <summary className="cursor-pointer text-sm hover:text-white/80 transition-colors">
               Don&apos;t have a wallet? Get started →
             </summary>
-            <div className="mt-2 space-y-2 text-xs">
+            <div className="mt-2 space-y-2 text-xs flex flex-col items-center justify-center">
               <a
                 href="https://phantom.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block hover:text-blue-400 transition-colors"
+                className="block hover:text-blue-400 transition-colors w-[180px] text-left"
               >
                 📱 Download Phantom Wallet
               </a>
@@ -387,7 +382,7 @@ export default function WalletConnectButton({
                 href="https://solflare.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block hover:text-blue-400 transition-colors"
+                className="block hover:text-blue-400 transition-colors w-[180px] text-left"
               >
                 📱 Download Solflare Wallet
               </a>

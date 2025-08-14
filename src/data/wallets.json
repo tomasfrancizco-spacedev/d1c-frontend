@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Ops",
+    "walletAddress": "BZwhpQztyYMd9hQkEsjypGSwWP3fCJF7cBGRUPiGdGhs",
+    "isFeeExempt": true
+  },
+  {
+    "name": "Community College",
+    "walletAddress": "8HgsjfVko8jrsi8ZZjZhYFx6arz9X2J9tzzdF2dDnL2A",
+    "isFeeExempt": false
+  }
+]

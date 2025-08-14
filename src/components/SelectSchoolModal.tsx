@@ -175,10 +175,9 @@ const SelectSchoolModal = ({
   };
 
   const handleConfirmLinking = async () => {
-    console.log("selectedCollege", selectedCollege);
-    console.log("linkedCollege", linkedCollege);
+    
+    
     if (selectedCollege?.id === linkedCollege?.id) {
-      console.log("You are already linked to this school");
       setLinkingError("You are already linked to this school");
       setSelectedCollege(null);
       // setShowConfirmModal(false);

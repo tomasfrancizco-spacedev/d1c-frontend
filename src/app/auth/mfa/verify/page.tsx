@@ -147,7 +147,7 @@ export default function MFAVerifyPage() {
                   value={digit}
                   onChange={(e) => handleInputChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="w-12 h-12 text-center text-xl font-semibold bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-md text-[#E6F0F0] focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-200"
+                  className="w-8 h-8 sm:w-12 sm:h-12 text-center text-xl font-semibold bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-md text-[#E6F0F0] focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-200"
                 />
               ))}
             </div>
