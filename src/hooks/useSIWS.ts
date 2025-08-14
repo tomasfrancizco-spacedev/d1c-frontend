@@ -23,27 +23,19 @@ export function useSIWS() {
   const [isLoading, setIsLoading] = useState(false);
 
   const authenticate = useCallback(async () => {
-    console.log("Connected:", connected);
-    console.log("Authenticating...");
 
     if (!connected) {
-      console.log("Connecting...");
       await connect();
-      console.log("Connected:", connected);
     }
 
     if (!signIn || !publicKey) {
       throw new Error('Wallet not connected or does not support sign in');
     }
-    console.log("Authenticating...");
 
     setIsLoading(true);
     try {
       const signInData = createSignInData();
 
-      console.log("Sign in data created");
-
-      console.log("Sign in data:", signInData);
       let signInOutput;
       try {
         signInOutput = await signIn(signInData); // @tomas fails when metamask is logged out
@@ -54,12 +46,8 @@ export function useSIWS() {
         throw error;
       }
 
-      console.log("Sign in output:", signInOutput);
-
       // Verify the signed message
       const isValid = await verifySIWSMessage(signInData, signInOutput);
-
-      console.log("Is valid:", isValid);
 
       if (isValid) {
         const timestamp = Date.now();
@@ -76,13 +64,9 @@ export function useSIWS() {
           }),
         });
 
-        console.log("Response:", response);
-
         if (!response.ok) {
           throw new Error('Failed to set authentication cookie');
         }
-
-        console.log("Setting auth state...");
 
         setAuthState({
           isAuthenticated: true,
@@ -90,8 +74,6 @@ export function useSIWS() {
           signInData,
           signInOutput,
         });
-
-        console.log("Auth state set");
 
         // Keep localStorage for client-side state
         localStorage.setItem('siws-auth', JSON.stringify({
@@ -112,7 +94,6 @@ export function useSIWS() {
         throw new Error('Failed to verify signed message');
       }
     } catch (error) {
-      console.error('Authentication failed:', error);
       setAuthState({
         isAuthenticated: false,
         publicKey: null,
