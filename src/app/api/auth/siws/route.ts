@@ -15,7 +15,6 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({ success: true });
     
-    // Set httpOnly cookie for wallet authentication
     response.cookies.set('siws-auth', JSON.stringify(authData), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

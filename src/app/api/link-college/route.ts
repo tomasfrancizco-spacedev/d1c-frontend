@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${req.cookies.get('accessToken')?.value}`,
       },
       body: JSON.stringify({ currentLinkedCollege: collegeId }),
     });

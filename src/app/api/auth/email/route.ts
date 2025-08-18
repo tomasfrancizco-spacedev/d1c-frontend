@@ -4,8 +4,12 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   const { email, walletAddress } = await request.json();
 
-  if (!email || !walletAddress) {
-    return NextResponse.json({ success: false, error: 'Email and wallet address are required' }, { status: 400 });
+  if(!walletAddress) {
+    return NextResponse.json({ success: false, error: 'Please sign in with your wallet first' }, { status: 400 });
+  }
+  
+  if (!email) {
+    return NextResponse.json({ success: false, error: 'Email is required' }, { status: 400 });
   }
 
   try {

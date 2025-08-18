@@ -118,3 +118,17 @@ export interface LeaderboardResponse {
   success: boolean;
   data: CollegeLeaderboardEntry[] | UserLeaderboardEntry[];
 }
+
+export interface D1CWallet {
+  id: number;
+  walletType: string;
+  walletAddress: string;
+  fee_exempt: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface D1CWalletsResponse {
+  success: boolean;
+  data: D1CWallet[];
+}

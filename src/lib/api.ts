@@ -1,4 +1,4 @@
-import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData } from '@/types/api';
+import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData, D1CWalletsResponse } from '@/types/api';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
 const getFrontendApiUrl = (env: string) => {
@@ -204,6 +204,16 @@ export async function linkCollege(userId: string, collegeId: string): Promise<{ 
     });
   } catch (error) {
     console.error('Error linking college:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchD1CWallets(): Promise<{ data?: D1CWalletsResponse; error?: string }> {
+  try {
+    const endpoint = `/d1c-wallets`;
+    return apiCall<D1CWalletsResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching D1C wallets:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

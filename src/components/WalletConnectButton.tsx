@@ -62,8 +62,8 @@ export default function WalletConnectButton({
       await authenticate();
     } catch (error) {
       console.error("Sign in failed:", error);
-      // alert("Sign in failed. Please try again.");
-      alert(error);
+      // remove wallet from local storage
+      // localStorage.removeItem("walletName");
     }
   };
 
