@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/stats/user-stats/wallet/${userAddress}`, {
       method: 'GET',
+      headers: request.headers,
     });
 
     const data = await response.json();

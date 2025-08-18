@@ -1,13 +1,14 @@
 import { BACKEND_API_BASE_URL } from '@/lib/api';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
 
   const limit = 12;
 
   try {
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/stats/user-leaderboard?limit=${limit}`, {  
       method: 'GET',
+      headers: request.headers,
     });
     const data = await response.json();
 

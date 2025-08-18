@@ -1,6 +1,10 @@
 "use client";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { checkAdminStatus } from "@/lib/auth-utils";
+import { useSIWS } from "@/hooks/useSIWS";
 
 const SchoolTable = dynamic(() => import("@/components/Admin/SchoolTable"), {
   ssr: false,
@@ -15,6 +19,65 @@ const FeeDistributionTable = dynamic(() => import("@/components/Admin/FeeDistrib
 });
 
 const AdminPage = () => {
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const { connected, isAuthenticated } = useSIWS();
+
+  useEffect(() => {
+    const checkAuthAndAdmin = async () => {
+      try {
+        // Check authentication status via API (which reads httpOnly cookies)
+        const { isAuthenticated, isAdmin: adminStatus } = await checkAdminStatus();
+
+        console.log('isAuthenticated', isAuthenticated);
+        console.log('adminStatus', adminStatus);
+
+        if (!isAuthenticated) {
+          // Not authenticated, redirect to home
+          router.push('/');
+          return;
+        }
+
+        if (!adminStatus) {
+          // Authenticated but not admin, redirect to dashboard
+          router.push('/dashboard');
+          return;
+        }
+
+        setIsAdmin(adminStatus);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+        router.push('/');
+      }
+    };
+
+    checkAuthAndAdmin();
+  }, [connected, isAuthenticated, router]);
+
+  // Show loading state while checking authentication
+  if (isLoading || isAdmin === null) {
+    return (
+      <DefaultLayout>
+        <div className="pt-[120px] min-h-screen bg-[#03211e] flex items-center justify-center">
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      </DefaultLayout>
+    );
+  }
+
+  // Only render admin content if user is confirmed admin
+  if (!isAdmin) {
+    return (
+      <DefaultLayout>
+        <div className="pt-[120px] min-h-screen bg-[#03211e] flex items-center justify-center">
+          <div className="text-white text-xl">Access Denied</div>
+        </div>
+      </DefaultLayout>
+    );
+  }
+
   return (
     <DefaultLayout>
       <div className="pt-[120px] min-h-screen bg-[#03211e]">

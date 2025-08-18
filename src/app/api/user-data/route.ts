@@ -12,9 +12,7 @@ export async function GET(request: NextRequest) {
   try {
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/user/wallet/${userAddress}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: request.headers,
     });
 
     if (response.headers.get("content-length") === "0") {

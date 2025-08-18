@@ -39,6 +39,22 @@ export async function POST(request: NextRequest) {
       path: '/'
     });
 
+    response.cookies.set('accessToken', verifyOtpData.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60, // 24 hours
+      path: '/'
+    });
+
+    response.cookies.set('isAdmin', verifyOtpData.user.isAdmin.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60, // 24 hours
+      path: '/'
+    });
+
     return response;
   } catch (error) {
     console.error('Failed to verify MFA:', error);

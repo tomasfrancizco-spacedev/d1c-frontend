@@ -1,36 +1,60 @@
 "use client";
-import React, { useMemo, useState } from "react";
-import wallets from "@/data/wallets.json";
+import React, { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
-
-type Wallet = {
-  name: string;
-  walletAddress: string;
-  isFeeExempt: boolean;
-};
+import { fetchD1CWallets } from "@/lib/api";
+import { D1CWallet } from "@/types/api";
 
 export default function WalletsTable() {
-  const walletList = (wallets as unknown as Wallet[])
-    .slice()
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const [wallets, setWallets] = useState<D1CWallet[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [filters, setFilters] = useState({
-    name: "",
+    walletType: "",
     walletAddress: "",
-    isFeeExempt: "",
+    fee_exempt: "",
   });
+
+  // Fetch wallets data on component mount
+  useEffect(() => {
+    const loadWallets = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await fetchD1CWallets();
+        
+        if (error) {
+          setError(error);
+          console.error('Error fetching wallets:', error);
+        } else if (data?.data) {
+          setWallets(data.data);
+        }
+      } catch (err) {
+        setError('Failed to load wallets');
+        console.error('Error loading wallets:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadWallets();
+  }, []);
+
+  const walletList = useMemo(() => 
+    wallets.slice().sort((a, b) => a.walletType.localeCompare(b.walletType)),
+    [wallets]
+  );
 
   const filteredWalletList = useMemo(() => {
     const lowercased = {
-      name: filters.name.toLowerCase(),
+      walletType: filters.walletType.toLowerCase(),
       walletAddress: filters.walletAddress.toLowerCase(),
-      isFeeExempt: filters.isFeeExempt.toLowerCase(),
+      fee_exempt: filters.fee_exempt.toLowerCase(),
     };
 
     return walletList.filter((wallet) => {
       if (
-        lowercased.name &&
-        !wallet.name.toLowerCase().includes(lowercased.name)
+        lowercased.walletType &&
+        !wallet.walletType.toLowerCase().includes(lowercased.walletType)
       )
         return false;
       if (
@@ -39,13 +63,31 @@ export default function WalletsTable() {
       )
         return false;
       if (
-        lowercased.isFeeExempt &&
-        !wallet.isFeeExempt.toString().includes(lowercased.isFeeExempt)
+        lowercased.fee_exempt &&
+        !wallet.fee_exempt.toString().includes(lowercased.fee_exempt)
       )
         return false;
       return true;
     });
   }, [filters, walletList]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 p-8">
+        <div className="text-center text-white/90">Loading wallets...</div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 p-8">
+        <div className="text-center text-red-400">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 overflow-scroll max-h-[500px] scrollbar-custom">
@@ -54,43 +96,50 @@ export default function WalletsTable() {
           <tr>
             <th className="px-4 py-2 align-top">
               <div className="space-y-1">
-                <div className="text-xs font-semibold mb-2">Name</div>
+                <div className="text-xs font-semibold mb-2">ID</div>
+              </div>
+            </th>
+            <th className="px-4 py-2 align-top">
+              <div className="space-y-1">
+                <div className="text-xs font-semibold mb-2">Wallet Type</div>
                 <input
                   type="text"
-                  value={filters.name}
+                  value={filters.walletType}
                   onChange={(e) =>
                     setFilters((prev) => ({
                       ...prev,
-                      name: e.target.value,
+                      walletType: e.target.value,
                     }))
                   }
-                  // placeholder="Filter"
                   className="w-full rounded-md bg-white/10 px-2 py-1 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9]"
                 />
               </div>
             </th>
             <th className="px-4 py-2 align-top">
               <div className="space-y-1">
-                <div className="text-xs font-semibold mb-2">Wallet address</div>
+                <div className="text-xs font-semibold mb-2">Wallet Address</div>
                 <input
                   type="text"
                   value={filters.walletAddress}
                   onChange={(e) => setFilters((prev) => ({ ...prev, walletAddress: e.target.value }))}
-                  // placeholder="Filter"
                   className="w-full rounded-md bg-white/10 px-2 py-1 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9]"
                 />
               </div>
             </th>
             <th className="px-4 py-2 align-top">
               <div className="space-y-1">
-                <div className="text-xs font-semibold mb-2">Fee exempt</div>
+                <div className="text-xs font-semibold mb-2">Fee Exempt</div>
                 <input
                   type="text"
-                  value={filters.isFeeExempt}
-                  onChange={(e) => setFilters((prev) => ({ ...prev, isFeeExempt: e.target.value }))}
-                  // placeholder="Filter"
+                  value={filters.fee_exempt}
+                  onChange={(e) => setFilters((prev) => ({ ...prev, fee_exempt: e.target.value }))}
                   className="w-full rounded-md bg-white/10 px-2 py-1 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9]"
                 />
+              </div>
+            </th>
+            <th className="px-4 py-2 align-top">
+              <div className="space-y-1">
+                <div className="text-xs font-semibold mb-2">Created At</div>
               </div>
             </th>
           </tr>
@@ -98,26 +147,41 @@ export default function WalletsTable() {
         <tbody>
           {filteredWalletList.length > 0 ? filteredWalletList.map((wallet) => (
             <tr
-              key={`${wallet.name}-${wallet.walletAddress}`}
+              key={`${wallet.id}-${wallet.walletAddress}`}
               className="odd:bg-white/0 even:bg-white/[0.03]"
             >
-              <td className="px-4 py-3 whitespace-nowrap">{wallet.name}</td>
+              <td className="px-4 py-3 whitespace-nowrap">{wallet.id}</td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <span className="px-2 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium">
+                  {wallet.walletType}
+                </span>
+              </td>
               <td className="px-4 py-3 font-mono">
                 <Link
                   href={`https://solscan.io/address/${wallet.walletAddress}`}
                   target="_blank"
-                  className="text-blue-500 hover:text-blue-600"
+                  className="text-blue-500 hover:text-blue-600 block truncate max-w-[200px]"
+                  title={wallet.walletAddress}
                 >
                   {wallet.walletAddress}
                 </Link>
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
-                {wallet.isFeeExempt ? "Yes" : "No"}
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  wallet.fee_exempt 
+                    ? 'bg-green-500/20 text-green-300' 
+                    : 'bg-red-500/20 text-red-300'
+                }`}>
+                  {wallet.fee_exempt ? "Yes" : "No"}
+                </span>
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap text-xs text-white/70">
+                {new Date(wallet.createdAt).toLocaleDateString()}
               </td>
             </tr>
           )) : (
             <tr>
-              <td colSpan={8} className="px-4 py-3 text-center text-white/50">No wallets found</td>
+              <td colSpan={5} className="px-4 py-3 text-center text-white/50">No wallets found</td>
             </tr>
           )}
         </tbody>

@@ -4,7 +4,6 @@ export async function POST() {
   try {
     const response = NextResponse.json({ success: true });
     
-    // Clear both authentication cookies
     response.cookies.set('siws-auth', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -14,6 +13,22 @@ export async function POST() {
     });
 
     response.cookies.set('mfa-auth', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/'
+    });
+
+    response.cookies.set('isAdmin', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/'
+    });
+
+    response.cookies.set('accessToken', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
