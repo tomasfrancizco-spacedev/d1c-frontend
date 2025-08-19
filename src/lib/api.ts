@@ -1,4 +1,4 @@
-import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData, D1CWalletsResponse } from '@/types/api';
+import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData, D1CWalletsResponse, AdminsResponse, FeeJobLogsResponse, TotalFeesResponse, TransactionCountResponse, AutomatedProcessingResponse, UserTransactionsResponse } from '@/types/api';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
 const getFrontendApiUrl = (env: string) => {
@@ -214,6 +214,150 @@ export async function fetchD1CWallets(): Promise<{ data?: D1CWalletsResponse; er
     return apiCall<D1CWalletsResponse>(endpoint);
   } catch (error) {
     console.error('Error fetching D1C wallets:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export interface UpdateCollegeRequest {
+  name?: string;
+  nickname?: string;
+  walletAddress?: string;
+}
+
+export interface CreateCollegeRequest {
+  name: string;
+  commonName: string;
+  nickname: string;
+  city: string;
+  state: string;
+  type: string;
+  subdivision: string;
+  primary: string;
+  walletAddress: string;
+  logo?: string;
+}
+
+export async function updateCollege(
+  collegeId: number,
+  updates: UpdateCollegeRequest
+): Promise<{ data?: CollegeData; error?: string }> {
+  try {
+    const endpoint = `/colleges/${collegeId}`;
+    return apiCall<CollegeData>(endpoint, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+  } catch (error) {
+    console.error('Error updating college:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function createCollege(
+  collegeData: CreateCollegeRequest
+): Promise<{ data?: CollegeData; error?: string }> {
+  try {
+    const endpoint = `/colleges`;
+    return apiCall<CollegeData>(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(collegeData),
+    });
+  } catch (error) {
+    console.error('Error creating college:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function deleteCollege(collegeId: number): Promise<{ data?: CollegeData; error?: string }> {
+  try {
+    const endpoint = `/colleges/${collegeId}`;
+    return apiCall<CollegeData>(endpoint, {
+      method: 'DELETE',
+    });
+  } catch (error) {
+    console.error('Error deleting college:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchAdmins(): Promise<{ data?: AdminsResponse; error?: string }> {
+  try {
+    const endpoint = `/admins`;
+    return apiCall<AdminsResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching admins:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+// Fee Management API Functions
+export async function fetchFeeJobLogs(limit: number = 10): Promise<{ data?: FeeJobLogsResponse; error?: string }> {
+  try {
+    const endpoint = `/fee-management/job-logs?limit=${limit}`;
+    return apiCall<FeeJobLogsResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching fee job logs:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchTotalFees(): Promise<{ data?: TotalFeesResponse; error?: string }> {
+  try {
+    const endpoint = `/fee-management/total-fees`;
+    return apiCall<TotalFeesResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching total fees:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchUnharvestedTransactionsCount(): Promise<{ data?: TransactionCountResponse; error?: string }> {
+  try {
+    const endpoint = `/fee-management/unharvested-transactions-count`;
+    return apiCall<TransactionCountResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching unharvested transactions count:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchUndistributedTransactionsCount(): Promise<{ data?: TransactionCountResponse; error?: string }> {
+  try {
+    const endpoint = `/fee-management/undistributed-transactions-count`;
+    return apiCall<TransactionCountResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching undistributed transactions count:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function triggerAutomatedProcessing(): Promise<{ data?: AutomatedProcessingResponse; error?: string }> {
+  try {
+    const endpoint = `/fee-management/trigger-automated-processing`;
+    return apiCall<AutomatedProcessingResponse>(endpoint, {
+      method: 'POST',
+      body: '',
+    });
+  } catch (error) {
+    console.error('Error triggering automated processing:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchUserTransactions(
+  userAddress: string,
+  limit: number = 10,
+  offset: number = 0
+): Promise<{ data?: UserTransactionsResponse; error?: string }> {
+  if (!userAddress) {
+    return { error: 'User address is required' };
+  }
+
+  try {
+    const endpoint = `/user-transactions?userAddress=${encodeURIComponent(userAddress)}&limit=${limit}&offset=${offset}`;
+    return apiCall<UserTransactionsResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching user transactions:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

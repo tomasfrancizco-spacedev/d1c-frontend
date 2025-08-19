@@ -37,7 +37,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
       )
     },
     {
-      title: "Trading Volume",
+      title: "$D1C Trading Volume",
       value: tradingVolume, 
       isLoading: isLoadingTradingVolume,
       icon: (
@@ -201,7 +201,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-[#E6F0F0] drop-shadow-sm">
-                Trading Volume
+                $D1C Trading Volume
               </h3>
               <div className="w-10 h-10 bg-gradient-to-br from-[#15C0B9]/30 to-[#15C0B9]/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-[#15C0B9]/20">
                 <svg className="w-5 h-5 text-[#15C0B9] drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">

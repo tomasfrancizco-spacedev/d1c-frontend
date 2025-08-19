@@ -12,6 +12,8 @@ import {
   isInMobileWalletBrowser,
   openWalletInAppBrowser,
 } from "@/lib/wallet-utils";
+import Link from "next/link";
+import { checkFullAuth } from "@/lib/auth-utils";
 
 export default function WalletConnectButton({
   setIsSelectSchoolModalOpen,
@@ -31,6 +33,14 @@ export default function WalletConnectButton({
 
   const isWalletBrowser = isInMobileWalletBrowser();
   const detectedMobileWallet = getMobileWalletAdapter();
+  const [isFullyAuthenticated, setIsFullyAuthenticated] = useState(false);
+
+  const [showConnectMobileWalletInfo, setShowConnectMobileWalletInfo] =
+    useState(false);
+
+  useEffect(() => {
+    setIsFullyAuthenticated(checkFullAuth(connected, isAuthenticated) || false);
+  }, [connected, isAuthenticated]);
 
   useEffect(() => {
     if (connected) {
@@ -96,6 +106,10 @@ export default function WalletConnectButton({
         console.log("No mobile wallet detected");
       }
     }
+  };
+
+  const handleShowConnectMobileWalletInfo = () => {
+    setShowConnectMobileWalletInfo(true);
   };
 
   const truncateAddress = (address: string) => {
@@ -222,26 +236,30 @@ export default function WalletConnectButton({
         </div>
 
         {showWalletInfo && (
-          <div className="absolute top-full mt-2 right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-md shadow-2xl p-4 min-w-[280px] z-50">
+          <div className="absolute top-full mt-2 right-0 bg-[#03211e] backdrop-blur-md border border-white/20 rounded-md shadow-2xl p-4 min-w-[280px] z-50">
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium text-white/80">
                   Address
                 </label>
-                <div className="bg-white/5 rounded-md p-2 mt-1 border border-white/10">
-                  <code className="text-sm font-mono text-white break-all">
-                    {publicKey.toString()}
-                  </code>
+                
+                  <div className="bg-white/5 rounded-md p-2 mt-1 border border-white/10">
+                  <Link href={`https://solscan.io/address/${publicKey.toString()}`} target="_blank">
+                    <code className="text-sm font-mono text-white break-all">
+                      {publicKey.toString()}
+                    </code>
+                  </Link>
                 </div>
               </div>
 
               <div className="flex space-x-2">
+                {isFullyAuthenticated && (
                 <button
                   onClick={() => {
                     setIsSelectSchoolModalOpen(true);
                     setShowWalletInfo(false);
                   }}
-                  className="cursor-pointer px-4 py-2 bg-[#15C0B9] hover:bg-[#15C0B9]/90 text-white font-medium rounded-lg transition-colors duration-200 flex items-center gap-2"
+                  className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
                 >
                   <svg
                     className="w-4 h-4"
@@ -258,6 +276,7 @@ export default function WalletConnectButton({
                   </svg>
                   Select School
                 </button>
+                )}
                 <button
                   onClick={handleSignOut}
                   className="text-sm flex-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-white font-medium px-4 py-2 rounded-md transition-all duration-200 cursor-pointer backdrop-blur-sm flex items-center justify-center"
@@ -317,78 +336,96 @@ export default function WalletConnectButton({
 
     // We're in a regular mobile browser - guide user to wallet app
     return (
-      <div className="space-y-4 max-w-sm">
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-          <div className="flex items-center gap-2 text-blue-400 mb-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="font-medium">For best experience</span>
+      <div className="flex items-center justify-center">
+        <button
+          onClick={handleShowConnectMobileWalletInfo}
+          className={`${
+            showConnectMobileWalletInfo
+              ? "hidden"
+              : "bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 hover:scale-101 cursor-pointer"
+          }`}
+        >
+          Connect your wallet
+        </button>
+        {showConnectMobileWalletInfo && (
+          <div className="space-y-4 max-w-sm">
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-blue-400 mb-2">
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="font-medium">For best experience</span>
+              </div>
+              <p className="text-sm text-white/70 mb-3">
+                Tap the button below to open this page in your wallet app
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {/* <h3 className="text-white font-medium text-center">
+                Choose your wallet:
+              </h3> */}
+
+              <button
+                onClick={() => openWalletInAppBrowser("phantom")}
+                className="w-full bg-[#9945FF] hover:bg-[#7C3AED] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
+              >
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-[#9945FF] text-sm font-bold">P</span>
+                </div>
+                <div className="flex flex-col items-start">
+                  <span>Open in Phantom</span>
+                </div>
+              </button>
+
+              {/* <button
+                onClick={() => openWalletInAppBrowser("solflare")}
+                className="w-full bg-[#FC9745] hover:bg-[#F97316] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
+              >
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-[#FC9745] text-sm font-bold">S</span>
+                </div>
+                <div className="flex flex-col items-start">
+                  <span>Open in Solflare</span>
+                </div>
+              </button> */}
+            </div>
+
+            <div className="border-t border-white/10 pt-4">
+              {/* <details className="text-white/60">
+                <summary className="cursor-pointer text-sm hover:text-white/80 transition-colors">
+                  Don&apos;t have a wallet? Get started →
+                </summary>
+                <div className="mt-2 space-y-2 text-xs flex flex-col items-center justify-center">
+                  <a
+                    href="https://phantom.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block hover:text-blue-400 transition-colors w-[180px] text-left"
+                  >
+                    📱 Download Phantom Wallet
+                  </a>
+                  <a
+                    href="https://solflare.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block hover:text-blue-400 transition-colors w-[180px] text-left"
+                  >
+                    📱 Download Solflare Wallet
+                  </a>
+                </div>
+              </details> */}
+            </div>
           </div>
-          <p className="text-sm text-white/70 mb-3">
-            Tap a button below to open this page in your wallet app
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          <h3 className="text-white font-medium text-center">
-            Choose your wallet:
-          </h3>
-
-          <button
-            onClick={() => openWalletInAppBrowser("phantom")}
-            className="w-full bg-[#9945FF] hover:bg-[#7C3AED] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
-          >
-            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-              <span className="text-[#9945FF] text-sm font-bold">P</span>
-            </div>
-            <div className="flex flex-col items-start">
-              <span>Open in Phantom</span>
-            </div>
-          </button>
-
-          <button
-            onClick={() => openWalletInAppBrowser("solflare")}
-            className="w-full bg-[#FC9745] hover:bg-[#F97316] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
-          >
-            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-              <span className="text-[#FC9745] text-sm font-bold">S</span>
-            </div>
-            <div className="flex flex-col items-start">
-              <span>Open in Solflare</span>
-            </div>
-          </button>
-        </div>
-
-        <div className="border-t border-white/10 pt-4">
-          <details className="text-white/60">
-            <summary className="cursor-pointer text-sm hover:text-white/80 transition-colors">
-              Don&apos;t have a wallet? Get started →
-            </summary>
-            <div className="mt-2 space-y-2 text-xs flex flex-col items-center justify-center">
-              <a
-                href="https://phantom.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block hover:text-blue-400 transition-colors w-[180px] text-left"
-              >
-                📱 Download Phantom Wallet
-              </a>
-              <a
-                href="https://solflare.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block hover:text-blue-400 transition-colors w-[180px] text-left"
-              >
-                📱 Download Solflare Wallet
-              </a>
-            </div>
-          </details>
-        </div>
+        )}
       </div>
     );
   }

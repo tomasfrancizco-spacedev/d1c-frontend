@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <DefaultLayout>
       <div
-        className="pt-[150px] min-h-screen bg-[#03211e]"
+        className="pt-[80px] md:pt-[100px] min-h-screen bg-[#03211e]"
         style={{
           backgroundImage: "url(/bg.png)",
           backgroundSize: "contain",
@@ -31,6 +31,13 @@ export default function Home() {
           <AnimatedElement>
             {/* Content container */}
             <div className="max-w-4xl mx-auto text-center text-[#E6F0F0] relative z-10">
+
+              {/* Mobile-only Wallet Connect Button */}
+              <div className="md:hidden mb-8">
+                <div className="flex justify-center">
+                  <WalletConnectButton setIsSelectSchoolModalOpen={() => {}} />
+                </div>
+              </div>
               {/* Subtitle */}
               <div className="mb-4">
                 <p className="text-sm md:text-base text-[#E6F0F0]/80 font-medium">
@@ -47,7 +54,7 @@ export default function Home() {
               </div>
 
               {/* Search Input */}
-              <div className="mb-12 max-w-100 mx-auto">
+              {/* <div className="mb-12 max-w-100 mx-auto">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 z-999 flex items-center pointer-events-none">
                     <svg
@@ -70,14 +77,8 @@ export default function Home() {
                     className="w-full pl-14 pr-4 py-4 bg-[rgba(0,0,0,0.4)] backdrop-blur-md border border-[rgba(255,255,255,0.1)] rounded-md text-[#E6F0F0] placeholder-[#E6F0F0]/90 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-300 text-lg"
                   />
                 </div>
-              </div>
+              </div> */}
 
-              {/* Mobile-only Wallet Connect Button */}
-              <div className="md:hidden mb-8">
-                <div className="flex justify-center">
-                  <WalletConnectButton setIsSelectSchoolModalOpen={() => {}} />
-                </div>
-              </div>
             </div>
           </AnimatedElement>
 

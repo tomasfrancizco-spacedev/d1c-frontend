@@ -50,11 +50,12 @@ export default function UserLeaderboard({
     <div className={`max-w-6xl mx-auto ${className} mb-12`}>
       {showTitle && (
         <div className="flex items-center justify-center text-center gap-3 mb-12">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-[#E6F0F0] mb-4">
-            Top supporters from the community
-          </h3>
-          {isLoadingLeaderboard && (
+          {isLoadingLeaderboard ? (
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#15C0B9]"></div>
+          ) : (
+            <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-[#E6F0F0] mb-4">
+              Top supporters from the community
+            </h3>
           )}
         </div>
       )}

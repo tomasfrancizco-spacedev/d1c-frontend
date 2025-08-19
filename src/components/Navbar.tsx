@@ -26,6 +26,7 @@ const Navbar = (props: {
 
   // Modal and user data state
   const [isSelectSchoolModalOpen, setIsSelectSchoolModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isAdminPath, setIsAdminPath] = useState(false);
   // Check for full authentication (wallet + MFA)
@@ -228,7 +229,9 @@ const Navbar = (props: {
                 </p>
               </Link>
             </li>
-            <li className="text-[#E6F0F0] ml-1">|</li>
+            {isFullyAuthenticated && (
+              <li className="text-[#E6F0F0] ml-1">|</li>
+            )}
             {isFullyAuthenticated && !isDashboard && (
               <li>
                 <Link
@@ -283,13 +286,13 @@ const Navbar = (props: {
 
         {/* Mobile dropdown menu */}
         {mobileMenuOpen && (
-          <div className="absolute top-full left-0 w-full sm:w-1/2 bg-white/5 backdrop-blur-xl shadow-2xl mt-1 py-2 lg:hidden z-50 rounded-md">
+          <div className="absolute top-full left-0 w-full sm:w-1/2 bg-[#03211e] backdrop-blur-xl shadow-2xl mt-1 py-2 lg:hidden z-50 rounded-md">
             <ul className="flex flex-col space-y-3 px-4">
               {isFullyAuthenticated && !isDashboard && (
                 <li>
                   <Link
                     href="/dashboard"
-                    className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-all duration-200 flex items-center gap-2 px-3 rounded-md hover:bg-white/10"
+                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Dashboard
@@ -300,7 +303,7 @@ const Navbar = (props: {
                 <li>
                   <Link
                     href="/admin"
-                    className="text-[#E6F0F0] hover:text-[#15C0B9] py-2 transition-all duration-200 flex items-center gap-2 px-3 rounded-md hover:bg-white/10"
+                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Admin
@@ -314,21 +317,9 @@ const Navbar = (props: {
                       setIsSelectSchoolModalOpen(true);
                       setMobileMenuOpen(false);
                     }}
-                    className="cursor-pointer w-full text-left px-3 py-2 bg-[#15C0B9] hover:bg-[#15C0B9]/90 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2"
+                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
+                    
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0h3m-3 0h-5m2-5h9m-9 0v-5"
-                      />
-                    </svg>
                     Select School
                   </button>
                 </li>
@@ -341,10 +332,15 @@ const Navbar = (props: {
       {isFullyAuthenticated && (
         <SelectSchoolModal
           isOpen={isSelectSchoolModalOpen}
-          onClose={() => setIsSelectSchoolModalOpen(false)}
+          onClose={() => {
+            setIsSelectSchoolModalOpen(false);
+            setSearchTerm("");
+          }}
           userId={userData?.data.id.toString() || ""}
           linkedCollege={userData?.data.currentLinkedCollege || null}
           setUserData={setUserData}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
       )}
     </header>

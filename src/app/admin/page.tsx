@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { checkAdminStatus } from "@/lib/auth-utils";
 import { useSIWS } from "@/hooks/useSIWS";
 
-const SchoolTable = dynamic(() => import("@/components/Admin/SchoolTable"), {
+const FeeManagement = dynamic(() => import("@/components/Admin/FeeManagement"), {
   ssr: false,
 });
 
@@ -14,7 +14,11 @@ const WalletsTable = dynamic(() => import("@/components/Admin/WalletsTable"), {
   ssr: false,
 });
 
-const FeeDistributionTable = dynamic(() => import("@/components/Admin/FeeDistributionTable"), {
+const AdminsTable = dynamic(() => import("@/components/Admin/AdminsTable"), {
+  ssr: false,
+});
+
+const SchoolTable = dynamic(() => import("@/components/Admin/SchoolTable"), {
   ssr: false,
 });
 
@@ -29,9 +33,6 @@ const AdminPage = () => {
       try {
         // Check authentication status via API (which reads httpOnly cookies)
         const { isAuthenticated, isAdmin: adminStatus } = await checkAdminStatus();
-
-        console.log('isAuthenticated', isAuthenticated);
-        console.log('adminStatus', adminStatus);
 
         if (!isAuthenticated) {
           // Not authenticated, redirect to home
@@ -61,7 +62,7 @@ const AdminPage = () => {
     return (
       <DefaultLayout>
         <div className="pt-[120px] min-h-screen bg-[#03211e] flex items-center justify-center">
-          <div className="text-white text-xl">Loading...</div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
         </div>
       </DefaultLayout>
     );
@@ -82,42 +83,22 @@ const AdminPage = () => {
     <DefaultLayout>
       <div className="pt-[120px] min-h-screen bg-[#03211e]">
         <div className="container mx-auto px-6 py-10 space-y-8">
-          <h1 className="text-4xl font-bold text-white">Admin Dashboard</h1>
+          <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
 
           <section className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-semibold text-white">Schools</h2>
-              <button className="cursor-pointer px-3 py-2 bg-[#15C0B9] hover:bg-[#15C0B9]/90 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
-                <svg
-                  width="24px"
-                  height="24px"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4 12H20M12 4V20"
-                    stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                Add School
-              </button>
-            </div>
-
-            <SchoolTable />
+            <FeeManagement />
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-white">Wallets</h2>
             <WalletsTable />
           </section>
+          
+          <section className="space-y-4">
+            <AdminsTable />
+          </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold text-white">Transactions</h2>
-            <FeeDistributionTable />
+            <SchoolTable />
           </section>
         </div>
       </div>
