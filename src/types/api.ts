@@ -13,6 +13,20 @@ export interface ApiError {
   error: string;
 }
 
+export interface AdminData {
+  id: number;
+  walletAddress: string;
+  lastLogin: string;
+  currentLinkedCollege: {
+    name: string;
+  }
+}
+
+export interface AdminsResponse {
+  success: boolean;
+  data: AdminData[];
+}
+
 export interface UserData {
   success: boolean;
   data: {
@@ -131,4 +145,59 @@ export interface D1CWallet {
 export interface D1CWalletsResponse {
   success: boolean;
   data: D1CWallet[];
+}
+
+export interface FeeJobLog {
+  id: number;
+  executedAt: string;
+  success: boolean;
+  harvestedAmount: string;
+  distributedAmount: string;
+  burnedAmount: string;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export interface FeeJobLogsResponse {
+  success: boolean;
+  data: FeeJobLog[];
+}
+
+export interface TotalFeesResponse {
+  success: boolean;
+  data: {
+    totalFees: number;
+  };
+}
+
+export interface TransactionCountResponse {
+  success: boolean;
+  data: {
+    count: number;
+  };
+}
+
+export interface HarvestResult {
+  success: boolean;
+  transactionsProcessed: number;
+  totalFeesHarvested: number;
+  errors: string[];
+}
+
+export interface DistributionResult {
+  success: boolean;
+  transactionsProcessed: number;
+  opsAmount: number;
+  collegeAmount: number;
+  burnedAmount: number;
+  errors: string[];
+  signatures: string[];
+}
+
+export interface AutomatedProcessingResponse {
+  success: boolean;
+  data: {
+    harvestResult: HarvestResult;
+    distributionResult: DistributionResult;
+  };
 }

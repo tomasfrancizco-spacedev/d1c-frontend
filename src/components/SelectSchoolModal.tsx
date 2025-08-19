@@ -14,6 +14,8 @@ interface SelectSchoolModalProps {
   userId: string;
   linkedCollege: CollegeData | null;
   setUserData: (userData: UserData) => void;
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
 }
 
 const SelectSchoolModal = ({
@@ -22,11 +24,12 @@ const SelectSchoolModal = ({
   userId,
   linkedCollege,
   setUserData,
+  searchTerm,
+  setSearchTerm,
 }: SelectSchoolModalProps) => {
   const { connected, isAuthenticated } = useSIWS();
   const [isFullyAuthenticated, setIsFullyAuthenticated] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [colleges, setColleges] = useState<CollegeData[]>([]);
   const [isLoadingColleges, setIsLoadingColleges] = useState(false);
   const [collegesError, setCollegesError] = useState<string | null>(null);

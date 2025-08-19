@@ -1,76 +1,70 @@
 "use client";
 import React, { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchD1CWallets } from "@/lib/api";
-import { D1CWallet } from "@/types/api";
+import { fetchAdmins } from "@/lib/api";
+import { AdminData } from "@/types/api";
 
-export default function WalletsTable() {
-  const [wallets, setWallets] = useState<D1CWallet[]>([]);
+export default function AdminsTable() {
+  const [admins, setAdmins] = useState<AdminData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [filters, setFilters] = useState({
-    walletType: "",
-    walletAddress: "",
-    fee_exempt: "",
+    waletAddress: "",
+    lastLogin: "",
+    currentLinkedCollege: "",
   });
 
   // Fetch wallets data on component mount
   useEffect(() => {
-    const loadWallets = async () => {
+    const loadAdmins = async () => {
       try {
         setIsLoading(true);
-        const { data, error } = await fetchD1CWallets();
+        const { data, error } = await fetchAdmins();
 
         if (error) {
           setError(error);
-          console.error("Error fetching wallets:", error);
+          console.error("Error fetching admins:", error);
         } else if (data?.data) {
-          setWallets(data.data);
+          setAdmins(data.data);
         }
       } catch (err) {
-        setError("Failed to load wallets");
-        console.error("Error loading wallets:", err);
+        setError("Failed to load admins");
+        console.error("Error loading admins:", err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadWallets();
+    loadAdmins();
   }, []);
 
-  const walletList = useMemo(
+  const adminList = useMemo(
     () =>
-      wallets.slice().sort((a, b) => a.walletType.localeCompare(b.walletType)),
-    [wallets]
+      admins.slice().sort((a, b) => a.walletAddress.localeCompare(b.walletAddress)),
+    [admins]
   );
 
-  const filteredWalletList = useMemo(() => {
+  const filteredAdminList = useMemo(() => {
     const lowercased = {
-      walletType: filters.walletType.toLowerCase(),
-      walletAddress: filters.walletAddress.toLowerCase(),
-      fee_exempt: filters.fee_exempt.toLowerCase(),
+      waletAddress: filters.waletAddress.toLowerCase(),
+      lastLogin: filters.lastLogin.toLowerCase(),
+      currentLinkedCollege: filters.currentLinkedCollege.toLowerCase(),
     };
 
-    return walletList.filter((wallet) => {
+    return adminList.filter((admin) => {
       if (
-        lowercased.walletType &&
-        !wallet.walletType.toLowerCase().includes(lowercased.walletType)
+        lowercased.waletAddress &&
+        !admin.walletAddress.toLowerCase().includes(lowercased.waletAddress)
       )
         return false;
-      if (
-        lowercased.walletAddress &&
-        !wallet.walletAddress.toLowerCase().includes(lowercased.walletAddress)
-      )
+      if (lowercased.lastLogin && !admin.lastLogin.toLowerCase().includes(lowercased.lastLogin))
         return false;
-      if (
-        lowercased.fee_exempt &&
-        !wallet.fee_exempt.toString().includes(lowercased.fee_exempt)
-      )
+      if (lowercased.currentLinkedCollege && !admin.currentLinkedCollege.toString().includes(lowercased.currentLinkedCollege))
         return false;
       return true;
     });
-  }, [filters, walletList]);
+  }, [filters, adminList]);
 
   // Loading state
   if (isLoading) {
@@ -102,30 +96,14 @@ export default function WalletsTable() {
             </th>
             <th className="px-4 py-2 align-top">
               <div className="space-y-1">
-                <div className="text-xs font-semibold mb-2">Wallet Type</div>
-                <input
-                  type="text"
-                  value={filters.walletType}
-                  onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      walletType: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-md bg-white/10 px-2 py-1 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9]"
-                />
-              </div>
-            </th>
-            <th className="px-4 py-2 align-top">
-              <div className="space-y-1">
                 <div className="text-xs font-semibold mb-2">Wallet Address</div>
                 <input
                   type="text"
-                  value={filters.walletAddress}
+                  value={filters.waletAddress}
                   onChange={(e) =>
                     setFilters((prev) => ({
                       ...prev,
-                      walletAddress: e.target.value,
+                      waletAddress: e.target.value,
                     }))
                   }
                   className="w-full rounded-md bg-white/10 px-2 py-1 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9]"
@@ -134,43 +112,72 @@ export default function WalletsTable() {
             </th>
             <th className="px-4 py-2 align-top">
               <div className="space-y-1">
-                <div className="text-xs font-semibold mb-2">Created At</div>
+                <div className="text-xs font-semibold mb-2">Last Login</div>
+                <input
+                  type="text"
+                  value={filters.lastLogin}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      lastLogin: e.target.value,
+                    }))
+                  }
+                  className="w-full rounded-md bg-white/10 px-2 py-1 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9]"
+                />
+              </div>
+            </th>
+            <th className="px-4 py-2 align-top">
+              <div className="space-y-1">
+                <div className="text-xs font-semibold mb-2">Linked College</div>
+                <input
+                  type="text"
+                  value={filters.currentLinkedCollege}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      currentLinkedCollege: e.target.value,
+                    }))
+                  }
+                  className="w-full rounded-md bg-white/10 px-2 py-1 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9]"
+                />
               </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          {filteredWalletList.length > 0 ? (
-            filteredWalletList.map((wallet) => (
+          {filteredAdminList.length > 0 ? (
+            filteredAdminList.map((admin) => (
               <tr
-                key={`${wallet.id}-${wallet.walletAddress}`}
+                key={`${admin.id}-${admin.walletAddress}`}
                 className="odd:bg-white/0 even:bg-white/[0.03]"
               >
-                <td className="px-4 py-3 whitespace-nowrap">{wallet.id}</td>
+                <td className="px-4 py-3 whitespace-nowrap">{admin.id}</td>
                 <td className="px-4 py-3 whitespace-nowrap">
-                  <span className="px-2 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium">
-                    {wallet.walletType}
-                  </span>
-                </td>
-                <td className="px-4 py-3 font-mono">
                   <Link
-                    href={`https://solscan.io/address/${wallet.walletAddress}`}
+                    href={`https://solscan.io/address/${admin.walletAddress}`}
                     target="_blank"
-                    className="text-blue-500 hover:text-blue-600 block truncate"
-                    title={wallet.walletAddress}
+                    className="text-blue-500 hover:text-blue-600 block truncate max-w-[200px]"
+                    title={admin.walletAddress}
                   >
-                    {wallet.walletAddress}
+                    {admin.walletAddress}
                   </Link>
                 </td>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium text-white/70`}
+                  >
+                    {admin.lastLogin ? new Date(admin.lastLogin).toLocaleDateString() : "N/A"}
+                  </span>
+                </td>
                 <td className="px-4 py-3 whitespace-nowrap text-xs text-white/70">
-                  {new Date(wallet.createdAt).toLocaleDateString()}
+                  {admin.currentLinkedCollege.name}
                 </td>
               </tr>
             ))
           ) : (
             <tr>
               <td colSpan={5} className="px-4 py-3 text-center text-white/50">
-                No wallets found
+                No admins found
               </td>
             </tr>
           )}

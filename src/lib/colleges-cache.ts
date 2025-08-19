@@ -55,19 +55,26 @@ export const clearCollegesCache = (): void => {
 };
 
 // High-level function to load colleges with cache
-export const loadCollegesWithCache = async (): Promise<{
+export const loadCollegesWithCache = async (forceReload: boolean = false): Promise<{
   data: CollegeData[] | null;
   error: string | null;
   fromCache: boolean;
 }> => {
-  // First, try to get from cache
-  const cachedColleges = getCachedColleges();
-  if (cachedColleges && cachedColleges.length > 0) {
-    return {
-      data: cachedColleges,
-      error: null,
-      fromCache: true,
-    };
+  // If force reload is requested, clear cache first
+  if (forceReload) {
+    clearCollegesCache();
+  }
+
+  // First, try to get from cache (unless force reload)
+  if (!forceReload) {
+    const cachedColleges = getCachedColleges();
+    if (cachedColleges && cachedColleges.length > 0) {
+      return {
+        data: cachedColleges,
+        error: null,
+        fromCache: true,
+      };
+    }
   }
 
   // If no cache, fetch from API

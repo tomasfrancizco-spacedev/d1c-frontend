@@ -26,6 +26,7 @@ const Navbar = (props: {
 
   // Modal and user data state
   const [isSelectSchoolModalOpen, setIsSelectSchoolModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isAdminPath, setIsAdminPath] = useState(false);
   // Check for full authentication (wallet + MFA)
@@ -341,10 +342,15 @@ const Navbar = (props: {
       {isFullyAuthenticated && (
         <SelectSchoolModal
           isOpen={isSelectSchoolModalOpen}
-          onClose={() => setIsSelectSchoolModalOpen(false)}
+          onClose={() => {
+            setIsSelectSchoolModalOpen(false);
+            setSearchTerm("");
+          }}
           userId={userData?.data.id.toString() || ""}
           linkedCollege={userData?.data.currentLinkedCollege || null}
           setUserData={setUserData}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
       )}
     </header>
