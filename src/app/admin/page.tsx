@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { checkAdminStatus } from "@/lib/auth-utils";
 import { useSIWS } from "@/hooks/useSIWS";
-import AdminsTable from "@/components/Admin/AdminsTable";
 
-const SchoolTable = dynamic(() => import("@/components/Admin/SchoolTable"), {
+const FeeManagement = dynamic(() => import("@/components/Admin/FeeManagement"), {
   ssr: false,
 });
 
@@ -15,7 +14,11 @@ const WalletsTable = dynamic(() => import("@/components/Admin/WalletsTable"), {
   ssr: false,
 });
 
-const FeeManagement = dynamic(() => import("@/components/Admin/FeeManagement"), {
+const AdminsTable = dynamic(() => import("@/components/Admin/AdminsTable"), {
+  ssr: false,
+});
+
+const SchoolTable = dynamic(() => import("@/components/Admin/SchoolTable"), {
   ssr: false,
 });
 
@@ -83,22 +86,18 @@ const AdminPage = () => {
           <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">Fee Management</h2>
             <FeeManagement />
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">D1C Wallets</h2>
             <WalletsTable />
           </section>
           
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">Admins</h2>
             <AdminsTable />
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">Colleges</h2>
             <SchoolTable />
           </section>
         </div>

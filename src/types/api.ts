@@ -201,3 +201,23 @@ export interface AutomatedProcessingResponse {
     distributionResult: DistributionResult;
   };
 }
+
+export interface UserTransaction {
+  id: number;
+  from: string;
+  to: string;
+  timestamp: string;
+  amount: string;
+  d1cFee: string;
+  linkedCollegeId: number | null;
+  signature: string;
+  fee_harvested: boolean;
+  fee_distributed: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserTransactionsResponse {
+  success: boolean;
+  transactions: UserTransaction[];
+}

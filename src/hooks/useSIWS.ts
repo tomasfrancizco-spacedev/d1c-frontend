@@ -38,7 +38,7 @@ export function useSIWS() {
 
       let signInOutput;
       try {
-        signInOutput = await signIn(signInData); // @tomas fails when metamask is logged out
+        signInOutput = await signIn(signInData);
       } catch (error) {
         if (error instanceof Error && error.message?.includes("Internal JSON-RPC error")) {
           throw new Error("Please unlock your wallet and try again.");

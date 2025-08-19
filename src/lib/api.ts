@@ -1,4 +1,4 @@
-import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData, D1CWalletsResponse, AdminsResponse, FeeJobLogsResponse, TotalFeesResponse, TransactionCountResponse, AutomatedProcessingResponse } from '@/types/api';
+import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData, D1CWalletsResponse, AdminsResponse, FeeJobLogsResponse, TotalFeesResponse, TransactionCountResponse, AutomatedProcessingResponse, UserTransactionsResponse } from '@/types/api';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
 const getFrontendApiUrl = (env: string) => {
@@ -340,6 +340,24 @@ export async function triggerAutomatedProcessing(): Promise<{ data?: AutomatedPr
     });
   } catch (error) {
     console.error('Error triggering automated processing:', error);
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function fetchUserTransactions(
+  userAddress: string,
+  limit: number = 10,
+  offset: number = 0
+): Promise<{ data?: UserTransactionsResponse; error?: string }> {
+  if (!userAddress) {
+    return { error: 'User address is required' };
+  }
+
+  try {
+    const endpoint = `/user-transactions?userAddress=${encodeURIComponent(userAddress)}&limit=${limit}&offset=${offset}`;
+    return apiCall<UserTransactionsResponse>(endpoint);
+  } catch (error) {
+    console.error('Error fetching user transactions:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

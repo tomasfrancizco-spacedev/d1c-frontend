@@ -41,7 +41,9 @@ export default function AdminsTable() {
 
   const adminList = useMemo(
     () =>
-      admins.slice().sort((a, b) => a.walletAddress.localeCompare(b.walletAddress)),
+      admins
+        .slice()
+        .sort((a, b) => a.walletAddress.localeCompare(b.walletAddress)),
     [admins]
   );
 
@@ -58,9 +60,17 @@ export default function AdminsTable() {
         !admin.walletAddress.toLowerCase().includes(lowercased.waletAddress)
       )
         return false;
-      if (lowercased.lastLogin && !admin.lastLogin.toLowerCase().includes(lowercased.lastLogin))
+      if (
+        lowercased.lastLogin &&
+        !admin.lastLogin.toLowerCase().includes(lowercased.lastLogin)
+      )
         return false;
-      if (lowercased.currentLinkedCollege && !admin.currentLinkedCollege.toString().includes(lowercased.currentLinkedCollege))
+      if (
+        lowercased.currentLinkedCollege &&
+        !admin.currentLinkedCollege
+          .toString()
+          .includes(lowercased.currentLinkedCollege)
+      )
         return false;
       return true;
     });
@@ -85,7 +95,12 @@ export default function AdminsTable() {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 overflow-scroll max-h-[500px] scrollbar-custom">
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-semibold text-white">Admins</h3>
+      </div>
+      <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 overflow-scroll max-h-[500px] scrollbar-custom">
+
       <table className="min-w-full table-fixed text-left text-sm text-white/90">
         <thead className="sticky top-0 z-20 bg-[#2a413e] text-white">
           <tr>
@@ -166,7 +181,9 @@ export default function AdminsTable() {
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium text-white/70`}
                   >
-                    {admin.lastLogin ? new Date(admin.lastLogin).toLocaleDateString() : "N/A"}
+                    {admin.lastLogin
+                      ? new Date(admin.lastLogin).toLocaleDateString()
+                      : "N/A"}
                   </span>
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-xs text-white/70">
@@ -181,8 +198,9 @@ export default function AdminsTable() {
               </td>
             </tr>
           )}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

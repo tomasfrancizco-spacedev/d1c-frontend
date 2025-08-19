@@ -232,7 +232,7 @@ const SelectSchoolModal = ({
               </div>
               <input
                 type="text"
-                placeholder="Search your favorite school..."
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 bg-black/30 backdrop-blur-md border border-white/10 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-[#15C0B9] focus:border-transparent transition-all duration-300"
@@ -242,7 +242,7 @@ const SelectSchoolModal = ({
         </div>
 
         {/* Schools grid */}
-        <div className="flex-1 overflow-y-scroll p-6 scrollbar-custom max-h-[70vh]">
+        <div className="flex-1 overflow-y-scroll p-6 pb-16 scrollbar-custom max-h-[70vh]">
           {isLoadingColleges ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
@@ -259,7 +259,7 @@ const SelectSchoolModal = ({
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
                 {filteredColleges.map((college) => {
                   if (college.id === linkedCollege?.id) {
                     return null;

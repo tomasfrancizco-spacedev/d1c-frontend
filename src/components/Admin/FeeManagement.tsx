@@ -129,10 +129,13 @@ export default function FeeManagement() {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-semibold text-white">Fee Management</h3>
+      </div>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <div className="text-sm text-white/60">Total Fees Available</div>
+          <div className="text-sm text-white/60">Fees Available For Distribution</div>
           <div className="text-2xl font-bold text-white">{totalFees.toLocaleString()}</div>
         </div>
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">

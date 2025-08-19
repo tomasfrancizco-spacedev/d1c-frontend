@@ -420,8 +420,8 @@ export default function SchoolTable() {
 
   return (
     <div className="space-y-4">
-      {/* Add School Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-semibold text-white">Schools</h3>
         <button
           onClick={handleOpenAddModal}
           className="cursor-pointer px-4 py-2 rounded-md bg-[#15C0B9] text-white hover:bg-[#15C0B9]/80 transition-colors outline-none focus:ring-2 focus:ring-[#15C0B9] font-medium"

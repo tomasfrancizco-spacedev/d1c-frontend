@@ -23,6 +23,7 @@ import {
   TradingVolumeData,
   CollegeData,
 } from "@/types/api";
+import UserTransactionsTable from "@/components/UserTransactionsTable";
 
 export default function Dashboard() {
   const { publicKey } = useWallet();
@@ -215,7 +216,7 @@ export default function Dashboard() {
   const d1cBalance = balanceData
     ? formatBalance(balanceData.formattedAmount)
     : isLoadingBalance
-    ? "Loading..."
+    ? ""
     : balanceError
     ? "Error loading balance"
     : "Connect wallet to view balance";
@@ -224,7 +225,7 @@ export default function Dashboard() {
     tradingVolumeData && tradingVolumeData.totalVolume > 0
       ? formatBalance(getTradingVolumeAmount(tradingVolumeData))
       : isLoadingTradingVolume
-      ? "Loading..."
+      ? ""
       : tradingVolumeError
       ? "Error loading trading volume"
       : formatBalance(0);
@@ -233,7 +234,7 @@ export default function Dashboard() {
     contributionsData.length > 0
       ? `${formatBalance(contributionsData[0]?.totalContributions) || 0}`
       : isLoadingContributions
-      ? "Loading..."
+      ? ""
       : contributionsError
       ? "Error loading contributions"
       : "0 $D1C";
@@ -295,7 +296,7 @@ export default function Dashboard() {
                           <span className="font-semibold">
                             You&apos;ve contributed
                           </span>
-                          <span className="font-bold text-[#15C0B9] my-2">
+                          <span className="font-bold text-[#15C0B9] my-1">
                             {formatBalance(linkedCollegeContributions)}
                           </span>
                           <span className="font-semibold">
@@ -332,6 +333,10 @@ export default function Dashboard() {
           />
 
           {/* Top Contributions Section */}
+          <div className="mt-16">
+            <UserTransactionsTable />
+          </div>
+          
           <div className="mt-16">
             <CollegeLeaderboard />
           </div>

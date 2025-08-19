@@ -91,7 +91,11 @@ export default function WalletsTable() {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 overflow-scroll max-h-[500px] scrollbar-custom">
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-semibold text-white">D1C Wallets</h3>
+      </div>
+      <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 overflow-scroll max-h-[500px] scrollbar-custom">
       <table className="min-w-full table-fixed text-left text-sm text-white/90">
         <thead className="sticky top-0 z-20 bg-[#2a413e] text-white">
           <tr>
@@ -174,8 +178,9 @@ export default function WalletsTable() {
               </td>
             </tr>
           )}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

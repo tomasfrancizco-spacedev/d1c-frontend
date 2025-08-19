@@ -9,16 +9,11 @@ export const isMobile = () => {
   );
 };
 
-export const isPhantomInstalled = () => {
-  if (typeof window === 'undefined') return false;
-  return !!(window as any).phantom?.solana;
-};
-
 export const openPhantomDeepLink = (url?: string) => {
   const baseUrl = url || window.location.href;
   
   if (isMobile()) {
-    // On mobile, use Phantom's universal link that opens the app with your website
+    // On mobile, use Phantom's universal link that opens the app with D1C website
     const phantomUniversalLink = `https://phantom.app/ul/browse/${encodeURIComponent(baseUrl)}?ref=${encodeURIComponent(window.location.hostname)}`;
     window.open(phantomUniversalLink, '_blank');
   } else {
@@ -27,24 +22,26 @@ export const openPhantomDeepLink = (url?: string) => {
   }
 };
 
-// Enhanced mobile wallet handling - opens the actual wallet APPS with your website
+// Enhanced mobile wallet handling - opens the actual wallet APPS with D1C website
 export const openWalletInAppBrowser = (walletName: string) => {
   const currentUrl = window.location.href;
+
+  console.log("currentUrl", currentUrl);
   
   switch (walletName.toLowerCase()) {
     case 'phantom':
-      // Use Phantom's universal link format that opens the app with your website
+      // Use Phantom's universal link format that opens the app with D1c website
       const phantomUniversalLink = `https://phantom.app/ul/browse/${encodeURIComponent(currentUrl)}?ref=${encodeURIComponent(window.location.hostname)}`;
       
-      // This should open Phantom app and navigate to your website within it
+      // This should open Phantom app and navigate to D1C website within it
       window.open(phantomUniversalLink, '_blank');
       break;
       
     case 'solflare':
-      // Use Solflare's universal link format that opens the app with your website  
-      const solflareUniversalLink = `https://solflare.com/ul/browse/${encodeURIComponent(currentUrl)}`;
+      // Use Solflare's universal link format that opens the app with D1C website  
+      const solflareUniversalLink = `https://solflare.com/ul/browse/${encodeURIComponent(currentUrl)}?ref=${encodeURIComponent(window.location.hostname)}`;
       
-      // This should open Solflare app and navigate to your website within it
+      // This should open Solflare app and navigate to D1C website within it
       window.open(solflareUniversalLink, '_blank');
       break;
       
@@ -53,63 +50,6 @@ export const openWalletInAppBrowser = (walletName: string) => {
       navigator.clipboard?.writeText(currentUrl);
       alert(`Copy this URL and open it in your ${walletName} wallet app's browser:\n\n${currentUrl}`);
   }
-};
-
-// Alternative function for manual instructions (if deep links fail)
-export const showWalletInstructions = (walletName: string) => {
-  const currentUrl = window.location.href;
-  
-  const instructions: Record<string, { steps: string[] }> = {
-    phantom: {
-      steps: [
-        '1. Copy this URL (we\'ll do it for you)',
-        '2. Open Phantom app on your phone',
-        '3. Tap the browser/globe icon at the bottom',
-        '4. Paste the URL and go to this page',
-        '5. Connect your wallet'
-      ]
-    },
-    solflare: {
-      steps: [
-        '1. Copy this URL (we\'ll do it for you)',
-        '2. Open Solflare app on your phone',
-        '3. Tap "Explore" tab at the bottom',
-        '4. Paste the URL and go to this page',
-        '5. Connect your wallet'
-      ]
-    }
-  };
-  
-  const wallet = instructions[walletName.toLowerCase()];
-  if (wallet) {
-    navigator.clipboard?.writeText(currentUrl);
-    alert(`Manual steps for ${walletName}:\n\n${wallet.steps.join('\n')}\n\n✅ URL copied to clipboard!`);
-  }
-};
-
-// Legacy function - keeping for backwards compatibility
-export const openWalletDeepLink = (walletName: string) => {
-  // Redirect to new function
-  openWalletInAppBrowser(walletName);
-};
-
-// Function to check if app opened successfully
-export const didAppOpen = (): Promise<boolean> => {
-  return new Promise((resolve) => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        resolve(true); // App likely opened
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange, { once: true });
-    
-    // If page is still visible after 2 seconds, app probably didn't open
-    setTimeout(() => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      resolve(false);
-    }, 2000);
-  });
 };
 
 export const isInMobileWalletBrowser = () => {
@@ -135,15 +75,6 @@ export const getMobileWalletAdapter = () => {
   }
   
   return null;
-};
-
-export const getMobileWalletUrl = (walletName: string) => {
-  const urls: Record<string, string> = {
-    phantom: 'https://phantom.app/',
-    solflare: 'https://solflare.com/'
-  };
-  
-  return urls[walletName.toLowerCase()] || '';
 };
 
 export const detectMobileWallet = () => {
