@@ -8,9 +8,6 @@ import {
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { 
-  SolflareWalletAdapter
-} from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { isInMobileWalletBrowser } from "@/lib/wallet-utils";
@@ -29,7 +26,6 @@ export const SolanaProvider: FC<SolanaProviderProps> = ({ children }) => {
   const wallets = useMemo(() => {
     const walletList = [
       new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
     ];
     
     // On mobile, only show wallets that are actually available
@@ -39,7 +35,6 @@ export const SolanaProvider: FC<SolanaProviderProps> = ({ children }) => {
         const name = wallet.name.toLowerCase();
         return (
           (window as any).phantom?.solana && name.includes('phantom') ||
-          (window as any).solflare && name.includes('solflare') ||
           !isInMobileWalletBrowser() // Show all if not in any wallet browser
         );
       });

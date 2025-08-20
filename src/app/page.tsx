@@ -33,7 +33,7 @@ export default function Home() {
             <div className="max-w-4xl mx-auto text-center text-[#E6F0F0] relative z-10">
 
               {/* Mobile-only Wallet Connect Button */}
-              <div className="md:hidden mb-8">
+              <div className="lg:hidden mb-8">
                 <div className="flex justify-center">
                   <WalletConnectButton setIsSelectSchoolModalOpen={() => {}} />
                 </div>

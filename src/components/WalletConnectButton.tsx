@@ -71,9 +71,9 @@ export default function WalletConnectButton({
     try {
       await authenticate();
     } catch (error) {
-      console.error("Sign in failed:", error);
-      // remove wallet from local storage
-      // localStorage.removeItem("walletName");
+      alert(`Sign in failed. ${error}`);
+      //remove wallet from local storage
+      localStorage.removeItem("walletName");
     }
   };
 
@@ -242,9 +242,12 @@ export default function WalletConnectButton({
                 <label className="text-sm font-medium text-white/80">
                   Address
                 </label>
-                
-                  <div className="bg-white/5 rounded-md p-2 mt-1 border border-white/10">
-                  <Link href={`https://solscan.io/address/${publicKey.toString()}`} target="_blank">
+
+                <div className="bg-white/5 rounded-md p-2 mt-1 border border-white/10">
+                  <Link
+                    href={`https://solscan.io/address/${publicKey.toString()}`}
+                    target="_blank"
+                  >
                     <code className="text-sm font-mono text-white break-all">
                       {publicKey.toString()}
                     </code>
@@ -254,28 +257,28 @@ export default function WalletConnectButton({
 
               <div className="flex space-x-2">
                 {isFullyAuthenticated && (
-                <button
-                  onClick={() => {
-                    setIsSelectSchoolModalOpen(true);
-                    setShowWalletInfo(false);
-                  }}
-                  className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  <button
+                    onClick={() => {
+                      setIsSelectSchoolModalOpen(true);
+                      setShowWalletInfo(false);
+                    }}
+                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0h3m-3 0h-5m2-5h9m-9 0v-5"
-                    />
-                  </svg>
-                  Select School
-                </button>
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0h3m-3 0h-5m2-5h9m-9 0v-5"
+                      />
+                    </svg>
+                    Select School
+                  </button>
                 )}
                 <button
                   onClick={handleSignOut}
@@ -370,10 +373,6 @@ export default function WalletConnectButton({
             </div>
 
             <div className="space-y-3">
-              {/* <h3 className="text-white font-medium text-center">
-                Choose your wallet:
-              </h3> */}
-
               <button
                 onClick={() => openWalletInAppBrowser("phantom")}
                 className="w-full bg-[#9945FF] hover:bg-[#7C3AED] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
@@ -385,45 +384,9 @@ export default function WalletConnectButton({
                   <span>Open in Phantom</span>
                 </div>
               </button>
-
-              {/* <button
-                onClick={() => openWalletInAppBrowser("solflare")}
-                className="w-full bg-[#FC9745] hover:bg-[#F97316] text-white font-medium py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3"
-              >
-                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-[#FC9745] text-sm font-bold">S</span>
-                </div>
-                <div className="flex flex-col items-start">
-                  <span>Open in Solflare</span>
-                </div>
-              </button> */}
             </div>
 
-            <div className="border-t border-white/10 pt-4">
-              {/* <details className="text-white/60">
-                <summary className="cursor-pointer text-sm hover:text-white/80 transition-colors">
-                  Don&apos;t have a wallet? Get started →
-                </summary>
-                <div className="mt-2 space-y-2 text-xs flex flex-col items-center justify-center">
-                  <a
-                    href="https://phantom.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:text-blue-400 transition-colors w-[180px] text-left"
-                  >
-                    📱 Download Phantom Wallet
-                  </a>
-                  <a
-                    href="https://solflare.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:text-blue-400 transition-colors w-[180px] text-left"
-                  >
-                    📱 Download Solflare Wallet
-                  </a>
-                </div>
-              </details> */}
-            </div>
+            <div className="border-t border-white/10 pt-4"></div>
           </div>
         )}
       </div>

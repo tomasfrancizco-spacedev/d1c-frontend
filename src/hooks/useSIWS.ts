@@ -29,7 +29,7 @@ export function useSIWS() {
     }
 
     if (!signIn || !publicKey) {
-      throw new Error('Wallet not connected or does not support sign in');
+      throw new Error('Wallet not connected or does not support sign in. Try again or choose a different wallet.');
     }
 
     setIsLoading(true);
@@ -86,6 +86,7 @@ export function useSIWS() {
         if (mfaAuth) {
           router.push('/dashboard');
         } else {
+          console.log("Pushing to mfa request from useSIWS");
           router.push('/auth/mfa/request');
         }
 
