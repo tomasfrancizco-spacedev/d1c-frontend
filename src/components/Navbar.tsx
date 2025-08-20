@@ -5,7 +5,7 @@ import SelectSchoolModal from "@/components/SelectSchoolModal";
 import Image from "next/image";
 import { useSIWS } from "@/hooks/useSIWS";
 import { usePathname } from "next/navigation";
-import { checkFullAuth } from "@/lib/auth-utils";
+import { checkFullAuth, checkAdminStatus } from "@/lib/auth-utils";
 import { fetchUserData } from "@/lib/api";
 import { UserData } from "@/types/api";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -29,9 +29,15 @@ const Navbar = (props: {
   const [searchTerm, setSearchTerm] = useState("");
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isAdminPath, setIsAdminPath] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   // Check for full authentication (wallet + MFA)
   useEffect(() => {
     setIsFullyAuthenticated(checkFullAuth(connected, isAuthenticated) || false);
+    const checkAdmin = async () => {
+      const { isAdmin: adminStatus } = await checkAdminStatus();
+      setIsAdmin(adminStatus);
+    };
+    checkAdmin();
   }, [connected, isAuthenticated]);
 
   // Fetch user data when wallet is connected
@@ -229,9 +235,10 @@ const Navbar = (props: {
                 </p>
               </Link>
             </li>
-            {isFullyAuthenticated && (
-              <li className="text-[#E6F0F0] ml-1">|</li>
-            )}
+            {isFullyAuthenticated &&
+              ((isAdmin && !isAdminPath) || !isDashboard) && (
+                <li className="text-[#E6F0F0] ml-1">|</li>
+              )}
             {isFullyAuthenticated && !isDashboard && (
               <li>
                 <Link
@@ -242,7 +249,7 @@ const Navbar = (props: {
                 </Link>
               </li>
             )}
-            {isFullyAuthenticated && !isAdminPath && (
+            {isFullyAuthenticated && isAdmin && !isAdminPath && (
               <li>
                 <Link
                   href="/admin"
@@ -285,48 +292,50 @@ const Navbar = (props: {
         </div>
 
         {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-          <div className="absolute top-full left-0 w-full sm:w-1/2 bg-[#03211e] backdrop-blur-xl shadow-2xl mt-1 py-2 lg:hidden z-50 rounded-md">
-            <ul className="flex flex-col space-y-3 px-4">
-              {isFullyAuthenticated && !isDashboard && (
-                <li>
-                  <Link
-                    href="/dashboard"
-                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-              )}
-              {isFullyAuthenticated && !isAdminPath && (
-                <li>
-                  <Link
-                    href="/admin"
-                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Admin
-                  </Link>
-                </li>
-              )}
-              {isFullyAuthenticated && (
-                <li>
-                  <button
-                    onClick={() => {
-                      setIsSelectSchoolModalOpen(true);
-                      setMobileMenuOpen(false);
-                    }}
-                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
-                    
-                  >
-                    Select School
-                  </button>
-                </li>
-              )}
-            </ul>
-          </div>
-        )}
+        {mobileMenuOpen &&
+          ((isFullyAuthenticated && !isDashboard) ||
+            (isFullyAuthenticated && isAdmin && !isAdminPath) ||
+            isFullyAuthenticated) && (
+            <div className="absolute top-full left-0 w-full sm:w-1/2 bg-[#03211e] backdrop-blur-xl shadow-2xl mt-1 py-2 lg:hidden z-50 rounded-md">
+              <ul className="flex flex-col space-y-3 px-4">
+                {isFullyAuthenticated && !isDashboard && (
+                  <li>
+                    <Link
+                      href="/dashboard"
+                      className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
+                )}
+                {isFullyAuthenticated && isAdmin && !isAdminPath && (
+                  <li>
+                    <Link
+                      href="/admin"
+                      className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Admin
+                    </Link>
+                  </li>
+                )}
+                {isFullyAuthenticated && (
+                  <li>
+                    <button
+                      onClick={() => {
+                        setIsSelectSchoolModalOpen(true);
+                        setMobileMenuOpen(false);
+                      }}
+                      className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 w-full text-left text-white font-medium py-3 px-6 rounded-md shadow-2xl transform transition-all duration-300 cursor-pointer flex items-center gap-2"
+                    >
+                      Select School
+                    </button>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
       </div>
 
       {isFullyAuthenticated && (

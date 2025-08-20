@@ -21,9 +21,11 @@ export default function MFAVerifyPage() {
     const storedEmail =
       localStorage.getItem("mfa-email") ||
       localStorage.getItem("mfa-completed");
+    console.log({ storedEmail });
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
+      console.log("Pushing to mfa request from mfa verify page");
       router.push("/auth/mfa/request");
     }
   }, [router]);
