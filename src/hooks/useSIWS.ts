@@ -86,6 +86,7 @@ export function useSIWS() {
         if (mfaAuth) {
           router.push('/dashboard');
         } else {
+          console.log("Redirecting to mfa request from authenticate");
           router.push('/auth/mfa/request');
         }
 

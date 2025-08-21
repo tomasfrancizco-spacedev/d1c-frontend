@@ -71,7 +71,7 @@ export default function WalletConnectButton({
     try {
       await authenticate();
     } catch (error) {
-      alert(`Sign in failed. ${error}`);
+      console.error(`Sign in failed. ${error} ${error instanceof Error ? error.message : "Unknown error"}`);
       //remove wallet from local storage
       localStorage.removeItem("walletName");
     }
