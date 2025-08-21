@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { CollegeData } from "@/types/api";
-import { loadCollegesWithCache } from "@/lib/colleges-cache";
+import { loadCollegesWithCache } from "@/lib/cache/colleges-cache";
 import { updateCollege, UpdateCollegeRequest, createCollege, CreateCollegeRequest, deleteCollege } from "@/lib/api";
 
 export default function SchoolTable() {
@@ -590,7 +590,7 @@ export default function SchoolTable() {
                   <Link
                     href={`https://solscan.io/address/${school.walletAddress}`}
                     target="_blank"
-                    className="text-blue-500 hover:text-blue-600 block truncate"
+                    className="text-blue-500 hover:text-blue-600 block truncate hover:underline"
                   >
                     {school.walletAddress}
                   </Link>
@@ -984,8 +984,11 @@ export default function SchoolTable() {
               Are you sure you want to delete <strong>{deleteModal.college?.name}</strong>?
             </p>
             
-            <p className="text-red-400 text-sm mb-6">
-              This action cannot be undone. All data associated with this school will be permanently removed.
+            <p className="text-red-400 text-xs mb-6">
+              Note: Only schools that are unlinked and have no pending fee harvesting or distribution can be deleted. 
+              <br />
+              <br />
+              This action is permanent and cannot be undone. All data associated with this school will be irreversibly removed.
             </p>
 
             <div className="space-y-2 mb-6">
@@ -1003,7 +1006,11 @@ export default function SchoolTable() {
               </div>
               <div className="text-sm">
                 <span className="text-white/60">Wallet Address:</span>{" "}
-                <span className="text-white font-mono text-xs">{deleteModal.college?.walletAddress}</span>
+                <span className="text-white font-mono text-xs truncate max-w-[200px]">
+                  <Link href={`https://solscan.io/address/${deleteModal.college?.walletAddress}`} target="_blank" className="hover:underline truncate max-w-[200px]">
+                    {deleteModal.college?.walletAddress}
+                  </Link>
+                </span>
               </div>
             </div>
 

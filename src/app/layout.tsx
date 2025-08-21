@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={ibmPlexSans.variable}>
+    <html lang="en" className={ibmPlexSans.variable + " overflow-x-hidden"}>
       <body>
         <SolanaProvider>
           {children}

@@ -8,6 +8,7 @@ import {
   fetchUndistributedTransactionsCount,
   triggerAutomatedProcessing,
 } from "@/lib/api";
+import { formatBalance } from "@/lib/api";
 
 export default function FeeManagement() {
   const [jobLogs, setJobLogs] = useState<FeeJobLog[]>([]);
@@ -24,18 +25,23 @@ export default function FeeManagement() {
       setLoading(true);
       setError(null);
 
-      const [logsResponse, feesResponse, unharvestedResponse, undistributedResponse] = 
-        await Promise.all([
-          fetchFeeJobLogs(10),
-          fetchTotalFees(),
-          fetchUnharvestedTransactionsCount(),
-          fetchUndistributedTransactionsCount(),
-        ]);
+      const [
+        logsResponse,
+        feesResponse,
+        unharvestedResponse,
+        undistributedResponse,
+      ] = await Promise.all([
+        fetchFeeJobLogs(10),
+        fetchTotalFees(),
+        fetchUnharvestedTransactionsCount(),
+        fetchUndistributedTransactionsCount(),
+      ]);
 
       // Handle job logs
       if (logsResponse.error) {
         setError(logsResponse.error);
       } else if (logsResponse.data?.data) {
+        console.log({ logsResponse });
         setJobLogs(logsResponse.data.data);
       }
 
@@ -70,42 +76,50 @@ export default function FeeManagement() {
     setProcessing(true);
     try {
       const { data, error } = await triggerAutomatedProcessing();
-      
+
       if (error) {
-        console.error('Failed to trigger processing:', error);
-        alert('Failed to trigger automated processing. Please try again.');
+        console.error("Failed to trigger processing:", error);
+        alert("Failed to trigger automated processing. Please try again.");
       } else if (data?.data) {
         const { harvestResult, distributionResult } = data.data;
-        
+
         // Show success message with details
-        let message = 'Automated processing completed successfully!\n\n';
-        message += `Harvest: ${harvestResult.success ? 'Success' : 'Failed'}\n`;
+        let message = "Automated processing completed successfully!\n\n";
+        message += `Harvest: ${harvestResult.success ? "Success" : "Failed"}\n`;
         message += `- Transactions processed: ${harvestResult.transactionsProcessed}\n`;
         message += `- Total fees harvested: ${harvestResult.totalFeesHarvested}\n\n`;
-        message += `Distribution: ${distributionResult.success ? 'Success' : 'Failed'}\n`;
+        message += `Distribution: ${
+          distributionResult.success ? "Success" : "Failed"
+        }\n`;
         message += `- Transactions processed: ${distributionResult.transactionsProcessed}\n`;
         message += `- College amount: ${distributionResult.collegeAmount}\n`;
         message += `- Burned amount: ${distributionResult.burnedAmount}\n`;
-        
+
         if (distributionResult.signatures.length > 0) {
           message += `- Signatures: ${distributionResult.signatures.length}`;
         }
-        
+
         alert(message);
-        
+
         // Reload data after successful processing
         await loadFeeData();
       }
     } catch (err) {
-      console.error('Error triggering processing:', err);
-      alert('Failed to trigger automated processing. Please try again.');
+      console.error("Error triggering processing:", err);
+      alert("Failed to trigger automated processing. Please try again.");
     } finally {
       setProcessing(false);
     }
   };
 
   const sortedJobLogs = useMemo(
-    () => jobLogs.slice().sort((a, b) => new Date(b.executedAt).getTime() - new Date(a.executedAt).getTime()),
+    () =>
+      jobLogs
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(b.executedAt).getTime() - new Date(a.executedAt).getTime()
+        ),
     [jobLogs]
   );
 
@@ -135,16 +149,26 @@ export default function FeeManagement() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <div className="text-sm text-white/60">Fees Available For Distribution</div>
-          <div className="text-2xl font-bold text-white">{totalFees.toLocaleString()}</div>
+          <div className="text-sm text-white/60">
+            Fees Available For Distribution
+          </div>
+          <div className="text-2xl font-bold text-white">
+            {totalFees.toLocaleString()}
+          </div>
         </div>
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
           <div className="text-sm text-white/60">Unharvested Transactions</div>
-          <div className="text-2xl font-bold text-orange-400">{unharvestedCount}</div>
+          <div className="text-2xl font-bold text-orange-400">
+            {unharvestedCount}
+          </div>
         </div>
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <div className="text-sm text-white/60">Undistributed Transactions</div>
-          <div className="text-2xl font-bold text-yellow-400">{undistributedCount}</div>
+          <div className="text-sm text-white/60">
+            Undistributed Transactions
+          </div>
+          <div className="text-2xl font-bold text-yellow-400">
+            {undistributedCount}
+          </div>
         </div>
         <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center justify-center">
           <button
@@ -155,7 +179,7 @@ export default function FeeManagement() {
             {processing && (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             )}
-            {processing ? 'Processing...' : 'Trigger Processing'}
+            {processing ? "Processing..." : "Trigger Processing"}
           </button>
         </div>
       </div>
@@ -176,13 +200,27 @@ export default function FeeManagement() {
           <table className="min-w-full table-fixed text-left text-sm text-white/90">
             <thead className="sticky top-0 z-20 bg-[#2a413e] text-white">
               <tr>
-                <th className="px-4 py-3 text-xs font-semibold min-w-[80px]">ID</th>
-                <th className="px-4 py-3 text-xs font-semibold min-w-[160px]">Executed At</th>
-                <th className="px-4 py-3 text-xs font-semibold min-w-[100px]">Status</th>
-                <th className="px-4 py-3 text-xs font-semibold min-w-[140px]">Harvested Amount</th>
-                <th className="px-4 py-3 text-xs font-semibold min-w-[140px]">Distributed Amount</th>
-                <th className="px-4 py-3 text-xs font-semibold min-w-[120px]">Burned Amount</th>
-                <th className="px-4 py-3 text-xs font-semibold min-w-[200px]">Error Message</th>
+                <th className="px-4 py-3 text-xs font-semibold min-w-[80px]">
+                  ID
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold min-w-[160px]">
+                  Executed At
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold min-w-[100px]">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold min-w-[140px]">
+                  Harvested
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold min-w-[140px]">
+                  Distributed
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold min-w-[120px]">
+                  Burned
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold min-w-[200px]">
+                  Notes
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -199,22 +237,30 @@ export default function FeeManagement() {
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          log.success
+                          log.success ||
+                          log.errorMessage?.includes(
+                            "No transactions with unharvested fees"
+                          )
                             ? "bg-green-500/20 text-green-300"
                             : "bg-red-500/20 text-red-300"
                         }`}
                       >
-                        {log.success ? "Success" : "Failed"}
+                        {log.success ||
+                        log.errorMessage?.includes(
+                          "No transactions with unharvested fees"
+                        )
+                          ? "Success"
+                          : "Failed"}
                       </span>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap font-mono text-xs">
-                      {parseFloat(log.harvestedAmount).toLocaleString()}
+                      {formatBalance(Number(log.harvestedAmount) / 10 ** 9)}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap font-mono text-xs">
-                      {parseFloat(log.distributedAmount).toFixed(8)}
+                      {formatBalance(log.distributedAmount)}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap font-mono text-xs">
-                      {parseFloat(log.burnedAmount).toFixed(8)}
+                      {formatBalance(log.burnedAmount)}
                     </td>
                     <td className="px-4 py-3 max-w-[200px] truncate text-xs">
                       {log.errorMessage || "—"}
@@ -223,7 +269,10 @@ export default function FeeManagement() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-white/50">
+                  <td
+                    colSpan={7}
+                    className="px-4 py-8 text-center text-white/50"
+                  >
                     No job logs found
                   </td>
                 </tr>

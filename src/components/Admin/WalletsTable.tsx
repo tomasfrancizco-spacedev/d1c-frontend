@@ -160,7 +160,7 @@ export default function WalletsTable() {
                   <Link
                     href={`https://solscan.io/address/${wallet.walletAddress}`}
                     target="_blank"
-                    className="text-blue-500 hover:text-blue-600 block truncate"
+                    className="text-blue-500 hover:text-blue-600 block truncate hover:underline"
                     title={wallet.walletAddress}
                   >
                     {wallet.walletAddress}

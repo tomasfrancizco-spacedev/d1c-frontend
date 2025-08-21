@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import CollegeCard from "./CollegeCard";
+import { useSupportInfoModal } from "./SupportInfoModal";
 
 interface CollegeItem {
   logo: string;
@@ -23,6 +24,7 @@ export default function CollegeCarousel({ items }: CollegeCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const scrollAmountRef = useRef(0);
+  const { openModal, SupportModal } = useSupportInfoModal();
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -52,8 +54,8 @@ export default function CollegeCarousel({ items }: CollegeCarouselProps) {
     };
   }, [scrollSpeed, items.length]);
 
-  const handleSupport = (item: CollegeItem) => {
-    console.log(`Supporting: ${item.schoolName}`); // TODO: Add support logic here
+  const handleSupport = () => {
+    openModal();
   };
 
   return (
@@ -75,11 +77,12 @@ export default function CollegeCarousel({ items }: CollegeCarouselProps) {
               image={item.logo}
               title={item.schoolName}
               subtitle={item.city + ", " + item.state}
-              onSupport={() => handleSupport(item)}
+              onSupport={() => handleSupport()}
             />
           </div>
         ))}
       </div>
+      <SupportModal />
     </div>
   );
 } 

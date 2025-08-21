@@ -247,6 +247,7 @@ export default function WalletConnectButton({
                   <Link
                     href={`https://solscan.io/address/${publicKey.toString()}`}
                     target="_blank"
+                    className="hover:underline"
                   >
                     <code className="text-sm font-mono text-white break-all">
                       {publicKey.toString()}

@@ -5,7 +5,7 @@ import DashboardCards from "@/components/DashboardCards";
 import CollegeLeaderboard from "@/components/CollegeLeaderboard";
 import UserLeaderboard from "@/components/UserLeaderboard";
 import Image from "next/image";
-
+// import { useWalletAuthCheck } from "@/lib/auth-utils-client";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useState, useEffect } from "react";
 import {
@@ -27,6 +27,12 @@ import UserTransactionsTable from "@/components/UserTransactionsTable";
 
 export default function Dashboard() {
   const { publicKey } = useWallet();
+  // const { checkAndLogout } = useWalletAuthCheck();
+
+  // useEffect(() => {
+  //   console.log("Checking and logging out from dashboard");
+  //   checkAndLogout();
+  // }, []);
 
   // User data state management
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
@@ -219,7 +225,7 @@ export default function Dashboard() {
     ? ""
     : balanceError
     ? "Error loading balance"
-    : "Connect wallet to view balance";
+    : "Connect wallet";
 
   const tradingVolume =
     tradingVolumeData && tradingVolumeData.totalVolume > 0
@@ -326,7 +332,7 @@ export default function Dashboard() {
             tradingVolume={tradingVolume}
             d1cBalance={d1cBalance}
             totalContributionAmount={totalContributionAmount}
-            usdAmount="TBD"
+            usdAmount="USD Coming Soon"
             isLoadingBalance={isLoadingBalance}
             isLoadingContributions={isLoadingContributions}
             isLoadingTradingVolume={isLoadingTradingVolume}
