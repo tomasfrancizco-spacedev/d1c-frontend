@@ -24,6 +24,7 @@ export default function MFAVerifyPage() {
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
+      console.log("Redirecting to mfa request from mfa verify");
       router.push("/auth/mfa/request");
     }
   }, [router]);
