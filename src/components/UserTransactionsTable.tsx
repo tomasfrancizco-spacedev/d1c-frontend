@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { fetchUserTransactions, formatBalance } from "@/lib/api";
 import { UserTransaction, CollegeData } from "@/types/api";
-import { loadCollegesWithCache } from "@/lib/colleges-cache";
+import { loadCollegesWithCache } from "@/lib/cache/colleges-cache";
 import Link from "next/link";
 
 const UserTransactionsTable = () => {
@@ -98,7 +98,7 @@ const UserTransactionsTable = () => {
     <div className="max-w-6xl mx-auto">
       <div className="flex items-center justify-center text-center gap-3 mb-12">
         <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
-          Latest Transactions
+          My Latest Transactions
         </h3>
       </div>
 
@@ -140,6 +140,7 @@ const UserTransactionsTable = () => {
                     <Link
                       href={`https://solscan.io/tx/${transaction.signature}`}
                       target="_blank"
+                      className="hover:underline"
                     >
                       {transaction.signature.slice(0, 8)}...
                       {transaction.signature.slice(-8)}
@@ -156,6 +157,7 @@ const UserTransactionsTable = () => {
                     <Link
                       href={`https://solscan.io/address/${transaction.to}`}
                       target="_blank"
+                      className="hover:underline"
                     >
                       {transaction.to.slice(0, 8)}...{transaction.to.slice(-8)}
                     </Link>

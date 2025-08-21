@@ -103,7 +103,7 @@ export async function DELETE(
     }
 
     const data = await response.json();
-    
+
     return NextResponse.json({
       success: true,
       data: data

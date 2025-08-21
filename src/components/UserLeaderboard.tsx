@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { fetchUserLeaderboard } from "@/lib/api";
 import { UserLeaderboardEntry } from "@/types/api";
 import { formatBalance } from "@/lib/api";
+import Link from "next/link";
 
 interface UserLeaderboardProps {
   showTitle?: boolean;
@@ -63,7 +64,7 @@ export default function UserLeaderboard({
       {/* Error State */}
       {leaderboardError ? (
         <div className="text-center text-red-400 p-8">
-          <p>Error loading leaderboard: {leaderboardError}</p>
+          <p>Error loading leaderboard</p>
         </div>
       ) : leaderboardData.length > 0 ? (
         <>
@@ -110,7 +111,9 @@ export default function UserLeaderboard({
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-lg font-semibold text-[#E6F0F0] mb-1 truncate">
-                      {user.walletAddress}
+                      <Link href={`https://solscan.io/address/${user.walletAddress}`} target="_blank" className="hover:underline">
+                        {user.walletAddress}
+                      </Link>
                     </h4>
                     <p className="text-[#15C0B9] font-bold text-sm">
                       {formatBalance(user.totalContributions)}

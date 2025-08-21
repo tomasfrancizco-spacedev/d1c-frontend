@@ -6,6 +6,7 @@ import { fetchCollegeLeaderboard } from "@/lib/api";
 import { CollegeLeaderboardEntry } from "@/types/api";
 import { formatBalance } from "@/lib/api";
 import CollegeCard from "./CollegeCard";
+import { useSupportInfoModal } from "./SupportInfoModal";
 
 interface CollegeLeaderboardProps {
   showTitle?: boolean;
@@ -22,6 +23,7 @@ export default function CollegeLeaderboard({
   >([]);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null);
+  const { openModal, SupportModal } = useSupportInfoModal();
 
   // Fetch leaderboard on component mount
   useEffect(() => {
@@ -66,7 +68,7 @@ export default function CollegeLeaderboard({
       {/* Error State */}
       {leaderboardError ? (
         <div className="text-center text-red-400 p-8">
-          <p>Error loading leaderboard: {leaderboardError}</p>
+          <p>Error loading leaderboard</p>
         </div>
       ) : leaderboardData.length > 0 ? (
         <>
@@ -99,7 +101,7 @@ export default function CollegeLeaderboard({
                     )}`}
                     rank={leaderboardData.indexOf(college) + 1}
                     isRanked={true}
-                    onSupport={() => {}}
+                    onSupport={openModal}
                   />
                 ))}
               </div>
@@ -148,8 +150,7 @@ export default function CollegeLeaderboard({
             </div>
           </div>
         </>
-      ) : // ... existing code ...
-      !isLoadingLeaderboard ? (
+      ) : !isLoadingLeaderboard ? (
         <div className="text-center text-[#E6F0F0] p-8">
           <p>No leaderboard data available</p>
         </div>
@@ -193,6 +194,7 @@ export default function CollegeLeaderboard({
           </div>
         </>
       )}
+      <SupportModal />
     </div>
   );
 }

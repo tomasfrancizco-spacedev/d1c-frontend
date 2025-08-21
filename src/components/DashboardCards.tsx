@@ -75,7 +75,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
             )}
           </div>
           
-          <div className="pt-2">
+          <div className="hidden pt-2">
             <button className="text-[#15C0B9] hover:text-[#E6F0F0] text-sm font-medium transition-colors duration-200 drop-shadow-sm">
               {usdAmount}
             </button>
@@ -157,7 +157,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
                 )}
               </div>
               
-              <div className="pt-2">
+              <div className="hidden pt-2">
                 <button className="text-[#15C0B9] hover:text-[#E6F0F0] text-sm font-medium transition-colors duration-200 drop-shadow-sm">
                   {usdAmount}
                 </button>
@@ -187,7 +187,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
                 )}
               </div>
               
-              <div className="pt-2">
+              <div className="hidden pt-2">
                 <button className="text-[#15C0B9] hover:text-[#E6F0F0] text-sm font-medium transition-colors duration-200 drop-shadow-sm">
                   {usdAmount}
                 </button>
@@ -216,7 +216,7 @@ export default function DashboardCards({ totalContributionAmount, usdAmount, d1c
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#15C0B9]"></div>
                 )}
               </div>
-              <div className="pt-2">
+              <div className="hidden pt-2">
                 <button className="text-[#15C0B9] hover:text-[#E6F0F0] text-sm font-medium transition-colors duration-200 drop-shadow-sm">
                   {usdAmount}
                 </button>

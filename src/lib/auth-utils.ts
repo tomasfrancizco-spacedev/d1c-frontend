@@ -11,8 +11,9 @@ export const checkFullAuth = (connected: boolean, isAuthenticated: boolean) => {
       return false;
     }
   })() : false;
-  
-  return connected && isAuthenticated && hasValidMFA;
+
+  const isFullyAuthenticated = connected && isAuthenticated && hasValidMFA;
+  return isFullyAuthenticated
 };
 
 export const checkAdminStatus = async (): Promise<{ isAuthenticated: boolean; isAdmin: boolean }> => {

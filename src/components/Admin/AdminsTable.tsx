@@ -171,7 +171,7 @@ export default function AdminsTable() {
                   <Link
                     href={`https://solscan.io/address/${admin.walletAddress}`}
                     target="_blank"
-                    className="text-blue-500 hover:text-blue-600 block truncate max-w-[200px]"
+                    className="text-blue-500 hover:text-blue-600 block truncate max-w-[200px] hover:underline"
                     title={admin.walletAddress}
                   >
                     {admin.walletAddress}

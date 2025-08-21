@@ -5,7 +5,7 @@ import { useSIWS } from "@/hooks/useSIWS";
 import { checkFullAuth } from "@/lib/auth-utils";
 import { linkCollege } from "@/lib/api";
 import { CollegeData, UserData } from "@/types/api";
-import { loadCollegesWithCache } from "@/lib/colleges-cache";
+import { loadCollegesWithCache } from "@/lib/cache/colleges-cache";
 import Image from "next/image";
 
 interface SelectSchoolModalProps {
