@@ -23,7 +23,7 @@ const Navbar = (props: {
   const { connected, isAuthenticated } = useSIWS();
   const { publicKey } = useWallet();
   const pathname = usePathname();
-
+  const [showWalletInfo, setShowWalletInfo] = useState(false);
   // Modal and user data state
   const [isSelectSchoolModalOpen, setIsSelectSchoolModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,7 +92,6 @@ const Navbar = (props: {
 
   // Create a sentinel element for scroll detection
   useEffect(() => {
-    // Only run on client side
     if (typeof window === "undefined") return;
 
     // Create a sentinel element at the top of the page
@@ -117,6 +116,11 @@ const Navbar = (props: {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
 
+      // Close menus and modals immediately on any scroll
+      setMobileMenuOpen(false);
+      setShowWalletInfo(false);
+      setIsSelectSchoolModalOpen(false);
+
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const isScrollingUp = lastScrollY > currentScrollPos;
@@ -127,7 +131,7 @@ const Navbar = (props: {
           lastScrollY = currentScrollPos;
           ticking = false;
         });
-
+        
         ticking = true;
       }
     };
@@ -149,7 +153,7 @@ const Navbar = (props: {
       observerRef.current.observe(sentinelRef.current);
     }
 
-    // Add scroll event for scroll direction detection
+    // Add scroll event for both navbar visibility and menu closing
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
@@ -285,6 +289,8 @@ const Navbar = (props: {
           <ul className="flex items-center gap-8 2xsm:gap-4">
             <li>
               <WalletConnectButton
+                setShowWalletInfo={setShowWalletInfo}
+                showWalletInfo={showWalletInfo}
                 setIsSelectSchoolModalOpen={setIsSelectSchoolModalOpen}
               />
             </li>

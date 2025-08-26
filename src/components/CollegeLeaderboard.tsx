@@ -2,22 +2,23 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { fetchCollegeLeaderboard } from "@/lib/api";
 import { CollegeLeaderboardEntry } from "@/types/api";
 import { formatBalance } from "@/lib/api";
+import { loadCollegeLeaderboardWithCache } from "@/lib/cache/college-leaderboard-cache";
 import CollegeCard from "./CollegeCard";
 import { useSupportInfoModal } from "./SupportInfoModal";
 
 interface CollegeLeaderboardProps {
   showTitle?: boolean;
   className?: string;
+  forceReload?: boolean;
 }
 
 export default function CollegeLeaderboard({
   showTitle = true,
   className = "",
+  forceReload = false,
 }: CollegeLeaderboardProps) {
-  // Leaderboard state management
   const [leaderboardData, setLeaderboardData] = useState<
     CollegeLeaderboardEntry[]
   >([]);
@@ -25,20 +26,20 @@ export default function CollegeLeaderboard({
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null);
   const { openModal, SupportModal } = useSupportInfoModal();
 
-  // Fetch leaderboard on component mount
   useEffect(() => {
     const loadLeaderboard = async () => {
       setIsLoadingLeaderboard(true);
       setLeaderboardError(null);
 
       try {
-        const { data, error } = await fetchCollegeLeaderboard();
+        const { data, error, fromCache } = await loadCollegeLeaderboardWithCache(forceReload);
 
         if (error) {
           setLeaderboardError(error);
           setLeaderboardData([]);
-        } else if (data?.success && data.data) {
-          setLeaderboardData(data.data as CollegeLeaderboardEntry[]);
+        } else if (data) {
+          setLeaderboardData(data);
+          console.log(`College leaderboard loaded ${fromCache ? 'from cache' : 'from API'}`);
         }
       } catch (err) {
         console.error("Error loading leaderboard:", err);
@@ -49,7 +50,7 @@ export default function CollegeLeaderboard({
     };
 
     loadLeaderboard();
-  }, []);
+  }, [forceReload]);
 
   return (
     <div className={`max-w-6xl mx-auto ${className}`}>
@@ -65,14 +66,12 @@ export default function CollegeLeaderboard({
         </div>
       )}
 
-      {/* Error State */}
       {leaderboardError ? (
         <div className="text-center text-red-400 p-8">
           <p>Error loading leaderboard</p>
         </div>
       ) : leaderboardData.length > 0 ? (
         <>
-          {/* Full-width background container */}
           <div
             className="absolute inset-0 w-screen left-1/2 transform -translate-x-1/2 -z-10"
             style={{

@@ -17,7 +17,11 @@ import { checkFullAuth } from "@/lib/auth-utils";
 
 export default function WalletConnectButton({
   setIsSelectSchoolModalOpen,
+  setShowWalletInfo,
+  showWalletInfo,
 }: {
+  setShowWalletInfo: (show: boolean) => void;
+  showWalletInfo: boolean;
   setIsSelectSchoolModalOpen: (isOpen: boolean) => void;
 }) {
   const { connected, publicKey, connecting, wallet, disconnect } = useWallet();
@@ -28,7 +32,6 @@ export default function WalletConnectButton({
     logout,
     checkPersistedAuth,
   } = useSIWS();
-  const [showWalletInfo, setShowWalletInfo] = useState(false);
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   const isWalletBrowser = isInMobileWalletBrowser();

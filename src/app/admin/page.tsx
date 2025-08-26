@@ -31,17 +31,14 @@ const AdminPage = () => {
   useEffect(() => {
     const checkAuthAndAdmin = async () => {
       try {
-        // Check authentication status via API (which reads httpOnly cookies)
         const { isAuthenticated, isAdmin: adminStatus } = await checkAdminStatus();
 
         if (!isAuthenticated) {
-          // Not authenticated, redirect to home
           router.push('/');
           return;
         }
 
         if (!adminStatus) {
-          // Authenticated but not admin, redirect to dashboard
           router.push('/dashboard');
           return;
         }
@@ -57,7 +54,6 @@ const AdminPage = () => {
     checkAuthAndAdmin();
   }, [connected, isAuthenticated, router]);
 
-  // Show loading state while checking authentication
   if (isLoading || isAdmin === null) {
     return (
       <DefaultLayout>
@@ -68,7 +64,6 @@ const AdminPage = () => {
     );
   }
 
-  // Only render admin content if user is confirmed admin
   if (!isAdmin) {
     return (
       <DefaultLayout>

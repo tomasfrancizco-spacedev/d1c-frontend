@@ -17,7 +17,6 @@ export default function MFAVerifyPage() {
   const { publicKey } = useWallet();
 
   useEffect(() => {
-    // Get email from localStorage
     const storedEmail =
       localStorage.getItem("mfa-email") ||
       localStorage.getItem("mfa-completed");
@@ -36,7 +35,6 @@ export default function MFAVerifyPage() {
     newCode[index] = value;
     setCode(newCode);
 
-    // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -46,6 +44,10 @@ export default function MFAVerifyPage() {
     if (e.key === "Backspace" && !code[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
+    if (e.key === "ArrowLeft" && index > 0)
+      inputRefs.current[index - 1]?.focus();
+    if (e.key === "ArrowRight" && index < 5)
+      inputRefs.current[index + 1]?.focus();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,7 +61,6 @@ export default function MFAVerifyPage() {
     setError(null);
 
     try {
-      // Call the MFA verification API
       const response = await fetch("/api/auth/verify", {
         method: "POST",
         headers: {
@@ -75,7 +76,6 @@ export default function MFAVerifyPage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Store MFA completion in localStorage for client-side state
         localStorage.setItem(
           "mfa-completed",
           JSON.stringify({
@@ -84,11 +84,8 @@ export default function MFAVerifyPage() {
           })
         );
 
-        // Clear the email from localStorage since MFA is complete
         localStorage.removeItem("mfa-email");
-
-        // Navigate to dashboard
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
       } else {
         setError(data.error || "Verification failed. Please try again.");
       }
@@ -127,14 +124,12 @@ export default function MFAVerifyPage() {
           backButtonHref="/auth/mfa/request"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Error message */}
             {error && (
               <div className="text-red-400 text-sm text-center bg-red-400/10 border border-red-400/20 rounded-md p-3">
                 {error}
               </div>
             )}
 
-            {/* 6 input squares for verification code */}
             <div className="flex justify-center space-x-3">
               {code.map((digit, index) => (
                 <input
@@ -153,7 +148,6 @@ export default function MFAVerifyPage() {
               ))}
             </div>
 
-            {/* Resend code link */}
             <div className="text-center">
               <span className="text-[#E6F0F0]/70 text-sm">
                 Didn&apos;t receive the code?{" "}

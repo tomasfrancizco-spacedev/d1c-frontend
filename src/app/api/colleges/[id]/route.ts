@@ -4,13 +4,12 @@ import { BACKEND_API_BASE_URL } from '@/lib/api';
 export async function PATCH(
   request: Request,
   context: { params: Promise<{ id: string }> }
-)   {
+) {
   try {
     const { id } = await context.params;
-    
-    // Get authorization header from the request
+
     const authHeader = request.headers.get('Authorization');
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { error: 'Missing or invalid authorization header' },
@@ -18,19 +17,16 @@ export async function PATCH(
       );
     }
 
-    // Get the request body
     const body = await request.json();
-    
-    // Validate that we have at least one field to update
-    const hasUpdates = body.name !== undefined || body.nickname !== undefined || body.walletAddress !== undefined;
+
+    const hasUpdates = body.name !== undefined || body.nickname !== undefined || body.walletAddress !== undefined || body.logo !== undefined;
     if (!hasUpdates) {
       return NextResponse.json(
-        { error: 'At least one field (name, nickname, walletAddress) must be provided' },
+        { error: 'At least one field (name, nickname, walletAddress, logo) must be provided' },
         { status: 400 }
       );
     }
 
-    // Make request to backend API
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/college/update/${id}`, {
       method: 'PATCH',
       headers: {
@@ -51,7 +47,7 @@ export async function PATCH(
     }
 
     const data = await response.json();
-    
+
     return NextResponse.json({
       success: true,
       data: data
@@ -72,10 +68,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
-    
-    // Get authorization header from the request
+
     const authHeader = request.headers.get('Authorization');
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { error: 'Missing or invalid authorization header' },
@@ -83,7 +78,6 @@ export async function DELETE(
       );
     }
 
-    // Make request to backend API
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/college/delete/${id}`, {
       method: 'DELETE',
       headers: {

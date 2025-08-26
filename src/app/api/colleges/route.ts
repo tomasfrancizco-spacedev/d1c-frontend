@@ -25,7 +25,6 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get authorization header from the request
     const authHeader = request.headers.get('Authorization');
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -35,10 +34,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the request body
     const body = await request.json();
     
-    // Validate required fields
     const requiredFields = ['name', 'commonName', 'nickname', 'city', 'state', 'type', 'subdivision', 'primary', 'walletAddress'];
     const missingFields = requiredFields.filter(field => !body[field]);
     
@@ -49,7 +46,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Make request to backend API
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/college`, {
       method: 'POST',
       headers: {

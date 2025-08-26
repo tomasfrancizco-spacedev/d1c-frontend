@@ -40,17 +40,15 @@ const SelectSchoolModal = ({
   const [isLoadingLinking, setIsLoadingLinking] = useState(false);
   const [linkingError, setLinkingError] = useState<string | null>(null);
 
-  // Check for full authentication (wallet + MFA)
+  
   useEffect(() => {
     setIsFullyAuthenticated(checkFullAuth(connected, isAuthenticated) || false);
   }, [connected, isAuthenticated]);
 
-  // Handle mounting state for portal
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Load colleges data (from cache or API)
   useEffect(() => {
     const loadColleges = async () => {
       if (!isOpen || !isFullyAuthenticated) return;
@@ -78,7 +76,6 @@ const SelectSchoolModal = ({
     loadColleges();
   }, [isOpen, isFullyAuthenticated]);
 
-  // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -97,7 +94,7 @@ const SelectSchoolModal = ({
     };
   }, [isOpen, onClose]);
 
-  // Filter colleges based on search term
+  
   const filteredColleges =
     colleges &&
     colleges.filter((college: CollegeData) => {
@@ -110,7 +107,7 @@ const SelectSchoolModal = ({
       );
     });
 
-  // Handler functions
+  
   const handleSchoolClick = (college: CollegeData) => {
     setSelectedCollege(college);
     setShowConfirmModal(true);
@@ -122,8 +119,6 @@ const SelectSchoolModal = ({
     if (selectedCollege?.id === linkedCollege?.id) {
       setLinkingError("You are already linked to this school");
       setSelectedCollege(null);
-      // setShowConfirmModal(false);
-      // onClose();
       return;
     }
 
@@ -166,22 +161,22 @@ const SelectSchoolModal = ({
     setSelectedCollege(null);
   };
 
-  // Don't render if not mounted, not open, or user not fully authenticated
+  
   if (!mounted || !isOpen || !isFullyAuthenticated) {
     return null;
   }
 
   const modalContent = (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-      {/* Backdrop */}
+      
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal */}
+      
       <div className="relative w-full max-w-6xl h-[90vh] m-4 bg-gradient-to-br from-[#0A1B1A] to-[#0F2A28] border border-[#15C0B9]/20 rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header */}
+        
         <div className="flex justify-between items-center px-6 pt-6">
           <h1 className="text-2xl font-semibold text-white">
             Search and choose a school to support
@@ -346,7 +341,6 @@ const SelectSchoolModal = ({
       {/* Confirmation Modal */}
       {showConfirmModal && selectedCollege && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={handleCancelLinking}

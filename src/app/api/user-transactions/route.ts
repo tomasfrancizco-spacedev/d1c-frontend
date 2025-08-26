@@ -15,7 +15,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get authorization header from the request
     const authHeader = request.headers.get('Authorization');
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -25,7 +24,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Make request to backend API
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/transactions/user/${userAddress}?limit=${limit}&offset=${offset}`, {
       method: 'GET',
       headers: {

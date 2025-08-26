@@ -31,10 +31,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Get the D1C associated token account address
     const ataAddress = getD1CAssociatedTokenAddress(userAddress);
 
-    // Query the D1C balance
     const response = await fetch(`${heliusBaseUrl}/?api-key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
