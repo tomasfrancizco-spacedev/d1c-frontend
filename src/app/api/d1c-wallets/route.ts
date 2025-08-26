@@ -3,7 +3,6 @@ import { BACKEND_API_BASE_URL } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get authorization header from the request
     const authHeader = request.headers.get('Authorization');
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -13,7 +12,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Make request to backend API
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/d1c-wallet`, {
       method: 'GET',
       headers: {

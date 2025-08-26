@@ -3,7 +3,6 @@ import { BACKEND_API_BASE_URL } from '@/lib/api';
 
 export async function POST(request: NextRequest) {
   try {
-    // Get authorization header from the request
     const authHeader = request.headers.get('Authorization');
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -13,7 +12,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Make request to backend API
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/fee-management/trigger-automated-processing`, {
       method: 'POST',
       headers: {

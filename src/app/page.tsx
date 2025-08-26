@@ -6,14 +6,7 @@ import CollegeLeaderboard from "@/components/CollegeLeaderboard";
 import FAQ from "@/components/FAQ";
 import Image from "next/image";
 import AnimatedElement from "@/components/AnimatedElement";
-import schools from "@/data/schools.json";
-
 export default function Home() {
-
-  const getRandomSchools = () => {
-    return schools.sort(() => Math.random() - 0.5).slice(0, 30);
-  };
-
   return (
     <DefaultLayout>
       <div
@@ -31,11 +24,14 @@ export default function Home() {
           <AnimatedElement>
             {/* Content container */}
             <div className="max-w-4xl mx-auto text-center text-[#E6F0F0] relative z-10">
-
               {/* Mobile-only Wallet Connect Button */}
               <div className="lg:hidden mb-8">
                 <div className="flex justify-center">
-                  <WalletConnectButton setIsSelectSchoolModalOpen={() => {}} />
+                  <WalletConnectButton
+                    setIsSelectSchoolModalOpen={() => {}}
+                    setShowWalletInfo={() => {}}
+                    showWalletInfo={false}
+                  />
                 </div>
               </div>
               {/* Subtitle */}
@@ -78,7 +74,6 @@ export default function Home() {
                   />
                 </div>
               </div> */}
-
             </div>
           </AnimatedElement>
 
@@ -86,7 +81,7 @@ export default function Home() {
           <div className="mt-24 mb-16">
             <AnimatedElement>
               <div className="max-w-6xl mx-auto">
-                <CollegeCarousel items={getRandomSchools()} />
+                <CollegeCarousel />
               </div>
             </AnimatedElement>
           </div>

@@ -1,4 +1,4 @@
-import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData, D1CWalletsResponse, AdminsResponse, FeeJobLogsResponse, TotalFeesResponse, TransactionCountResponse, AutomatedProcessingResponse, UserTransactionsResponse } from '@/types/api';
+import { D1CBalanceResponse, ContributionsResponse, UserContribution, TradingVolumeResponse, TradingVolumeData, LeaderboardResponse, UserData, CollegeData, CollegesData, D1CWalletsResponse, AdminsResponse, FeeJobLogsResponse, TransactionCountResponse, AutomatedProcessingResponse, UserTransactionsResponse } from '@/types/api';
 import { BACKEND_API_URLS, FRONTEND_API_URLS } from '@/lib/constants';
 
 const getFrontendApiUrl = (env: string) => {
@@ -222,6 +222,7 @@ export interface UpdateCollegeRequest {
   name?: string;
   nickname?: string;
   walletAddress?: string;
+  logo?: string;
 }
 
 export interface CreateCollegeRequest {
@@ -234,7 +235,7 @@ export interface CreateCollegeRequest {
   subdivision: string;
   primary: string;
   walletAddress: string;
-  logo?: string;
+  logo: string;
 }
 
 export async function updateCollege(
@@ -301,32 +302,12 @@ export async function fetchFeeJobLogs(limit: number = 10): Promise<{ data?: FeeJ
   }
 }
 
-export async function fetchTotalFees(): Promise<{ data?: TotalFeesResponse; error?: string }> {
-  try {
-    const endpoint = `/fee-management/total-fees`;
-    return apiCall<TotalFeesResponse>(endpoint);
-  } catch (error) {
-    console.error('Error fetching total fees:', error);
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-}
-
 export async function fetchUnharvestedTransactionsCount(): Promise<{ data?: TransactionCountResponse; error?: string }> {
   try {
     const endpoint = `/fee-management/unharvested-transactions-count`;
     return apiCall<TransactionCountResponse>(endpoint);
   } catch (error) {
     console.error('Error fetching unharvested transactions count:', error);
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-}
-
-export async function fetchUndistributedTransactionsCount(): Promise<{ data?: TransactionCountResponse; error?: string }> {
-  try {
-    const endpoint = `/fee-management/undistributed-transactions-count`;
-    return apiCall<TransactionCountResponse>(endpoint);
-  } catch (error) {
-    console.error('Error fetching undistributed transactions count:', error);
     return { error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

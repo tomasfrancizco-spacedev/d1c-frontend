@@ -19,7 +19,6 @@ export default function UserLeaderboard({
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null);
 
-  // Fetch leaderboard on component mount
   useEffect(() => {
     const loadLeaderboard = async () => {
       setIsLoadingLeaderboard(true);
@@ -61,7 +60,6 @@ export default function UserLeaderboard({
         </div>
       )}
 
-      {/* Error State */}
       {leaderboardError ? (
         <div className="text-center text-red-400 p-8">
           <p>Error loading leaderboard</p>

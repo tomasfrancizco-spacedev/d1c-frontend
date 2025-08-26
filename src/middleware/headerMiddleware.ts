@@ -17,7 +17,6 @@ export function headerMiddleware(req: NextRequest) {
   }
 
   const token = req.cookies.get('accessToken')?.value;
-  // const isAdmin = req.cookies.get('isAdmin')?.value;
   const headers = new Headers(req.headers);
 
   if (token) {

@@ -20,7 +20,6 @@ export default function MFARequestPage() {
     setError(null);
 
     try {
-      // Call the email API to send verification code
       const response = await fetch("/api/auth/email", {
         method: "POST",
         headers: {
@@ -32,10 +31,7 @@ export default function MFARequestPage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Store email for the verify page
         localStorage.setItem("mfa-email", email);
-
-        // Navigate to verify page
         router.push("/auth/mfa/verify");
       } else {
         setError(
@@ -67,7 +63,6 @@ export default function MFARequestPage() {
           subtitle="Enter your email to receive a confirmation code"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Error message */}
             {error && (
               <div className="text-red-400 text-sm text-center bg-red-400/10 border border-red-400/20 rounded-md p-3">
                 {error}

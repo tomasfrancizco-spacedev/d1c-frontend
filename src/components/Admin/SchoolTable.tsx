@@ -37,6 +37,7 @@ export default function SchoolTable() {
     name: "",
     nickname: "",
     walletAddress: "",
+    logo: "",
   });
 
   const [updating, setUpdating] = useState(false);
@@ -112,6 +113,7 @@ export default function SchoolTable() {
       name: college.name,
       nickname: college.nickname,
       walletAddress: college.walletAddress,
+      logo: college.logo,
     });
     setEditModal({ isOpen: true, college });
   };
@@ -119,7 +121,7 @@ export default function SchoolTable() {
   // Handle closing edit modal
   const handleCloseEditModal = () => {
     setEditModal({ isOpen: false, college: null });
-    setEditForm({ name: "", nickname: "", walletAddress: "" });
+    setEditForm({ name: "", nickname: "", walletAddress: "", logo: "" });
   };
 
   // Handle form submission
@@ -136,6 +138,9 @@ export default function SchoolTable() {
     }
     if (editForm.walletAddress !== editModal.college.walletAddress) {
       updates.walletAddress = editForm.walletAddress;
+    }
+    if (editForm.logo !== editModal.college.logo) {
+      updates.logo = editForm.logo;
     }
 
     // Check if there are any changes
@@ -248,7 +253,7 @@ export default function SchoolTable() {
       subdivision: addForm.subdivision.trim(),
       primary: addForm.primary.trim(),
       walletAddress: addForm.walletAddress.trim(),
-      ...(addForm.logo.trim() && { logo: addForm.logo.trim() }),
+      logo: addForm.logo.trim()
     };
     setAddModal({ isOpen: false });
     setAddConfirmModal({
@@ -665,6 +670,17 @@ export default function SchoolTable() {
                   type="text"
                   value={editForm.walletAddress}
                   onChange={(e) => setEditForm(prev => ({ ...prev, walletAddress: e.target.value }))}
+                  className="w-full rounded-md bg-white/10 px-3 py-2 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9] border border-white/20 font-mono text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/90 mb-2">
+                  Logo URL
+                </label>
+                <input
+                  type="text"
+                  value={editForm.logo}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, logo: e.target.value }))}
                   className="w-full rounded-md bg-white/10 px-3 py-2 text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-[#15C0B9] border border-white/20 font-mono text-sm"
                 />
               </div>

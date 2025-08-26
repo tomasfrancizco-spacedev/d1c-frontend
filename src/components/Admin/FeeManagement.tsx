@@ -3,18 +3,14 @@ import React, { useMemo, useState, useEffect } from "react";
 import { FeeJobLog } from "@/types/api";
 import {
   fetchFeeJobLogs,
-  fetchTotalFees,
   fetchUnharvestedTransactionsCount,
-  fetchUndistributedTransactionsCount,
   triggerAutomatedProcessing,
 } from "@/lib/api";
 import { formatBalance } from "@/lib/api";
 
 export default function FeeManagement() {
   const [jobLogs, setJobLogs] = useState<FeeJobLog[]>([]);
-  const [totalFees, setTotalFees] = useState<number>(0);
   const [unharvestedCount, setUnharvestedCount] = useState<number>(0);
-  const [undistributedCount, setUndistributedCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -27,14 +23,10 @@ export default function FeeManagement() {
 
       const [
         logsResponse,
-        feesResponse,
         unharvestedResponse,
-        undistributedResponse,
       ] = await Promise.all([
         fetchFeeJobLogs(10),
-        fetchTotalFees(),
         fetchUnharvestedTransactionsCount(),
-        fetchUndistributedTransactionsCount(),
       ]);
 
       // Handle job logs
@@ -45,20 +37,11 @@ export default function FeeManagement() {
         setJobLogs(logsResponse.data.data);
       }
 
-      // Handle total fees
-      if (feesResponse.data?.data) {
-        setTotalFees(feesResponse.data.data.totalFees);
-      }
-
       // Handle unharvested count
       if (unharvestedResponse.data?.data) {
         setUnharvestedCount(unharvestedResponse.data.data.count);
       }
 
-      // Handle undistributed count
-      if (undistributedResponse.data?.data) {
-        setUndistributedCount(undistributedResponse.data.data.count);
-      }
     } catch (err) {
       setError("Failed to load fee management data");
       console.error("Error loading fee data:", err);
@@ -147,27 +130,11 @@ export default function FeeManagement() {
         <h3 className="text-xl font-semibold text-white">Fee Management</h3>
       </div>
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <div className="text-sm text-white/60">
-            Fees Available For Distribution
-          </div>
-          <div className="text-2xl font-bold text-white">
-            {totalFees.toLocaleString()}
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
           <div className="text-sm text-white/60">Unharvested Transactions</div>
           <div className="text-2xl font-bold text-orange-400">
             {unharvestedCount}
-          </div>
-        </div>
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <div className="text-sm text-white/60">
-            Undistributed Transactions
-          </div>
-          <div className="text-2xl font-bold text-yellow-400">
-            {undistributedCount}
           </div>
         </div>
         <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center justify-center">
@@ -187,7 +154,7 @@ export default function FeeManagement() {
       {/* Job Logs Table */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-xl font-semibold text-white">Recent Job Logs</h3>
+          <h3 className="text-xl font-semibold text-white">Recent Fee Processing Logs</h3>
           <button
             onClick={loadFeeData}
             className="cursor-pointer px-3 py-1 rounded-md bg-white/10 text-white hover:bg-white/20 transition-colors outline-none focus:ring-2 focus:ring-[#15C0B9] text-sm"

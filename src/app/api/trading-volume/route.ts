@@ -3,9 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // const periodStart = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-    // const encodedPeriodStart = encodeURIComponent(periodStart);
-
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/stats/trading-volume?periodType=all_time`, {
       method: 'GET',  
       headers: request.headers,
