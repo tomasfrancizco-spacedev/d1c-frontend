@@ -7,6 +7,7 @@ const PUBLIC_API_PATHS = [
   '/api/auth/logout',
   '/api/auth/check-admin',
   '/api/college-leaderboard',
+  '/api/colleges',
 ];
 
 export function headerMiddleware(req: NextRequest) {

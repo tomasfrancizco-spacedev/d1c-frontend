@@ -8,6 +8,9 @@ export async function GET() {
   try {
     const response = await fetch(`${BACKEND_API_BASE_URL}/v1/college?limit=${limit}`, {  
       method: 'GET',
+      headers: {
+        'Accept': '*/*',
+      },
     });
     const data = await response.json();
 

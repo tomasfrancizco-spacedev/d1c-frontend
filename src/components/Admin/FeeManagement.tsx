@@ -33,7 +33,6 @@ export default function FeeManagement() {
       if (logsResponse.error) {
         setError(logsResponse.error);
       } else if (logsResponse.data?.data) {
-        console.log({ logsResponse });
         setJobLogs(logsResponse.data.data);
       }
 

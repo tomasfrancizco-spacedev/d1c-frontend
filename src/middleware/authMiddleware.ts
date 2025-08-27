@@ -52,7 +52,6 @@ export function authMiddleware(req: NextRequest) {
     if (isMfaPath(pathname)) {
       return NextResponse.next();
     }
-    console.log("Redirecting to mfa request from auth middleware");
     const url = new URL('/auth/mfa/request', req.url);
     return NextResponse.redirect(url);
   }

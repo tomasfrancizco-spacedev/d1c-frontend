@@ -105,7 +105,7 @@ export default function CollegeCarousel({
     return (
       <div className="w-full overflow-hidden">
         <div className="text-center text-red-400 p-8">
-          <p>Error loading colleges</p>
+          <p>{error}</p>
         </div>
         <SupportModal />
       </div>
