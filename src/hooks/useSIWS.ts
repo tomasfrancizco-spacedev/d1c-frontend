@@ -150,8 +150,7 @@ export function useSIWS() {
       try {
         const { publicKey: storedKey, timestamp } = JSON.parse(stored);
         // Check if auth is still valid (24 hours)
-        // const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
-        const isExpired = Date.now() - timestamp > 120 * 1000;
+        const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
         if (!isExpired && storedKey === publicKey.toString()) {
           setAuthState({
             isAuthenticated: true,
