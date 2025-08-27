@@ -196,6 +196,7 @@ export async function fetchColleges(): Promise<{ data?: CollegesData; error?: st
   }
 }
 
+
 export async function linkCollege(userId: string, collegeId: string): Promise<{ data?: UserData; error?: string }> {
   try {
     const endpoint = `/link-college?userId=${userId}&collegeId=${collegeId}`;

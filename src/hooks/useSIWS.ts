@@ -86,7 +86,6 @@ export function useSIWS() {
         if (mfaAuth) {
           router.push('/dashboard');
         } else {
-          console.log("Redirecting to mfa request from authenticate");
           router.push('/auth/mfa/request');
         }
 
@@ -151,15 +150,15 @@ export function useSIWS() {
       try {
         const { publicKey: storedKey, timestamp } = JSON.parse(stored);
         // Check if auth is still valid (24 hours)
-        const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
-
+        // const isExpired = Date.now() - timestamp > 24 * 60 * 60 * 1000;
+        const isExpired = Date.now() - timestamp > 120 * 1000;
         if (!isExpired && storedKey === publicKey.toString()) {
           setAuthState({
             isAuthenticated: true,
             publicKey,
           });
         } else {
-          localStorage.removeItem('siws-auth');
+          logout();
         }
       } catch (error) {
         console.error('Failed to parse stored auth:', error);
